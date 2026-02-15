@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" href="CSS/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "/node_modules/three/build/three.module.js",
+        "three/addons/": "/node_modules/three/examples/jsm/"
+      }
+    }
+  </script>
+  <meta charset="utf-8" />
+  <title>Display Entity Builder (MVP0)</title>
+</head>
+<body>
+<div id="ui">
+  <div id="uiTopbar">
+    <h3>MVP0: Display Entity Builder</h3>
+
+    <div id="projectBtns">
+      <button id="saveBtn" title="Download a .json save">Save</button>
+      <button id="loadBtn" title="Load + merge a .json save (Shift = replace)">Load</button>
+      <input id="loadInput" type="file" accept=".json,application/json" style="display:none;" />
+    </div>
+  </div>
+
+  <div id="hint">
+    Left click: select<br>
+    Shift+Left click on ground: place<br>
+    W/E/R: translate/rotate/scale<br>
+    Del: delete selected
+  </div>
+
+  <div id="facing" style="margin-top:8px;font-size:12px;opacity:.95;"></div>
+
+  <select id="palette"></select>
+  <button id="place">Place Selected Block (Alt+Click also works)</button>
+
+  <button id="importRefBtn">Import Reference Model (.glb/.gltf/.obj/.stl)</button>
+  <input id="importRefInput" type="file" accept=".glb,.gltf,.obj,.mtl,.stl" style="display:none;" />
+
+  <button id="exportMany">Export: one summon per entity</button>
+  <button id="exportOne">Export: single “one-command” (minecart chain)</button>
+
+  <div id="outList"></div>
+</div>
+
+<div id="xformUI">
+  <div class="xHdr">
+    <div><b>Transform</b></div>
+    <div class="xBtns">
+      <button id="copyBtn" title="Ctrl/Cmd+C">Copy</button>
+      <button id="pasteBtn" title="Ctrl/Cmd+V">Paste</button>
+    </div>
+  </div>
+
+  <div class="xRow"><span>Pos</span>
+    <input id="px" type="number" step="0.25">
+    <input id="py" type="number" step="0.25">
+    <input id="pz" type="number" step="0.25">
+  </div>
+
+  <div class="xRow"><span>Rot°</span>
+    <input id="rx" type="number" step="5">
+    <input id="ry" type="number" step="5">
+    <input id="rz" type="number" step="5">
+  </div>
+
+  <div class="xRow"><span>Scale</span>
+    <input id="sx" type="number" step="0.01">
+    <input id="sy" type="number" step="0.01">
+    <input id="sz" type="number" step="0.01">
+  </div>
+
+  <div class="xSmall">
+    Alt+Click: place<br>
+    Shift: snap rotate/scale/translate<br>
+  </div>
+</div>
+<script type="module" src="webScripts/main.js"></script>
+</body>
+</html>
