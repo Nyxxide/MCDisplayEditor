@@ -38,8 +38,7 @@ canvas {
     font-size: 14px;
 }
 
-#ui button,
-#ui select {
+#ui button{
     width: 100%;
     margin: 6px 0;
     padding: 8px;
@@ -67,6 +66,112 @@ canvas {
     margin: 0;
 }
 
+#hint {
+    font-size: 12px;
+    opacity: .9;
+    line-height: 1.35;
+}
+
+/* Palette (searchable block picker) */
+.palette {
+    width: 100%;
+    margin: 6px 0;
+    position: relative;
+}
+
+.paletteBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    cursor: pointer;
+}
+
+.paletteRowIconImg,
+.paletteIconImg {
+    width: 18px;
+    height: 18px;
+    image-rendering: pixelated;
+    border-radius: 4px;
+    flex: 0 0 auto;
+}
+
+.paletteLabel {
+    flex: 1 1 auto;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.paletteCaret {
+    opacity: .85;
+    flex: 0 0 auto;
+}
+
+.palettePopup {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 9999;
+    background: rgba(0,0,0,.92);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+.paletteSearch {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 0;
+    outline: none;
+    background: rgba(255,255,255,.08);
+    color: #d7faff;
+}
+
+.paletteList {
+    max-height: 320px;
+    overflow: auto;
+}
+
+.paletteRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.paletteRow:hover {
+    background: rgba(255,255,255,.08);
+}
+
+.paletteRowIcon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: rgba(255,255,255,.12); /* placeholder icon */
+    flex: 0 0 auto;
+}
+
+.paletteRowLabel {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    font-size: 13px;
+}
+
 #projectBtns{
     display: flex;
     flex-direction: column;
@@ -77,13 +182,6 @@ canvas {
 #projectBtns button{
     width: 100%;
 }
-
-#hint {
-    font-size: 12px;
-    opacity: .9;
-    line-height: 1.35;
-}
-
 
 #outList {
     flex: 1;

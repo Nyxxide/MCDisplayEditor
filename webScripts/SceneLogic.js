@@ -8,11 +8,13 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import {loadAtlas} from "./TextureLoad.js";
+import { loadAtlas } from "./TextureLoad.js";
 
 const GRID_COLOR = 0x8a8a8a;
 const gridFine = new THREE.GridHelper(40, 160, GRID_COLOR, GRID_COLOR);
 const gridCoarse = new THREE.GridHelper(40, 40, GRID_COLOR, GRID_COLOR);
+
+let markerAnim = null;
 
 export async function initScene(state) {
     const scene = new THREE.Scene();
@@ -78,19 +80,6 @@ export async function initScene(state) {
     const orbit = new OrbitControls(camera, renderer.domElement);
     orbit.enableDamping = true;
 
-    // origin marker
-    const originMarker = new THREE.Mesh(
-        new THREE.PlaneGeometry(1, 1),
-        new THREE.MeshBasicMaterial({
-            color: 0xff8c1a,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.85,
-        })
-    );
-    originMarker.rotation.x = -Math.PI / 2;
-    originMarker.position.set(-0.5, 0.001, -0.5);
-    scene.add(originMarker);
 
     // ground tint plane
     const ground = new THREE.Mesh(

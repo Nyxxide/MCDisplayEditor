@@ -9,23 +9,53 @@ import { initTransformLogic} from "./TransformLogic.js";
 import { initImportLogic } from "./FileImportLogic.js";
 import { entityToSummonCmd, exportOneCommand } from "./CommandBlockLogic.js";
 import { initSaveLoadLogic } from "./SaveLoadLogic.js"
-import {loadBlockList} from "./TextureLoad.js";
+import { loadBlockList } from "./TextureLoad.js";
+import { initPaletteUI } from "./PaletteUI.js";
+import { loadMcmetaAnimatedTexture, tickMcmetaAnimator } from "./BlockAnimationLogic.js";
+
 
 // -------------------- Init --------------------
+const clock = new THREE.Clock();
+let markerAnim = null;
+let markerMesh = null;
+
 initDom();
 await initScene(state);
+
+// --- Command block marker (animated) ---
+markerAnim = await loadMcmetaAnimatedTexture(
+    "/Resources/textures/block/command_block_front.png",
+    "/Resources/textures/block/command_block_front.png.mcmeta"
+);
+
+const markerMat = new THREE.MeshBasicMaterial({
+  map: markerAnim.tex,
+  transparent: true
+});
+
+markerMat.toneMapped = false;
+
+
+
+markerMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), markerMat);
+
+// flat on ground, slightly raised to avoid z-fighting
+markerMesh.rotation.x = -Math.PI / 2;
+markerMesh.position.set(-0.5, 0.001, -0.5);
+
+// optional: fight z-fighting even harder
+markerMat.polygonOffset = true;
+markerMat.polygonOffsetFactor = -1;
+markerMat.polygonOffsetUnits = -1;
+
+state.scene.add(markerMesh);
+
 
 // palette blocks
 const BLOCKS = await loadBlockList();
 
-for (const b of BLOCKS) {
-  const opt = document.createElement("option");
-  opt.value = b;
-  opt.textContent = b;
-  state.ui.paletteEl.appendChild(opt);
-}
-
-
+// fill palette
+initPaletteUI(state, BLOCKS);
 
 // selection + history + dragging
 initSelectionLogic(state);
@@ -100,6 +130,10 @@ function yawToCompass(yaw) {
 }
 
 function animate() {
+  const dt = clock.getDelta();
+
+  if (markerAnim) tickMcmetaAnimator(markerAnim, dt);
+
   state.orbit.update();
   state.composer.render();
 

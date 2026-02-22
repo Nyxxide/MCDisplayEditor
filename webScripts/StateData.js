@@ -74,7 +74,8 @@ export const state = {
 
 export function initDom() {
     // ----- Left UI -----
-    state.ui.paletteEl = document.getElementById("palette");
+    // palette picker (custom UI sets these)
+    state.ui.paletteValue = null;
     state.ui.outList = document.getElementById("outList");
     state.ui.facingEl = document.getElementById("facing");
 

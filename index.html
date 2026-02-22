@@ -34,7 +34,19 @@
 
   <div id="facing" style="margin-top:8px;font-size:12px;opacity:.95;"></div>
 
-  <select id="palette"></select>
+  <div id="palette" class="palette">
+    <button id="paletteBtn" class="paletteBtn" type="button">
+      <span id="paletteBtnIcon" class="paletteIcon"></span>
+      <span id="paletteBtnLabel" class="paletteLabel">Select a block…</span>
+      <span class="paletteCaret">▾</span>
+    </button>
+
+    <div id="palettePopup" class="palettePopup" style="display:none;">
+      <input id="paletteSearch" class="paletteSearch" type="text" placeholder="Search blocks…" autocomplete="off" />
+      <div id="paletteList" class="paletteList"></div>
+    </div>
+  </div>
+
   <button id="place">Place Selected Block (Alt+Click also works)</button>
 
   <button id="importRefBtn">Import Reference Model (.glb/.gltf/.obj/.stl)</button>

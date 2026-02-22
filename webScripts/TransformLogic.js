@@ -181,6 +181,22 @@ export function initTransformLogic(state) {
             updateSnaps(state, transform);
         }
 
+        // --- Arrow key nudge (camera-cardinal) ---
+        if (isArrowKey(e.key)) {
+            if(isPaletteOpen(state) && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+                return;
+            }
+
+            if (isNumericOrTextareaFocused()) return;
+
+            e.preventDefault();
+
+            const step = e.shiftKey ? 1.0 : state.const.TRANS_SNAP; // shift=1, otherwise 0.25
+            const did = nudgeSelectedByArrow(state, transform, e.key, step);
+            if (did) return;
+        }
+
+
         if (isTextInputFocused()) return;
 
         if (mod && e.key.toLowerCase() === "c") {
@@ -240,6 +256,109 @@ export function attachTransformToActiveRig(state, transform) {
 
     killGizmoWiresHard(transform);
 }
+
+function isPaletteOpen(state) {
+    const root = state.ui.paletteRoot;
+    if (!root) return false;
+    return root.dataset.open === "true";
+}
+
+function isArrowKey(k) {
+    return k === "ArrowUp" || k === "ArrowDown" || k === "ArrowLeft" || k === "ArrowRight";
+}
+
+function isNumericOrTextareaFocused() {
+    const a = document.activeElement;
+    if (!a) return false;
+
+    const tag = (a.tagName || "").toLowerCase();
+    if (tag === "textarea") return true;
+
+    if (tag === "input") {
+        const t = (a.getAttribute("type") || "").toLowerCase();
+        // don’t steal arrows from numeric transform fields
+        if (t === "number") return true;
+    }
+
+    if (a.isContentEditable) return true;
+    return false;
+}
+
+// returns one of: "N" "E" "S" "W"
+function cameraSnappedCardinalVectors(state) {
+    const dir = new THREE.Vector3();
+    state.camera.getWorldDirection(dir);
+
+    // flatten to XZ plane
+    dir.y = 0;
+
+    // if somehow degenerate, default to +Z
+    if (dir.lengthSq() < 1e-8) dir.set(0, 0, 1);
+    else dir.normalize();
+
+    // Snap forward to dominant axis (nearest cardinal)
+    const ax = Math.abs(dir.x);
+    const az = Math.abs(dir.z);
+
+    const fwd = new THREE.Vector3();
+    if (ax > az) {
+        fwd.set(Math.sign(dir.x) || 1, 0, 0);   // ±X
+    } else {
+        fwd.set(0, 0, Math.sign(dir.z) || 1);   // ±Z
+    }
+
+    // Right vector for that snapped forward (90° clockwise in XZ)
+    // If fwd = (0,0,1) => right = (1,0,0)
+    // If fwd = (1,0,0) => right = (0,0,-1)
+    const right = new THREE.Vector3(fwd.z, 0, -fwd.x);
+
+    return { fwd, right };
+}
+
+
+function nudgeSelectedByArrow(state, transform, key, step) {
+    if (!state.activeRig) return false;
+
+    // don’t fight with gizmo dragging / plane drags
+    if (state.isTransforming || transform?.dragging || state.isDraggingMesh || state.isDraggingRef) return false;
+
+    const { fwd, right } = cameraSnappedCardinalVectors(state);
+
+    const delta = new THREE.Vector3();
+    if (key === "ArrowUp") delta.copy(fwd);
+    if (key === "ArrowDown") delta.copy(fwd).multiplyScalar(-1);
+    if (key === "ArrowRight") delta.copy(right).multiplyScalar(-1);
+    if (key === "ArrowLeft") delta.copy(right);
+
+    delta.multiplyScalar(step);
+
+    // Refs are TRS driven; blocks/groups are matrix driven but you move the rig
+    const rig = state.activeRig;
+
+    rig.position.add(delta);
+    rig.updateMatrixWorld(true);
+
+    // If we’re using the temp selectionRig, we must bake so meshes actually move in world
+    if (state.selectionIsTempRig && rig === state.selectionRig) {
+        state.api.bakeRigToMeshes?.();
+        state.api.rebuildSelectionRig?.();
+    }
+
+    // Update UI + outline
+    if (state.selectedRefId && state.activeRig) {
+        fillTransformUI(state, state.activeRig);
+    } else if (state.selectedIds.size === 1 && !state.selectedRefId) {
+        const m = state.api.getOnlySelectedMesh?.();
+        if (m) fillTransformUI(state, m);
+    } else if (state.selectionBase && state.activeRig && !state.selectionIsTempRig) {
+        fillTransformUIRelative(state, state.activeRig, state.selectionBase);
+    }
+
+    state.api.updateHighlight?.();
+    state.api.pushHistory?.("nudge");
+    return true;
+}
+
 
 function updateSnaps(state, transform) {
     transform.setTranslationSnap(state.shiftHeld ? state.const.TRANS_SNAP : null);

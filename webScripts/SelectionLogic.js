@@ -557,7 +557,8 @@ export function initSelectionLogic(state) {
 
     // ---- placement ----
     async function placeAt(point) {
-        const blockName = state.ui.paletteEl.value;
+        const blockName = state.ui.paletteValue;
+        if(!blockName) return;
         const mesh = await makeCubeForBlock(state, blockName);
 
         const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;

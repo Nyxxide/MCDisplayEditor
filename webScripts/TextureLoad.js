@@ -25,6 +25,38 @@ async function loadAtlasTexture(url) {
     return tex;
 }
 
+// --- Colormap loading (grass/foliage) ---
+let _colormapsPromise = null;
+let _foliageMap = null; // { data: Uint8ClampedArray, w, h }
+let _grassMap = null;
+
+async function loadColormapsOnce() {
+    if (_colormapsPromise) return _colormapsPromise;
+
+    _colormapsPromise = (async () => {
+        _foliageMap = await loadColormap("../Resources/textures/colormap/foliage.png");
+        _grassMap   = await loadColormap("../Resources/textures/colormap/grass.png");
+    })();
+
+    return _colormapsPromise;
+}
+
+async function loadColormap(url) {
+    const loader = new THREE.ImageBitmapLoader();
+    const bmp = await loader.loadAsync(url);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = bmp.width;
+    canvas.height = bmp.height;
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(bmp, 0, 0);
+
+    const img = ctx.getImageData(0, 0, bmp.width, bmp.height);
+    return { data: img.data, w: bmp.width, h: bmp.height };
+}
+
+
 export function rectToUVs(rect, atlasW, atlasH) {
     const u0 = rect.x / atlasW;
     const v0 = rect.y / atlasH;
@@ -45,26 +77,6 @@ export function makeTexturedCube(atlas, texId) {
 
     // ✅ apply same tile to all faces using safe remap
     for (let f = 0; f < 6; f++) {
-        remapUVsToRect(geom, f, u0, v0, u1, v1);
-    }
-
-    const mat = new THREE.MeshBasicMaterial({ map: atlasTex, transparent: true });
-    return new THREE.Mesh(geom, mat);
-}
-
-export function makeTexturedCubeFaces(atlas, faceTexIds) {
-    const { atlasMeta, atlasTex } = atlas;
-
-    const geom = new THREE.BoxGeometry(1, 1, 1).toNonIndexed();
-
-    // face order (BoxGeometry.toNonIndexed):
-    // 0:+x, 1:-x, 2:+y, 3:-y, 4:+z, 5:-z
-    for (let f = 0; f < 6; f++) {
-        const texId = faceTexIds[f];
-        const entry = atlasMeta.textures[texId];
-        if (!entry) continue;
-
-        const { u0, v0, u1, v1 } = rectToUVs(entry, atlasMeta.atlasW, atlasMeta.atlasH);
         remapUVsToRect(geom, f, u0, v0, u1, v1);
     }
 
@@ -96,38 +108,31 @@ function remapUVsToRect(geom, faceIndex, u0, v0, u1, v1) {
     uv.needsUpdate = true;
 }
 
-// function inferCutout(model, blockId) {
-//     const chain = (model.parentChain || []).join(" ").toLowerCase();
-//     const id = (typeof model.variant === "string" ? model.variant : model.variant?.model || "").toLowerCase();
-//     const bid = (blockId || "").toLowerCase();
-//
-//     // common cutout templates / parents in vanilla packs
-//     if (chain.includes("cross") || chain.includes("tinted_cross")) return true;
-//     if (chain.includes("rail") || id.includes("rail")) return true;
-//     if (bid.includes("rail")) return true;
-//     if (bid.includes("sapling") || bid.includes("flower") || bid.includes("tall_grass") || bid.includes("fern")) return true;
-//
-//     return false;
-// }
 
-
-
-async function resolveModelIdForBlock(blockId) {
+async function resolveModelIdForBlock(blockId, props = null) {
     const name = stripMcPrefix(blockId);
     const bs = await loadBlockstate(name);
     if (!bs) return null;
 
-    // variants path (your current system)
-    if (bs.variants) return getVariantModelId(bs);
+    // If the caller didn't pass props, we can still force a sensible default
+    // for stems in the editor (full-grown looks best).
+    const id = (blockId || "").toLowerCase();
+    if (!props && (id.includes("melon_stem") || id.includes("pumpkin_stem"))) {
+        props = { age: "0" }; // blockstates usually store as strings in json keys
+    }
 
-    // multipart blocks (beehive uses variants; others use multipart)
-    // minimal: pick first apply
+    if (!props && (id.includes("attached_melon_stem") || id.includes("attached_pumpkin_stem"))) {
+        props = { age: "7" }; // blockstates usually store as strings in json keys
+    }
+
+    if (bs.variants) return getVariantModelId(bs, props, blockId);
+
+    // multipart minimal: pick first apply (you can improve later)
     if (bs.multipart && bs.multipart.length) {
         const first = bs.multipart[0];
         const apply = first.apply;
         const pick = Array.isArray(apply) ? apply[0] : apply;
         return pick && typeof pick === "object" ? pick : null;
-
     }
 
     return null;
@@ -166,15 +171,45 @@ async function resolveFullModel(variant, maxDepth = 24) {
     return merged;
 }
 
+function shouldMirrorPerFaceCubes(model) {
+    // detect “individual block face” cubes by: multiple distinct textures across faces
+    // (ignore cross models etc — those are not cube faces)
+    if (!model || !model.elements || !Array.isArray(model.elements)) return false;
 
-function buildMeshFromModel(atlas, model, blockId) {
+    const chain = (model.parentChain || []).join(" ").toLowerCase();
+    if (chain.includes("cross") || chain.includes("tinted_cross")) return false;
+
+    const tex = model.textures || {};
+    const faces = model.elements?.[0]?.faces; // usually enough for cube models
+    if (!faces) return false;
+
+    const faceNames = ["north","south","east","west","up","down"];
+
+    const ids = new Set();
+    for (const fn of faceNames) {
+        const f = faces[fn];
+        if (!f?.texture) continue;
+
+        // resolveTextureRef handles "#side" indirections etc
+        const resolved = resolveTextureRef(tex, f.texture);
+        if (resolved) ids.add(resolved);
+    }
+
+    // “per-face” block if it uses >= 2 different texture keys across its faces
+    return ids.size >= 2;
+}
+
+
+function buildMeshFromModel(atlas, model, blockId, props) {
     const { atlasMeta, atlasTex } = atlas;
 
     // One geometry for whole model
     const positions = [];
     const uvs = [];
+    const colors = [];
     const indices = [];
     let idxBase = 0;
+    const mirrorPerFace = shouldMirrorPerFaceCubes(model);
 
     // Each element is a box from [from] to [to] in 0..16
     for (const el of model.elements) {
@@ -198,43 +233,44 @@ function buildMeshFromModel(atlas, model, blockId) {
         // north (-Z)
         idxBase = pushFaceIf(faces, "north",
             V(X0,Y0,Z0), V(X1,Y0,Z0), V(X1,Y1,Z0), V(X0,Y1,Z0),
-            model.textures, atlasMeta, positions, uvs, indices, idxBase
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
         );
 
         // south (+Z)
         idxBase = pushFaceIf(faces, "south",
             V(X1,Y0,Z1), V(X0,Y0,Z1), V(X0,Y1,Z1), V(X1,Y1,Z1),
-            model.textures, atlasMeta, positions, uvs, indices, idxBase
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
         );
 
         // west (-X)
         idxBase = pushFaceIf(faces, "west",
             V(X0,Y0,Z1), V(X0,Y0,Z0), V(X0,Y1,Z0), V(X0,Y1,Z1),
-            model.textures, atlasMeta, positions, uvs, indices, idxBase
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
         );
 
         // east (+X)
         idxBase = pushFaceIf(faces, "east",
             V(X1,Y0,Z0), V(X1,Y0,Z1), V(X1,Y1,Z1), V(X1,Y1,Z0),
-            model.textures, atlasMeta, positions, uvs, indices, idxBase
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
         );
 
         // up (+Y)
         idxBase = pushFaceIf(faces, "up",
             V(X0,Y1,Z0), V(X1,Y1,Z0), V(X1,Y1,Z1), V(X0,Y1,Z1),
-            model.textures, atlasMeta, positions, uvs, indices, idxBase
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
         );
 
         // down (-Y)
         idxBase = pushFaceIf(faces, "down",
             V(X0,Y0,Z1), V(X1,Y0,Z1), V(X1,Y0,Z0), V(X0,Y0,Z0),
-            model.textures, atlasMeta, positions, uvs, indices, idxBase
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
         );
     }
 
     const geom = new THREE.BufferGeometry();
     geom.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
     geom.setAttribute("uv", new THREE.Float32BufferAttribute(uvs, 2));
+    geom.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
     geom.setIndex(indices);
     geom.computeVertexNormals();
 
@@ -249,25 +285,137 @@ function buildMeshFromModel(atlas, model, blockId) {
         if (!isTranslucent) isCutout = inferCutout(model, blockId);
     }
 
+// --- MATERIAL RULES ---
+// Cutout: discard pixels (no blending), single-sided, write depth
+// Translucent: blend, double-sided, don't write depth
+    let mat;
+    if (isTranslucent) {
+        mat = new THREE.MeshBasicMaterial({
+            map: atlasTex,
+            transparent: true,
+            opacity: 1,
+            alphaTest: 0.0,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+            depthTest: true,
+        });
+    } else if (isCutout) {
+        mat = new THREE.MeshBasicMaterial({
+            map: atlasTex,
+            transparent: false,     // <-- IMPORTANT
+            alphaTest: 0.5,         // <-- IMPORTANT (try 0.33 if edges look too harsh)
+            side: THREE.FrontSide,  // <-- IMPORTANT (kills the “mirrored overlap”)
+            depthWrite: true,
+            depthTest: true,
+        });
+    } else {
+        mat = new THREE.MeshBasicMaterial({
+            map: atlasTex,
+            transparent: false,
+            alphaTest: 0.0,
+            side: THREE.FrontSide,
+            depthWrite: true,
+            depthTest: true,
+        });
+    }
 
-    const mat = new THREE.MeshBasicMaterial({
-        map: atlasTex,
-        transparent: true,
-        alphaTest: isCutout ? 0.5 : 0.0,
-        side: THREE.DoubleSide,
-        depthWrite: !isTranslucent,
-        depthTest: true,
-    });
-
+    mat.toneMapped = false; // keep textures “minecraft-like”
+    mat.vertexColors = true;
 
     const mesh = new THREE.Mesh(geom, mat);
     mesh.userData.blockId = blockId;
     return mesh;
 }
 
+function sampleColormap(map, u, v) {
+    // u,v in [0..1], Minecraft colormaps are sampled with (x=u*(w-1), y=(1-v)*(h-1))
+    if (!map) return { r: 1, g: 1, b: 1 };
+
+    const x = Math.max(0, Math.min(map.w - 1, Math.round(u * (map.w - 1))));
+    const y = Math.max(0, Math.min(map.h - 1, Math.round((1 - v) * (map.h - 1))));
+
+    const idx = (y * map.w + x) * 4;
+    const d = map.data;
+
+    return { r: d[idx] / 255, g: d[idx + 1] / 255, b: d[idx + 2] / 255 };
+}
+
+// "Base biome-ish" sample point.
+// Minecraft uses biome temperature/rainfall; for a good default look we pick a middle value.
+const DEFAULT_BIOME_U = 0.5;
+const DEFAULT_BIOME_V = 0.5;
+
+function srgbToLinear(c) {
+    // exact sRGB → linear conversion
+    if (c <= 0.04045) return c / 12.92;
+    return Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+function toLinearRGB(col) {
+    return {
+        r: srgbToLinear(col.r),
+        g: srgbToLinear(col.g),
+        b: srgbToLinear(col.b),
+    };
+}
+
+function isFoliageTint(blockId) {
+    const id = (blockId || "").toLowerCase();
+    return (id.includes("leaves") || id.includes("vine") || id.includes("leaf_litter")) && !id.includes("cherry");
+}
+
+function isGrassTint(blockId) {
+    const id = (blockId || "").toLowerCase();
+    return (
+        id.includes("grass") ||
+        id.includes("fern") ||
+        id.includes("tall_grass") ||
+        id.includes("large_fern") ||
+        id.includes("seagrass") ||
+        id.includes("sugar_cane")
+    );
+}
+
+function stemTintFromAge(age) {
+    // Vanilla-like formula: red increases, green decreases, blue slightly increases
+    // age: 0..7
+    // const a = Math.max(0, Math.min(7, Number(age ?? 0)));
+    console.log(age);
+    const a = age;
+    const r = (a * 32) / 255;          // 0 .. 224
+    const g = (255 - a * 8) / 255;     // 255 .. 199
+    const b = (a * 4) / 255;           // 0 .. 28
+    return { r, g, b };
+}
+
+
+function getTintForBlockFace(blockId, props) {
+    const id = (blockId || "").toLowerCase();
+
+    if (id.includes("lily_pad")) {
+        return { r: 0x20/255, g: 0x80/255, b: 0x30/255 };
+    }
+
+    if (id.includes("melon_stem") || id.includes("pumpkin_stem") ||
+        id.includes("attached_melon_stem") || id.includes("attached_pumpkin_stem")) {
+            return stemTintFromAge(props?.age);
+    }
+
+    if (isFoliageTint(blockId)) {
+        return toLinearRGB(sampleColormap(_foliageMap, DEFAULT_BIOME_U, DEFAULT_BIOME_V));
+    }
+
+    if (isGrassTint(blockId)) {
+        return toLinearRGB(sampleColormap(_grassMap, DEFAULT_BIOME_U, DEFAULT_BIOME_V));
+    }
+
+    return { r: 1, g: 1, b: 1 };
+}
+
+
 function pushFaceIf(
     faces, faceName, v0, v1, v2, v3,
-    textures, atlasMeta, positions, uvs, indices, idxBase
+    textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props
 ) {
     const f = faces[faceName];
     if (!f) return idxBase;
@@ -312,7 +460,26 @@ function pushFaceIf(
     if (flipU) quad = quad.map(([u, v]) => [1 - u, v]);
     if (flipV) quad = quad.map(([u, v]) => [u, 1 - v]);
 
+    if (mirrorPerFace) {
+        if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+        else {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
     positions.push(...v0, ...v1, ...v2, ...v3);
+
+    const tint = (f.tintindex !== undefined)
+        ? getTintForBlockFace(blockId, props)
+        : { r: 1, g: 1, b: 1 };
+
+
+    for (let i = 0; i < 4; i++) {
+        colors.push(tint.r, tint.g, tint.b);
+    }
+
 
     const du = U1 - U0;
     const dv = V1 - V0;
@@ -322,8 +489,8 @@ function pushFaceIf(
     }
 
     indices.push(
-        idxBase + 0, idxBase + 1, idxBase + 2,
-        idxBase + 0, idxBase + 2, idxBase + 3
+        idxBase + 0, idxBase + 2, idxBase + 1,
+        idxBase + 0, idxBase + 3, idxBase + 2
     );
 
     return idxBase + 4;
@@ -356,6 +523,14 @@ function rotatePoint(p, origin, axis, angleDeg) {
     return [x + origin[0], y + origin[1], z + origin[2]];
 }
 
+function hexToRgb01(hex) {
+    const r = (hex >> 16) & 255;
+    const g = (hex >> 8) & 255;
+    const b = hex & 255;
+    return { r: r/255, g: g/255, b: b/255 };
+}
+
+
 function applyElementRotation(v, rot) {
     if (!rot) return v;
 
@@ -376,6 +551,8 @@ function inferCutout(model, blockId) {
     if (chain.includes("cross") || chain.includes("tinted_cross")) return true;
 
     // common block-name heuristics
+    if (bid.includes("_stem") || bid.includes("attached_") && bid.includes("_stem")) return true;
+    if (bid.includes("leaf_litter") || bid.includes("pink_petals") || bid.includes("dripleaf")) return true;
     if (bid.includes("sapling") || bid.includes("flower") || bid.includes("tall_grass") || bid.includes("fern")) return true;
     if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire")) return true;
     if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes")) return true;
@@ -413,9 +590,12 @@ export function blockIdToTexId(blockId) {
     return `minecraft:block/${name}`;
 }
 
-export async function makeMeshForBlockId(atlas, blockId) {
+export async function makeMeshForBlockId(atlas, blockId, props = null) {
+    await loadColormapsOnce();
 
-    const modelIdRaw = await resolveModelIdForBlock(blockId);
+
+
+    const modelIdRaw = await resolveModelIdForBlock(blockId, props);
     if (!modelIdRaw) {
         // fallback
         const texId = blockIdToTexId(blockId);
@@ -432,26 +612,31 @@ export async function makeMeshForBlockId(atlas, blockId) {
         return mesh;
     }
 
+    if (blockId.includes("melon_stem") || blockId.includes("pumpkin_stem")) {
+        props = {age: "0"}
+    }
+    if (blockId.includes("attached_melon_stem") || blockId.includes("attached_pumpkin_stem")) {
+        props = {age: "7"}
+    }
 
-    const mesh = buildMeshFromModel(atlas, model, blockId);
+    const mesh = buildMeshFromModel(atlas, model, blockId, props);
 
     mesh.name = `BLOCKMESH:${blockId}:${crypto.randomUUID().slice(0,8)}`;
 
-
-
     const vx = model.variant?.x ?? 0;
-    const vy = model.variant?.y ?? 0;
-    // if (vx) mesh.rotateX(THREE.MathUtils.degToRad(-vx));
-    // if (vy) mesh.rotateY(THREE.MathUtils.degToRad(-vy));
+    let vy = model.variant?.y ?? 0;
 
-    const YAW_OFFSET = 180;
+    if (blockId.includes("melon_stem") || blockId.includes("pumpkin_stem") ||
+        blockId.includes("attached_melon_stem") || blockId.includes("attached_pumpkin_stem")) {
+        vy = (vy + 180) % 360;
+    }
 
     // finalizeMesh(mesh, blockId);
     const rot = new THREE.Matrix4();
     rot.makeRotationFromEuler(
         new THREE.Euler(
             THREE.MathUtils.degToRad(-vx),
-            THREE.MathUtils.degToRad(-(vy + YAW_OFFSET)),
+            THREE.MathUtils.degToRad(-vy),
             0,
             "YXZ"
         )
@@ -459,6 +644,13 @@ export async function makeMeshForBlockId(atlas, blockId) {
 
 // bake rotation into the geometry-space matrix
     mesh.geometry.applyMatrix4(rot);
+
+    const chain = (model.parentChain || []).join(" ").toLowerCase();
+    const isCross = chain.includes("cross") || chain.includes("tinted_cross");
+    if (isCross) {
+        const s = 1.30; // try 1.05..1.20
+        mesh.geometry.applyMatrix4(new THREE.Matrix4().makeScale(s, 1.0, s));
+    }
 
 // keep the mesh transform clean (placement/rigging owns this)
     mesh.position.set(0,0,0);
@@ -565,8 +757,6 @@ async function loadModelMerged(modelIdRaw, maxDepth = 12) {
     return { parent: templateParent, textures: mergedTextures };
 }
 
-
-
 function resolveTextureRef(textures, ref) {
     if (!ref) return null;
 
@@ -589,11 +779,64 @@ function resolveTextureRef(textures, ref) {
 
 }
 
+function normalizeProps(props) {
+    if (!props) return null;
+    const out = {};
+    for (const [k, v] of Object.entries(props)) {
+        // normalize everything to string because blockstate keys are strings like "age=7"
+        out[k] = String(v);
+    }
+    return out;
+}
 
+function keyMatchesProps(variantKey, props) {
+    // variantKey like: "age=7" or "facing=north,lit=false"
+    // props is normalized {age:"7", facing:"north"}
+    if (variantKey === "") return true;
 
-function getVariantModelId(blockstateJson) {
+    const parts = variantKey.split(",");
+    for (const part of parts) {
+        const [k, v] = part.split("=");
+        if (!k) continue;
+        if (props[k] === undefined) return false;
+        if (props[k] !== v) return false;
+    }
+    return true;
+}
+
+// For cases where you have props subset, prefer the "most specific" key (most conditions)
+function pickBestMatchingVariant(vars, props) {
+    let bestKey = null;
+    let bestScore = -1;
+
+    for (const key of Object.keys(vars)) {
+        if (!keyMatchesProps(key, props)) continue;
+
+        const score = key === "" ? 0 : key.split(",").length;
+        if (score > bestScore) {
+            bestScore = score;
+            bestKey = key;
+        }
+    }
+
+    return bestKey;
+}
+
+function getVariantModelId(blockstateJson, props = null, blockId = null) {
     const vars = blockstateJson?.variants;
     if (!vars) return null;
+
+    const nprops = normalizeProps(props);
+
+    // 1) If props were provided, try to match the exact/most-specific variant FIRST.
+    if (nprops) {
+        const bestKey = pickBestMatchingVariant(vars, nprops);
+        if (bestKey != null) {
+            const v = vars[bestKey];
+            const first = Array.isArray(v) ? v[0] : v;
+            return first && typeof first === "object" ? first : null;
+        }
+    }
 
     const entries = Object.entries(vars);
 
@@ -617,16 +860,16 @@ function getVariantModelId(blockstateJson) {
     // Buttons: prefer wall + south + unpowered
     {
         const v =
-            hardPick("face=wall,facing=south,powered=false") ||
-            hardPick("face=wall,facing=south,powered=true");
+            hardPick("face=wall,facing=north,powered=false") ||
+            hardPick("face=wall,facing=north,powered=true");
         if (v) return v;
     }
 
     // Stairs: prefer south + bottom + straight
     {
         const v =
-            hardPick("facing=south,half=bottom,shape=straight") ||
-            hardPick("facing=south,half=bottom,shape=straight,waterlogged=false");
+            hardPick("facing=north,half=bottom,shape=straight") ||
+            hardPick("facing=north,half=bottom,shape=straight,waterlogged=false");
         if (v) return v;
     }
 
@@ -698,7 +941,7 @@ function getVariantModelId(blockstateJson) {
                 (k) =>
                     k.includes("shape=straight") &&
                     k.includes("half=bottom") &&
-                    k.includes("facing=south")
+                    k.includes("facing=north")
             ) ||
             bestMatch(
                 (k) =>
@@ -724,7 +967,7 @@ function getVariantModelId(blockstateJson) {
         // 4) Buttons: strongly prefer wall + powered=false + facing=south
         {
             const v =
-                bestMatch(k => k.includes("face=wall") && k.includes("powered=false") && k.includes("facing=south")) ||
+                bestMatch(k => k.includes("face=wall") && k.includes("powered=false") && k.includes("facing=north")) ||
                 bestMatch(k => k.includes("face=wall") && k.includes("powered=false")) ||
                 bestMatch(k => k.includes("face=wall")) ||
                 bestMatch(k => k.includes("powered=false")); // last resort, but still better than random
@@ -755,7 +998,7 @@ function getVariantModelId(blockstateJson) {
             bestMatch(
                 (k) =>
                     k.includes("tilt=none") &&
-                    k.includes("facing=south")
+                    k.includes("facing=north")
             ) ||
             bestMatch((k) => k.includes("tilt=none"));
         if (v) return v;
@@ -775,8 +1018,8 @@ function getVariantModelId(blockstateJson) {
     // -----------------------------
     {
         const v =
-            bestMatch((k) => k.includes("facing=south")) ||
             bestMatch((k) => k.includes("facing=north")) ||
+            bestMatch((k) => k.includes("facing=south")) ||
             bestMatch((k) => k.includes("facing="));
         if (v) return v;
     }
@@ -809,7 +1052,8 @@ export async function loadBlockList() {
     return data.BLOCKS;
 }
 
-export async function makeCubeForBlock(state, blockId) {
+export async function makeCubeForBlock(state, blockId, props = null) {
     const atlas = state.atlas;
-    return await makeMeshForBlockId(atlas, blockId);
+    return await makeMeshForBlockId(atlas, blockId, props);
 }
+
