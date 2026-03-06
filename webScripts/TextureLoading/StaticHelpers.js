@@ -1,0 +1,229 @@
+import {resolveTextureRef} from "./ResolveHelpers.js";
+import {rotateQuadUV} from "./RotationHelpers.js";
+import {getTintForBlockFace} from "./ColormapHelper.js";
+import {rectToUVs} from "./UVRectHelpers.js";
+
+//Constants
+
+const BLOCKSTATES_BASE = "../Resources/blockstates/";
+const MODELS_BASE      = "../Resources/models/";
+
+// ---- caches ----
+const _blockstateCache = new Map(); // name -> json
+const _modelCache      = new Map(); // "minecraft:block/xyz" -> json
+
+
+
+
+// Helper Functions
+
+function blockIdToTexId(blockId) {
+    // "minecraft:stone" -> "minecraft:block/stone"
+    const name = blockId.startsWith("minecraft:") ? blockId.slice("minecraft:".length) : blockId;
+    return `minecraft:block/${name}`;
+}
+
+async function fetchJsonCached(url, cache) {
+    if (cache.has(url)) return cache.get(url);
+    const p = fetch(url).then(r => (r.ok ? r.json() : null)).catch(() => null);
+    cache.set(url, p);
+    return p;
+}
+
+function stripMcPrefix(id) {
+    return id.startsWith("minecraft:") ? id.slice("minecraft:".length) : id;
+}
+
+async function loadBlockstate(name) {
+    const url = `${BLOCKSTATES_BASE}${name}.json`;
+    return await fetchJsonCached(url, _blockstateCache);
+}
+
+async function loadModel(modelIdRaw) {
+    if (!modelIdRaw) return null;
+
+    // If someone passed the whole variant object, recover
+    if (typeof modelIdRaw === "object") modelIdRaw = modelIdRaw.model;
+
+    if (typeof modelIdRaw !== "string") return null;
+
+    // "minecraft:block/acacia_log" -> "block/acacia_log"
+    const p = modelIdRaw.startsWith("minecraft:")
+        ? modelIdRaw.slice("minecraft:".length)
+        : modelIdRaw;
+
+    const url = `${MODELS_BASE}${p}.json`; // MODELS_BASE ends with "/"
+
+    return await fetchJsonCached(url, _modelCache);
+}
+
+
+function inferCutout(model, blockId) {
+    const chain = (model.parentChain || []).join(" ").toLowerCase();
+    const bid = (blockId || "").toLowerCase();
+
+    // model parents that imply cutout geometry
+    if (chain.includes("cross") || chain.includes("tinted_cross")) return true;
+
+    // common block-name heuristics
+    if (bid.includes("_stem") || bid.includes("attached_") && bid.includes("_stem")) return true;
+    if (bid.includes("leaf_litter") || bid.includes("pink_petals") || bid.includes("dripleaf")) return true;
+    if (bid.includes("sapling") || bid.includes("flower") || bid.includes("tall_grass") || bid.includes("fern")) return true;
+    if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire")) return true;
+    if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes") || bid.includes("beetroot") || bid.includes("wart")) return true;
+    if (bid.includes("rail")) return true;
+    if (bid.includes("vine")) return true;
+    if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves")) return true;
+    if (bid.includes("seagrass") || bid.includes("vines") || bid.includes("potted") || bid.includes("coral") || bid.includes("calibrated")) return true;
+    if (bid.includes("spore") || bid.includes("pitcher") || bid.includes("chain") || bid.includes("sculk") || bid.includes("ladder")) return true;
+
+    return false;
+}
+
+
+
+// Texture Builders
+
+function shouldMirrorPerFaceCubes(model) {
+    // detect “individual block face” cubes by: multiple distinct textures across faces
+    // (ignore cross models etc — those are not cube faces)
+    if (!model || !model.elements || !Array.isArray(model.elements)) return false;
+
+    const chain = (model.parentChain || []).join(" ").toLowerCase();
+    if (chain.includes("cross") || chain.includes("tinted_cross")) return false;
+
+    const tex = model.textures || {};
+    const faces = model.elements?.[0]?.faces; // usually enough for cube models
+    if (!faces) return false;
+
+    const faceNames = ["north","south","east","west","up","down"];
+
+    const ids = new Set();
+    for (const fn of faceNames) {
+        const f = faces[fn];
+        if (!f?.texture) continue;
+
+        // resolveTextureRef handles "#side" indirections etc
+        const resolved = resolveTextureRef(tex, f.texture);
+        if (resolved) ids.add(resolved);
+    }
+
+    // “per-face” block if it uses >= 2 different texture keys across its faces
+    return ids.size >= 2;
+}
+
+
+function pushFaceIf(
+    faces, faceName, v0, v1, v2, v3,
+    textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+) {
+    const f = faces[faceName];
+    if (!f) return idxBase;
+
+    const texId = resolveTextureRef(textures, f.texture);
+    const entry = atlasMeta.textures[texId] || atlasMeta.textures["minecraft:block/debug"];
+
+    // atlas rect in TOP-LEFT space (because tex.flipY=false)
+    const r = rectToUVs(entry, atlasMeta.atlasW, atlasMeta.atlasH);
+    const U0 = r.u0, V0 = r.v0;
+    const U1 = r.u1, V1 = r.v1;
+
+    // model UVs in 0..16, TOP-LEFT origin
+    const uvRect = f.uv || [0, 0, 16, 16];
+
+    let [U0m, V0m, U1m, V1m] = uvRect;
+
+    if ((blockId || "").toLowerCase().includes("attached_") && (blockId || "").toLowerCase().includes("_stem")) {
+        console.log("[STEM FACE]",
+            { faceName, texId, uvRect, rot: f.rotation || 0, tint: f.tintindex, mirrorPerFace }
+        );
+    }
+
+// detect mirroring
+    const flipU = U0m > U1m;
+    const flipV = V0m > V1m;
+
+// normalize so U0m<=U1m and V0m<=V1m
+    if (flipU) [U0m, U1m] = [U1m, U0m];
+    if (flipV) [V0m, V1m] = [V1m, V0m];
+
+    const rot = f.rotation || 0;
+
+// 1) start with LOCAL quad coords in [0..1]
+    let quad = [
+        [0, 1], // bottom-left
+        [1, 1], // bottom-right
+        [1, 0], // top-right
+        [0, 0], // top-left
+    ];
+
+// 2) apply model rotation in LOCAL space
+    quad = rotateQuadUV(quad, rot);
+
+// 3) apply flip flags in LOCAL space
+    if (flipU) quad = quad.map(([u, v]) => [1 - u, v]);
+    if (flipV) quad = quad.map(([u, v]) => [u, 1 - v]);
+
+// 4) apply your mirrorPerFace in LOCAL space
+    if (mirrorPerFace) {
+        if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        } else {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+    if (isCrossModel) {
+        // Usually the "back" of a vertical plane is the opposing face.
+        // Flipping U here makes the texture read the same from both sides (Minecraft-like).
+        if (faceName === "south" || faceName === "east" || faceName === "west" || faceName === "north") {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+// 5) NOW map LOCAL quad into the model's uvRect (still normalized 0..1 within the texture)
+    const tu0 = U0m / 16, tv0 = V0m / 16;
+    const tu1 = U1m / 16, tv1 = V1m / 16;
+
+    quad = quad.map(([u, v]) => [
+        tu0 + u * (tu1 - tu0),
+        tv0 + v * (tv1 - tv0),
+    ]);
+
+    positions.push(...v0, ...v1, ...v2, ...v3);
+
+    const tint = (f.tintindex !== undefined)
+        ? getTintForBlockFace(blockId, props)
+        : { r: 1, g: 1, b: 1 };
+
+    for (let i = 0; i < 4; i++) {
+        colors.push(tint.r, tint.g, tint.b);
+    }
+
+    const du = U1 - U0;
+    const dv = V1 - V0;
+
+    for (const [uu, vv] of quad) {
+        uvs.push(U0 + uu * du, V0 + vv * dv);
+    }
+
+    const tri = {
+        north: [0,2,1, 0,3,2],
+        south: [0,2,1, 0,3,2],
+        west:  [0,2,1, 0,3,2],
+        east:  [0,2,1, 0,3,2],
+        up:    [0,2,1, 0,3,2],
+        down:  [0,2,1, 0,3,2],
+    }[faceName] || [0,2,1, 0,3,2];
+
+    indices.push(
+        idxBase + tri[0], idxBase + tri[1], idxBase + tri[2],
+        idxBase + tri[3], idxBase + tri[4], idxBase + tri[5]
+    );
+
+    return idxBase + 4;
+}
+
+
+
+export { shouldMirrorPerFaceCubes, pushFaceIf , stripMcPrefix, loadBlockstate, loadModel, inferCutout, blockIdToTexId};

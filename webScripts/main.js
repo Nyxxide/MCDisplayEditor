@@ -1,17 +1,18 @@
-// main.js
-// Entry point (ES module)
+// TODO: Make touchpad pinch/expand work like scroll, not resize page
+// TODO: Make group moves by -+ 0.25 instead of locking to 0.25. they dont adhere to regular block coordinates.
 
 import * as THREE from "three";
-import { state, initDom } from "./StateData.js";
-import { initScene } from "./SceneLogic.js";
-import { initSelectionLogic } from "./SelectionLogic.js";
-import { initTransformLogic} from "./TransformLogic.js";
-import { initImportLogic } from "./FileImportLogic.js";
-import { entityToSummonCmd, exportOneCommand } from "./CommandBlockLogic.js";
-import { initSaveLoadLogic } from "./SaveLoadLogic.js"
-import { loadBlockList } from "./TextureLoad.js";
-import { initPaletteUI } from "./PaletteUI.js";
-import { loadMcmetaAnimatedTexture, tickMcmetaAnimator } from "./BlockAnimationLogic.js";
+import { state, initDom } from "./Misc/StateData.js";
+import { initScene } from "./3DEditorSetup/SceneFunctions.js";
+import { initSelectionLogic } from "./3DEditorSetup/SelectionLogic.js";
+import { initTransformLogic} from "./3DEditorSetup/TransformLogic.js";
+import { initImportLogic } from "./FileHandling/FileImportLogic.js";
+import { entityToSummonCmd, exportOneCommand } from "./Misc/CommandBlockLogic.js";
+import { initSaveLoadLogic } from "./FileHandling/SaveLoadLogic.js"
+import { loadBlockList } from "./TextureLoading/TextureLoad.js";
+import { initPaletteUI } from "./TextureLoading/PaletteUI.js";
+import { loadMcmetaAnimatedTexture, tickMcmetaAnimator } from "./TextureLoading/BlockAnimationLogic.js";
+
 
 
 // -------------------- Init --------------------

@@ -9,7 +9,7 @@
 
 import * as THREE from "three";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
-import {gridFine, gridCoarse} from "./SceneLogic.js"
+import {gridFine, gridCoarse} from "./SceneFunctions.js"
 
 /** -------------------- Matrix helpers -------------------- */
 

@@ -4,8 +4,8 @@
 // Also upgrades ref instantiation to be template-based so undo/redo is stable.
 
 import * as THREE from "three";
-import { setObjectWorldMatrix } from "./TransformLogic.js";
-import { makeCubeForBlock } from "./TextureLoad.js"
+import { setObjectWorldMatrix } from "../3DEditorSetup/TransformLogic.js";
+import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
 
 /**
  * Save format:
@@ -22,35 +22,6 @@ export function initSaveLoadLogic(state) {
     // --- UI mount (top-right inside #ui) ---
     const uiRoot = document.getElementById("ui");
     if (!uiRoot) return;
-
-    // const wrap = document.createElement("div");
-    // wrap.id = "saveLoadWrap";
-    // wrap.style.position = "absolute";
-    // wrap.style.top = "12px";
-    // wrap.style.right = "12px";
-    // wrap.style.display = "flex";
-    // wrap.style.flexDirection = "column";
-    // wrap.style.gap = "6px";
-    // wrap.style.zIndex = "9999";
-    //
-    // const saveBtn = document.createElement("button");
-    // saveBtn.textContent = "Save";
-    // saveBtn.title = "Download a .json save";
-    //
-    // const loadBtn = document.createElement("button");
-    // loadBtn.textContent = "Load (merge)";
-    // loadBtn.title = "Load a .json save and merge into current scene";
-    //
-    // const fileInput = document.createElement("input");
-    // fileInput.type = "file";
-    // fileInput.accept = ".json,application/json";
-    // fileInput.style.display = "none";
-    //
-    // wrap.appendChild(saveBtn);
-    // wrap.appendChild(loadBtn);
-    // wrap.appendChild(fileInput);
-    // uiRoot.style.position = uiRoot.style.position || "relative";
-    // uiRoot.appendChild(wrap);
 
     const saveBtn = document.getElementById("saveBtn");
     const loadBtn = document.getElementById("loadBtn");

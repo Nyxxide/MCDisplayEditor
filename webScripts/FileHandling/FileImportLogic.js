@@ -8,7 +8,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
 
-import { setObjectWorldTRS } from "./TransformLogic.js";
+import { setObjectWorldTRS } from "../3DEditorSetup/TransformLogic.js";
 import { applyReferenceMaterialOverrides } from "./SaveLoadLogic.js"
 
 export function initImportLogic(state) {

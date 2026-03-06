@@ -1,4 +1,4 @@
-// SceneLogic.js
+// SceneFunctions.js
 // -------------
 // Builds the Three.js scene/camera/renderer, grids, outline pass, orbit controls, compass labels, etc.
 
@@ -8,13 +8,11 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
-import { loadAtlas } from "./TextureLoad.js";
+import { loadAtlas } from "../TextureLoading/TextureLoad.js";
 
 const GRID_COLOR = 0x8a8a8a;
 const gridFine = new THREE.GridHelper(40, 160, GRID_COLOR, GRID_COLOR);
 const gridCoarse = new THREE.GridHelper(40, 40, GRID_COLOR, GRID_COLOR);
-
-let markerAnim = null;
 
 export async function initScene(state) {
     const scene = new THREE.Scene();

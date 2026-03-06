@@ -10,7 +10,7 @@
 
 import * as THREE from "three";
 import { attachKeepWorldMatrix, setObjectWorldMatrix, setObjectWorldTRS } from "./TransformLogic.js";
-import { makeCubeForBlock } from "./TextureLoad.js"
+import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
 
 export function initSelectionLogic(state) {
     // --- Selection box element (DOM overlay) ---
@@ -68,8 +68,14 @@ export function initSelectionLogic(state) {
         return { x, y, ndcZ: v.z };
     }
 
-    function entityByMesh(mesh) {
-        return state.entities.find((x) => x.mesh === mesh) || null;
+    function entityByObject(obj) {
+        let p = obj;
+        while (p) {
+            const ent = state.entities.find((x) => x.mesh === p);
+            if (ent) return ent;
+            p = p.parent;
+        }
+        return null;
     }
 
     function meshById(id) {
@@ -598,7 +604,7 @@ export function initSelectionLogic(state) {
 
         const blockHits = raycaster.intersectObjects(
             state.entities.map((x) => x.mesh),
-            false
+            true
         );
 
         const refRoots = state.refs.map((r) => r.root);
@@ -668,7 +674,7 @@ export function initSelectionLogic(state) {
         // --- clicked a block ---
         state.selectedRefId = null;
 
-        const ent = entityByMesh(hit.object);
+        const ent = entityByObject(hit.object);
         if (!ent) return;
 
 
