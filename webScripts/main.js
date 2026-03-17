@@ -11,7 +11,7 @@ import { entityToSummonCmd, exportOneCommand } from "./Misc/CommandBlockLogic.js
 import { initSaveLoadLogic } from "./FileHandling/SaveLoadLogic.js"
 import { loadBlockList } from "./TextureLoading/TextureLoad.js";
 import { initPaletteUI } from "./TextureLoading/PaletteUI.js";
-import { loadMcmetaAnimatedTexture, tickMcmetaAnimator } from "./TextureLoading/BlockAnimationLogic.js";
+import { loadMcmetaAnimatedTexture, setMcmetaAnimatorFlip, tickMcmetaAnimator } from "./TextureLoading/BlockAnimationLogic.js";
 
 
 
@@ -29,13 +29,14 @@ markerAnim = await loadMcmetaAnimatedTexture(
     "/Resources/textures/block/command_block_front.png.mcmeta"
 );
 
+setMcmetaAnimatorFlip(markerAnim, true, true);
+
 const markerMat = new THREE.MeshBasicMaterial({
   map: markerAnim.tex,
   transparent: true
 });
 
 markerMat.toneMapped = false;
-
 
 
 markerMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), markerMat);

@@ -62,7 +62,9 @@ export async function loadMcmetaAnimatedTexture(pngUrl, mcmetaUrl) {
         // internal time accumulator in ticks
         t: 0,
         frameH,
-        imgH: img.height
+        imgH: img.height,
+        flipX: false,
+        flipY: false
     };
 
     // Set initial frame (index 0)
@@ -72,9 +74,22 @@ export async function loadMcmetaAnimatedTexture(pngUrl, mcmetaUrl) {
 }
 
 function setFrameByIndex(st, frameIndex) {
-    // frameIndex 0 = top frame in the PNG
-    const v = 1 - (frameIndex + 1) * (st.frameH / st.imgH);
-    st.tex.offset.set(0, v);
+    const frameV = st.frameH / st.imgH;
+
+    // Horizontal
+    const repeatX = st.flipX ? -1 : 1;
+    const offsetX = st.flipX ? 1 : 0;
+
+    // Vertical frame window
+    // frameIndex 0 = top frame in PNG
+    const v0 = 1 - (frameIndex + 1) * frameV; // bottom of selected frame in UV space
+    const v1 = v0 + frameV;                   // top of selected frame in UV space
+
+    const repeatY = st.flipY ? -frameV : frameV;
+    const offsetY = st.flipY ? v1 : v0;
+
+    st.tex.repeat.set(repeatX, repeatY);
+    st.tex.offset.set(offsetX, offsetY);
     st.tex.needsUpdate = true;
 }
 
@@ -93,4 +108,23 @@ export function tickMcmetaAnimator(st, dtSeconds) {
             break;
         }
     }
+}
+
+export function setMcmetaAnimatorFlip(st, flipX = false, flipY = false) {
+    st.flipX = flipX;
+    st.flipY = flipY;
+
+    // Re-apply current frame immediately
+    let acc = 0;
+    for (let i = 0; i < st.frames.length; i++) {
+        const f = st.frames[i];
+        acc += f.time;
+        if (st.t < acc) {
+            setFrameByIndex(st, f.index);
+            return;
+        }
+    }
+
+    // fallback
+    setFrameByIndex(st, st.frames[0].index);
 }

@@ -540,6 +540,192 @@ function makeBedMesh(bedTex, id) {
     return group;
 }
 
+function makeBannerMesh(bannerTex, id, bannerColor = "white") {
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 64;
+
+    const BANNER_COLORS = {
+        "black": "#191919",
+        "gray": "#4C4C4C",
+        "light_gray": "#999999",
+        "white": "#FFFFFF",
+        "pink": "#F27FA5",
+        "magenta": "#B24CD8",
+        "purple": "#7F3FB2",
+        "blue": "#334CB2",
+        "cyan": "#4C7F99",
+        "light_blue": "#6699D8",
+        "green": "#667F33",
+        "lime": "#7FCC19",
+        "yellow": "#E5E533",
+        "orange": "#D87F33",
+        "brown": "#664C33",
+        "red": "#993333",
+    };
+
+    const chosenHex = BANNER_COLORS[String(bannerColor).toLowerCase()] ?? "#FFFFFF";
+
+    // Inclusive pixel coordinates:
+    // (x0,y0) -> (x1,y1)
+    const rectInc = (x0, y0, x1, y1) => ({
+        u0: x0 / TEX_W,
+        v0: y0 / TEX_H,
+        u1: (x1 + 1) / TEX_W,
+        v1: (y1 + 1) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    // Cloth gets tinted
+    const clothMat = new THREE.MeshBasicMaterial({
+        map: bannerTex,
+        color: new THREE.Color(chosenHex),
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    clothMat.toneMapped = false;
+
+    // Posts stay untinted
+    const postMat = new THREE.MeshBasicMaterial({
+        map: bannerTex,
+        color: new THREE.Color("#FFFFFF"),
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    postMat.toneMapped = false;
+
+    //
+    // TEXTURE RECTS
+    //
+
+    // Cloth
+    const bannerFront  = rectInc(1, 1, 20, 40);
+    const bannerLeft   = rectInc(0, 1, 0, 40);
+    const bannerRight  = rectInc(21, 1, 21, 40);
+    const bannerTop    = rectInc(1, 0, 20, 0);
+    const bannerBottom = rectInc(21, 0, 40, 0);
+    const bannerBack   = rectInc(22, 1, 40, 40);
+
+    // Vertical post
+    const vertBack   = rectInc(50, 2, 51, 43);
+    const vertFront  = rectInc(46, 2, 47, 43);
+    const vertLeft   = rectInc(44, 2, 45, 43);
+    const vertRight  = rectInc(48, 2, 49, 43);
+    const vertTop    = rectInc(46, 0, 47, 1);
+    const vertBottom = rectInc(47, 0, 48, 1);
+
+    // Horizontal post
+    const horizBack   = rectInc(24, 44, 43, 45);
+    const horizFront  = rectInc(2, 44, 21, 45);
+    const horizLeft   = rectInc(0, 44, 1, 45);
+    const horizRight  = rectInc(22, 44, 23, 45);
+    const horizTop    = rectInc(2, 42, 21, 43);
+    const horizBottom = rectInc(22, 42, 41, 43);
+
+    //
+    // GEOMETRY
+    //
+
+    const cloth = makeBox(
+        [0, 4.5, 10],
+        [19, 41, 11],
+        clothMat
+    );
+
+    const vertPost = makeBox(
+        [8.5, 0, 8],
+        [10.5, 39, 10],
+        postMat
+    );
+
+    const horizPost = makeBox(
+        [0, 39, 8],
+        [19, 41, 10],
+        postMat
+    );
+
+    const cg = cloth.geometry;
+    const vg = vertPost.geometry;
+    const hg = horizPost.geometry;
+
+    //
+    // UV MAPPING
+    //
+
+    // Cloth
+    remapFace(cg, FACE.FRONT,  bannerFront,  true, true);
+    remapFace(cg, FACE.BACK,   bannerBack,   true, true);
+    remapFace(cg, FACE.LEFT,   bannerLeft,   true, true);
+    remapFace(cg, FACE.RIGHT,  bannerRight,  true, true);
+    remapFace(cg, FACE.TOP,    bannerTop,    false, true);
+    remapFace(cg, FACE.BOTTOM, bannerBottom, false, false);
+
+    // Vertical post
+    remapFace(vg, FACE.FRONT,  vertFront,  false, true);
+    remapFace(vg, FACE.BACK,   vertBack,   false, true);
+    remapFace(vg, FACE.LEFT,   vertLeft,   false, true);
+    remapFace(vg, FACE.RIGHT,  vertRight,  false, true);
+    remapFace(vg, FACE.TOP,    vertTop,    false, true);
+    remapFace(vg, FACE.BOTTOM, vertBottom, false, false);
+
+    // Horizontal post
+    remapFace(hg, FACE.FRONT,  horizFront,  true, true);
+    remapFace(hg, FACE.BACK,   horizBack,   false, true);
+    remapFace(hg, FACE.LEFT,   horizLeft,   true, false);
+    remapFace(hg, FACE.RIGHT,  horizRight,  true, false);
+    remapFace(hg, FACE.TOP,    horizTop,    false, true);
+    remapFace(hg, FACE.BOTTOM, horizBottom, false, false);
+
+    inner.add(cloth, vertPost, horizPost);
+
+    inner.scale.setScalar(0.75);
+    inner.scale.multiply(new THREE.Vector3(0.925, 1, 0.925));
+
+    inner.position.set(-0.06, -0.125, -0.04);
+
+    group.add(inner);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
 function makeSkullMesh(headTex, id, { mirrorSides = false } = {}) {
     const toBlock = (x) => x / 16 - 0.5;
 
@@ -748,4 +934,4 @@ function makeDragonHeadMesh(headTex) {
     return group;
 }
 
-export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeSkullMesh}
+export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh}

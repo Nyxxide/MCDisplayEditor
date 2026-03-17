@@ -5,7 +5,7 @@ import { rectToUVs, remapUVsToRect } from "./UVRectHelpers.js"
 import { resolveFullModel, resolveModelIdForBlock } from "./ResolveHelpers.js";
 import { applyElementRotation } from "./RotationHelpers.js"
 import { loadColormapsOnce } from "./ColormapHelper.js";
-import { loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeSkullMesh } from "./EntityBlockHelper.js";
+import { loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh } from "./EntityBlockHelper.js";
 
 export async function loadAtlas(atlasPngUrl, atlasJsonUrl) {
     const [atlasMeta, atlasTex] = await Promise.all([
@@ -249,6 +249,8 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
         const isAnyBed = bid.includes("_bed");
 
+        const isAnyBanner = bid.includes("_banner");
+
         if (isAnyChest){
             let texPath = "../Resources/textures/blockentity/chest/normal.png";
             if (bid.includes("ender_chest")) texPath = "../Resources/textures/blockentity/chest/ender.png";
@@ -328,6 +330,26 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             finalizeMesh(mesh, blockId);
             return mesh;
         }
+
+        if (isAnyBanner) {
+            let texPath = "../Resources/textures/blockentity/banner/banner_base.png";
+
+            const tex = await loadExternalTexture(texPath);
+
+            let colorIndex = bid.indexOf("_banner")
+            let color = bid.substring(10, colorIndex);
+
+            console.log(color);
+
+            const mesh = makeBannerMesh(tex, bid, color); // set true if you see left/right flipped
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        const texId = blockIdToTexId(blockId);
+        const mesh = makeTexturedCube(atlas, atlas.atlasMeta.textures[texId] ? texId : "minecraft:block/debug");
+        finalizeMesh(mesh, blockId);
+        return mesh;
 
 
         // (Later: skulls, signs, bells, etc)
