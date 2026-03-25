@@ -1252,9 +1252,9 @@ function makeCopperGolemMesh(tex, id) {
     inner.add(body, head, nose, leftArm, rightArm, leftLeg, rightLeg, pole, tip);
 
     // inner.rotation.x = Math.PI;
-    // inner.rotation.y = Math.PI;
-    inner.rotation.z = Math.PI;
-    inner.position.set(0, 0.5, 0);
+    inner.rotation.y = Math.PI;
+    // inner.rotation.z = Math.PI;
+    // inner.position.set(0, 0.5, 0);
 
     inner.updateMatrix();
     inner.matrixAutoUpdate = false;
