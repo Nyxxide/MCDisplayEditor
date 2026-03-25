@@ -13,8 +13,6 @@ const _blockstateCache = new Map(); // name -> json
 const _modelCache      = new Map(); // "minecraft:block/xyz" -> json
 
 
-
-
 // Helper Functions
 
 function blockIdToTexId(blockId) {
@@ -35,6 +33,7 @@ function stripMcPrefix(id) {
 }
 
 async function loadBlockstate(name) {
+    if(name==="beacon") name = "bcn";
     const url = `${BLOCKSTATES_BASE}${name}.json`;
     return await fetchJsonCached(url, _blockstateCache);
 }
@@ -72,7 +71,7 @@ function inferCutout(model, blockId) {
     if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire")) return true;
     if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes") || bid.includes("beetroot") || bid.includes("wart")) return true;
     if (bid.includes("rail")) return true;
-    if (bid.includes("vine")) return true;
+    if (bid.includes("vine") || bid.includes("cactus")) return true;
     if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves")) return true;
     if (bid.includes("seagrass") || bid.includes("vines") || bid.includes("potted") || bid.includes("coral") || bid.includes("calibrated")) return true;
     if (bid.includes("spore") || bid.includes("pitcher") || bid.includes("chain") || bid.includes("sculk") || bid.includes("ladder")) return true;

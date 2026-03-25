@@ -1,11 +1,11 @@
 import * as THREE from "three";
 
-import { shouldMirrorPerFaceCubes, pushFaceIf, inferCutout, blockIdToTexId } from "./StaticHelpers.js"
-import { rectToUVs, remapUVsToRect } from "./UVRectHelpers.js"
+import { shouldMirrorPerFaceCubes, pushFaceIf, inferCutout, blockIdToTexId } from "./StaticHelpers.js";
+import { rectToUVs, remapUVsToRect } from "./UVRectHelpers.js";
 import { resolveFullModel, resolveModelIdForBlock } from "./ResolveHelpers.js";
-import { applyElementRotation } from "./RotationHelpers.js"
+import { applyElementRotation } from "./RotationHelpers.js";
 import { loadColormapsOnce } from "./ColormapHelper.js";
-import { loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh } from "./EntityBlockHelper.js";
+import { loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh, makeShulkerMesh, makeCopperGolemMesh } from "./EntityBlockHelper.js";
 
 export async function loadAtlas(atlasPngUrl, atlasJsonUrl) {
     const [atlasMeta, atlasTex] = await Promise.all([
@@ -22,7 +22,7 @@ async function loadAtlasTexture(url) {
 
     const tex = new THREE.Texture(bitmap);
     tex.flipY = false;
-    tex.colorSpace = THREE.SRGBColorSpace; // ✅ IMPORTANT for correct colors
+    tex.colorSpace = THREE.SRGBColorSpace;
     tex.needsUpdate = true;
     tex.magFilter = THREE.NearestFilter;
     tex.minFilter = THREE.NearestFilter;
@@ -30,7 +30,6 @@ async function loadAtlasTexture(url) {
 
     return tex;
 }
-
 
 function makeTexturedCube(atlas, texId) {
     const { atlasMeta, atlasTex } = atlas;
@@ -41,7 +40,6 @@ function makeTexturedCube(atlas, texId) {
 
     const geom = new THREE.BoxGeometry(1, 1, 1).toNonIndexed();
 
-    // ✅ apply same tile to all faces using safe remap
     for (let f = 0; f < 6; f++) {
         remapUVsToRect(geom, f, u0, v0, u1, v1);
     }
@@ -50,26 +48,32 @@ function makeTexturedCube(atlas, texId) {
     return new THREE.Mesh(geom, mat);
 }
 
+function isBeaconGlassElement(el) {
+    const faces = el?.faces || {};
+    const faceList = Object.values(faces);
+    if (!faceList.length) return false;
+    return faceList.every(f => f && f.texture === "#glass");
+}
 
-function buildMeshFromModel(atlas, model, blockId, props) {
+function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
+    if (!model || !model.elements) return null;
+
     const { atlasMeta, atlasTex } = atlas;
 
-    // One geometry for whole model
     const positions = [];
     const uvs = [];
     const colors = [];
     const indices = [];
     let idxBase = 0;
+
     const mirrorPerFace = shouldMirrorPerFaceCubes(model);
     const chain = (model.parentChain || []).join(" ").toLowerCase();
     const isCrossModel = chain.includes("cross") || chain.includes("tinted_cross");
 
-    // Each element is a box from [from] to [to] in 0..16
     for (const el of model.elements) {
-        const from = el.from; // [x,y,z]
+        const from = el.from;
         const to = el.to;
 
-        // element center in block-space AFTER rotation (use the un-offset from/to center)
         const isUpperStem =
             (blockId || "").toLowerCase().includes("attached_") &&
             (
@@ -79,7 +83,6 @@ function buildMeshFromModel(atlas, model, blockId, props) {
                 el.faces?.west?.texture  === "#upperstem"
             );
 
-        // build the 8 corners in 0..16 space
         const X0 = from[0], Y0 = from[1], Z0 = from[2];
         const X1 = to[0],   Y1 = to[1],   Z1 = to[2];
 
@@ -87,56 +90,49 @@ function buildMeshFromModel(atlas, model, blockId, props) {
 
         const V = (x, y, z) => {
             let p = [x, y, z];
-            if (isUpperStem) {
-                p[0] += 7;
-            }
-
-            // keep your element rotation exactly as-is
+            if (isUpperStem) p[0] += 7;
             p = applyElementRotation(p, rot);
-
-            // convert to block-space (-0.5..+0.5)
             return [p[0] / 16 - 0.5, p[1] / 16 - 0.5, p[2] / 16 - 0.5];
         };
 
         const faces = el.faces || {};
-
         const bid = (blockId || "").toLowerCase();
         const isStemLike =
             bid.includes("attached_melon_stem") || bid.includes("attached_pumpkin_stem");
 
-        // north (-Z)
-            idxBase = pushFaceIf(faces, "north",
-            V(X0,Y0,Z0), V(X1,Y0,Z0), V(X1,Y1,Z0), V(X0,Y1,Z0),
+        idxBase = pushFaceIf(
+            faces, "north",
+            V(X0, Y0, Z0), V(X1, Y0, Z0), V(X1, Y1, Z0), V(X0, Y1, Z0),
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
         );
 
-        // south (+Z)
-        idxBase = pushFaceIf(faces, "south",
-            V(X1,Y0,Z1), V(X0,Y0,Z1), V(X0,Y1,Z1), V(X1,Y1,Z1),
+        idxBase = pushFaceIf(
+            faces, "south",
+            V(X1, Y0, Z1), V(X0, Y0, Z1), V(X0, Y1, Z1), V(X1, Y1, Z1),
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
         );
 
-        // west (-X)
-        idxBase = pushFaceIf(faces, "west",
-            V(X0,Y0,Z1), V(X0,Y0,Z0), V(X0,Y1,Z0), V(X0,Y1,Z1),
+        idxBase = pushFaceIf(
+            faces, "west",
+            V(X0, Y0, Z1), V(X0, Y0, Z0), V(X0, Y1, Z0), V(X0, Y1, Z1),
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
         );
 
-        // east (+X)
-        idxBase = pushFaceIf(faces, "east",
-            V(X1,Y0,Z0), V(X1,Y0,Z1), V(X1,Y1,Z1), V(X1,Y1,Z0),
+        idxBase = pushFaceIf(
+            faces, "east",
+            V(X1, Y0, Z0), V(X1, Y0, Z1), V(X1, Y1, Z1), V(X1, Y1, Z0),
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
         );
 
-        // up (+Y)
-        idxBase = pushFaceIf(faces, "up",
-            V(X0,Y1,Z0), V(X1,Y1,Z0), V(X1,Y1,Z1), V(X0,Y1,Z1),
+        idxBase = pushFaceIf(
+            faces, "up",
+            V(X0, Y1, Z0), V(X1, Y1, Z0), V(X1, Y1, Z1), V(X0, Y1, Z1),
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
         );
 
-        // down (-Y)
-        idxBase = pushFaceIf(faces, "down",
-            V(X0,Y0,Z1), V(X1,Y0,Z1), V(X1,Y0,Z0), V(X0,Y0,Z0),
+        idxBase = pushFaceIf(
+            faces, "down",
+            V(X0, Y0, Z1), V(X1, Y0, Z1), V(X1, Y0, Z0), V(X0, Y0, Z0),
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
         );
     }
@@ -148,20 +144,27 @@ function buildMeshFromModel(atlas, model, blockId, props) {
     geom.setIndex(indices);
     geom.computeVertexNormals();
 
-
     const rt = (model.render_type || "").toLowerCase();
     let isCutout = rt.includes("cutout");
     let isTranslucent = rt.includes("translucent");
 
-    if (!isCutout && !isTranslucent) {
-        const bid = (blockId || "").toLowerCase();
-        if (bid.includes("glass") || bid.includes("ice")) isTranslucent = true;
-        if (!isTranslucent) isCutout = inferCutout(model, blockId);
+    if (opts.forceOpaque) {
+        isCutout = false;
+        isTranslucent = false;
+    } else if (opts.forceTranslucent) {
+        isCutout = false;
+        isTranslucent = true;
+    } else if (opts.forceCutout) {
+        isCutout = true;
+        isTranslucent = false;
+    } else {
+        if (!isCutout && !isTranslucent) {
+            const bid = (blockId || "").toLowerCase();
+            if (bid.includes("glass") || bid.includes("ice")) isTranslucent = true;
+            if (!isTranslucent) isCutout = inferCutout(model, blockId);
+        }
     }
 
-// --- MATERIAL RULES ---
-// Cutout: discard pixels (no blending), single-sided, write depth
-// Translucent: blend, double-sided, don't write depth
     let mat;
     if (isTranslucent) {
         mat = new THREE.MeshBasicMaterial({
@@ -183,8 +186,7 @@ function buildMeshFromModel(atlas, model, blockId, props) {
             map: atlasTex,
             transparent: false,
             alphaTest: 0.5,
-            side: isStemLike ? THREE.DoubleSide : THREE.FrontSide,  // ✅ only stems
-            // side: THREE.DoubleSide,
+            side: isStemLike ? THREE.DoubleSide : THREE.FrontSide,
             depthWrite: true,
             depthTest: true,
         });
@@ -199,7 +201,7 @@ function buildMeshFromModel(atlas, model, blockId, props) {
         });
     }
 
-    mat.toneMapped = false; // keep textures “minecraft-like”
+    mat.toneMapped = false;
     mat.vertexColors = true;
 
     const mesh = new THREE.Mesh(geom, mat);
@@ -211,21 +213,68 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
     await loadColormapsOnce();
 
     const modelIdRaw = await resolveModelIdForBlock(blockId, props);
-    // if (!modelIdRaw) {
-    //     // fallback
-    //     const texId = blockIdToTexId(blockId);
-    //     const mesh = makeTexturedCube(atlas, atlas.atlasMeta.textures[texId] ? texId : "minecraft:block/debug");
-    //     finalizeMesh(mesh, blockId);
-    //     return mesh;
-    // }
 
     const model = await resolveFullModel(modelIdRaw);
-    // if (!model) {
-    //     const texId = blockIdToTexId(blockId);
-    //     const mesh = makeTexturedCube(atlas, atlas.atlasMeta.textures[texId] ? texId : "minecraft:block/debug");
-    //     finalizeMesh(mesh, blockId);
-    //     return mesh;
-    // }
+
+    const bidLower = (blockId || "").toLowerCase();
+
+    if (bidLower.includes("beacon") && model && model.elements) {
+        const glassElements = model.elements.filter(isBeaconGlassElement);
+        const solidElements = model.elements.filter(el => !isBeaconGlassElement(el));
+
+        const group = new THREE.Group();
+
+        if (solidElements.length) {
+            const solidModel = { ...model, elements: solidElements };
+            const solidMesh = buildMeshFromModel(atlas, solidModel, blockId, props, {
+                forceOpaque: true
+            });
+            if (solidMesh) group.add(solidMesh);
+        }
+
+        if (glassElements.length) {
+            const glassModel = { ...model, elements: glassElements };
+            const glassMesh = buildMeshFromModel(atlas, glassModel, blockId, props, {
+                forceTranslucent: true
+            });
+            if (glassMesh) {
+                glassMesh.renderOrder = 1;
+                group.add(glassMesh);
+            }
+        }
+
+        group.name = `BLOCKMESH:${blockId}:${crypto.randomUUID().slice(0, 8)}`;
+
+        const vx = model.variant?.x ?? 0;
+        let vy = model.variant?.y ?? 0;
+
+        if (blockId.includes("melon_stem") || blockId.includes("pumpkin_stem") ||
+            blockId.includes("attached_melon_stem") || blockId.includes("attached_pumpkin_stem")) {
+            vy = (vy + 180) % 360;
+        }
+
+        const rot = new THREE.Matrix4();
+        rot.makeRotationFromEuler(
+            new THREE.Euler(
+                THREE.MathUtils.degToRad(-vx),
+                THREE.MathUtils.degToRad(-vy),
+                0,
+                "YXZ"
+            )
+        );
+
+        group.traverse((o) => {
+            if (o.isMesh) {
+                o.geometry.applyMatrix4(rot);
+                o.position.set(0, 0, 0);
+                o.quaternion.identity();
+                o.scale.set(1, 1, 1);
+            }
+        });
+
+        finalizeMesh(group, blockId);
+        return group;
+    }
 
     if (!model || !model.elements) {
         const bid = (blockId || "").toLowerCase();
@@ -246,12 +295,12 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             bid === "minecraft:dragon_head";
 
         const isAnySign = bid.includes("sign");
-
         const isAnyBed = bid.includes("_bed");
-
         const isAnyBanner = bid.includes("_banner");
+        const isAnyShulker = bid.includes("shulker");
+        const isAnyCopperGolem = bid.includes("copper_golem_statue")
 
-        if (isAnyChest){
+        if (isAnyChest) {
             let texPath = "../Resources/textures/blockentity/chest/normal.png";
             if (bid.includes("ender_chest")) texPath = "../Resources/textures/blockentity/chest/ender.png";
             if (bid.includes("trapped_chest")) texPath = "../Resources/textures/blockentity/chest/trapped.png";
@@ -271,15 +320,13 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             if (bid.includes("creeper_head")) texPath = "../Resources/textures/blockentity/heads/creeper/creeper.png";
             if (bid.includes("skeleton_skull")) texPath = "../Resources/textures/blockentity/heads/skeleton/skeleton.png";
             if (bid.includes("wither_skeleton_skull")) texPath = "../Resources/textures/blockentity/heads/skeleton/wither_skeleton.png";
-
             if (bid.includes("zombie_head")) texPath = "../Resources/textures/blockentity/heads/zombie/zombie.png";
             if (bid.includes("player_head")) texPath = "../Resources/textures/blockentity/heads/player/steve.png";
-
             if (bid.includes("piglin_head")) texPath = "../Resources/textures/blockentity/heads/piglin/piglin.png";
             if (bid.includes("dragon_head")) texPath = "../Resources/textures/blockentity/heads/enderdragon/dragon.png";
 
             const tex = await loadExternalTexture(texPath);
-            const mesh = makeSkullMesh(tex, bid,{ mirrorSides: false } ); // set true if you see left/right flipped
+            const mesh = makeSkullMesh(tex, bid, { mirrorSides: false });
             finalizeMesh(mesh, blockId);
             return mesh;
         }
@@ -300,7 +347,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             if (bid.includes("mangrove_sign")) texPath = "../Resources/textures/blockentity/signs/mangrove.png";
 
             const tex = await loadExternalTexture(texPath);
-            const mesh = makeSignMesh(tex, bid ); // set true if you see left/right flipped
+            const mesh = makeSignMesh(tex, bid);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
@@ -324,48 +371,92 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             if (bid.includes("white_bed")) texPath = "../Resources/textures/blockentity/bed/white.png";
             if (bid.includes("yellow_bed")) texPath = "../Resources/textures/blockentity/bed/yellow.png";
 
-
             const tex = await loadExternalTexture(texPath);
-            const mesh = makeBedMesh(tex, bid ); // set true if you see left/right flipped
+            const mesh = makeBedMesh(tex, bid);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
 
         if (isAnyBanner) {
-            let texPath = "../Resources/textures/blockentity/banner/banner_base.png";
-
+            const texPath = "../Resources/textures/blockentity/banner/banner_base.png";
             const tex = await loadExternalTexture(texPath);
 
-            let colorIndex = bid.indexOf("_banner")
-            let color = bid.substring(10, colorIndex);
+            const colorIndex = bid.indexOf("_banner");
+            const color = bid.substring(10, colorIndex);
 
-            console.log(color);
-
-            const mesh = makeBannerMesh(tex, bid, color); // set true if you see left/right flipped
+            const mesh = makeBannerMesh(tex, bid, color);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
 
-        const texId = blockIdToTexId(blockId);
-        const mesh = makeTexturedCube(atlas, atlas.atlasMeta.textures[texId] ? texId : "minecraft:block/debug");
+        if (isAnyShulker) {
+            let texPath = "../Resources/textures/blockentity/shulkerbox/shulker.png";
+
+            if (bid.includes("black_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_black.png";
+            if (bid.includes("blue_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_blue.png";
+            if (bid.includes("brown_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_brown.png";
+            if (bid.includes("cyan_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_cyan.png";
+            if (bid.includes("gray_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_gray.png";
+            if (bid.includes("green_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_green.png";
+            if (bid.includes("light_blue_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_light_blue.png";
+            if (bid.includes("light_gray_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_light_gray.png";
+            if (bid.includes("lime_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_lime.png";
+            if (bid.includes("magenta_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_magenta.png";
+            if (bid.includes("orange_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_orange.png";
+            if (bid.includes("pink_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_pink.png";
+            if (bid.includes("purple_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_purple.png";
+            if (bid.includes("red_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_red.png";
+            if (bid.includes("white_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_white.png";
+            if (bid.includes("yellow_shulker_box")) texPath = "../Resources/textures/blockentity/shulkerbox/shulker_yellow.png";
+
+            const tex = await loadExternalTexture(texPath);
+            const mesh = makeShulkerMesh(tex, bid);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        if (isAnyCopperGolem) {
+            let texPath = "../Resources/textures/blockentity/copper_golem/copper_golem.png";
+
+            if (bid.includes("exposed")) texPath = "../Resources/textures/blockentity/copper_golem/exposed_copper_golem.png";
+            if (bid.includes("weathered")) texPath = "../Resources/textures/blockentity/copper_golem/weathered_copper_golem.png";
+            if (bid.includes("oxidized")) texPath = "../Resources/textures/blockentity/copper_golem/oxidized_copper_golem.png";
+
+            const tex = await loadExternalTexture(texPath);
+            const mesh = makeCopperGolemMesh(tex, bid);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        // Generic fallback for models with no elements (like conduit)
+        let texId = blockIdToTexId(blockId);
+
+        // If the normal block-id->texture-id mapping fails,
+        // try the model's particle texture if available.
+        if ((!texId || !atlas.atlasMeta.textures[texId]) && model?.textures?.particle) {
+            texId = model.textures.particle.startsWith("minecraft:")
+                ? model.textures.particle
+                : `minecraft:${model.textures.particle}`;
+        }
+
+        const mesh = makeTexturedCube(
+            atlas,
+            (texId && atlas.atlasMeta.textures[texId]) ? texId : "minecraft:block/debug"
+        );
+
         finalizeMesh(mesh, blockId);
         return mesh;
-
-
-        // (Later: skulls, signs, bells, etc)
     }
-
 
     if (blockId.includes("melon_stem") || blockId.includes("pumpkin_stem")) {
-        props = {age: "0"}
+        props = { age: "0" };
     }
     if (blockId.includes("attached_melon_stem") || blockId.includes("attached_pumpkin_stem")) {
-        props = {age: "7"}
+        props = { age: "7" };
     }
 
     const mesh = buildMeshFromModel(atlas, model, blockId, props);
-
-    mesh.name = `BLOCKMESH:${blockId}:${crypto.randomUUID().slice(0,8)}`;
+    mesh.name = `BLOCKMESH:${blockId}:${crypto.randomUUID().slice(0, 8)}`;
 
     const vx = model.variant?.x ?? 0;
     let vy = model.variant?.y ?? 0;
@@ -375,7 +466,6 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
         vy = (vy + 180) % 360;
     }
 
-    // finalizeMesh(mesh, blockId);
     const rot = new THREE.Matrix4();
     rot.makeRotationFromEuler(
         new THREE.Euler(
@@ -386,28 +476,24 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
         )
     );
 
-// bake rotation into the geometry-space matrix
     mesh.geometry.applyMatrix4(rot);
 
     const chain = (model.parentChain || []).join(" ").toLowerCase();
     const isCross = chain.includes("cross") || chain.includes("tinted_cross");
     if (isCross) {
-        const s = 1.30; // try 1.05..1.20
+        const s = 1.30;
         mesh.geometry.applyMatrix4(new THREE.Matrix4().makeScale(s, 1.0, s));
     }
 
-// keep the mesh transform clean (placement/rigging owns this)
-    mesh.position.set(0,0,0);
+    mesh.position.set(0, 0, 0);
     mesh.quaternion.identity();
-    mesh.scale.set(1,1,1);
+    mesh.scale.set(1, 1, 1);
 
     finalizeMesh(mesh, blockId);
-
     return mesh;
 }
 
 function finalizeMesh(mesh, blockId) {
-
     mesh.updateMatrix();
     mesh.matrixAutoUpdate = false;
 
@@ -415,8 +501,6 @@ function finalizeMesh(mesh, blockId) {
     mesh.userData.kind = "block";
     mesh.userData.blockId = blockId;
 }
-
-
 
 export async function loadBlockList() {
     const data = await fetch("../Data/json/BlockList.json").then(r => r.json());

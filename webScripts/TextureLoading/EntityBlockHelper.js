@@ -934,4 +934,342 @@ function makeDragonHeadMesh(headTex) {
     return group;
 }
 
-export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh}
+function makeShulkerMesh(shulkerTex, id) {
+    const group = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 64;
+
+    const rectInc = (x0, y0, x1, y1) => ({
+        u0: x0 / TEX_W,
+        v0: y0 / TEX_H,
+        u1: (x1 + 1) / TEX_W,
+        v1: (y1 + 1) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    // Texture regions you provided
+    const topFace      = rectInc(16, 0, 31, 15);
+    const bottomFace   = rectInc(32, 28, 47, 43);
+    const topHalfSide  = rectInc(0, 16, 15, 27);
+    const botHalfSide  = rectInc(0, 44, 15, 51);
+
+    const mat = new THREE.MeshBasicMaterial({
+        map: shulkerTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    mat.toneMapped = false;
+
+    // Closed shulker made from two overlapping halves.
+    // Total assembled height = 16.
+    // Overlap = 4.
+    // So:
+    // bottom half: y 0..10
+    // top half:    y 6..16
+    const bottomShell = makeBox(
+        [0, 0, 0],
+        [16, 8, 16],
+        mat
+    );
+
+    const topShell = makeBox(
+        [0, 4, 0],
+        [16, 16, 16],
+        mat
+    );
+
+    const bg = bottomShell.geometry;
+    const tg = topShell.geometry;
+
+    // Bottom shell:
+    // - use bottom strip on all side faces
+    // - use bottom texture on DOWN
+    // - leave UP unused
+    remapFace(bg, FACE.FRONT,  botHalfSide, false, true);
+    remapFace(bg, FACE.BACK,   botHalfSide, false, true);
+    remapFace(bg, FACE.LEFT,   botHalfSide, false, true);
+    remapFace(bg, FACE.RIGHT,  botHalfSide, false, true);
+    remapFace(bg, FACE.BOTTOM, bottomFace,  false, false);
+
+    // Top shell:
+    // - use top strip on all side faces
+    // - use top texture on UP
+    // - leave DOWN unused
+    remapFace(tg, FACE.FRONT,  topHalfSide, false, true);
+    remapFace(tg, FACE.BACK,   topHalfSide, false, true);
+    remapFace(tg, FACE.LEFT,   topHalfSide, false, true);
+    remapFace(tg, FACE.RIGHT,  topHalfSide, false, true);
+    remapFace(tg, FACE.TOP,    topFace,     false, true);
+
+    // Remove hidden/interior faces
+    const bottomNoTop = stripBoxFaces(bg, [FACE.TOP]);
+    const topNoBottom = stripBoxFaces(tg, [FACE.BOTTOM]);
+
+    bottomShell.geometry.dispose();
+    topShell.geometry.dispose();
+
+    bottomShell.geometry = bottomNoTop;
+    topShell.geometry = topNoBottom;
+
+    group.add(bottomShell, topShell);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeCopperGolemMesh(tex, id) {
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 64;
+
+    const rectInc = (x0, y0, x1, y1) => ({
+        u0: x0 / TEX_W,
+        v0: y0 / TEX_H,
+        u1: (x1 + 1) / TEX_W,
+        v1: (y1 + 1) / TEX_H,
+    });
+
+    const remap = (g, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(g, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const g = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        g.translate(cx, cy, cz);
+
+        const m = new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        m.toneMapped = false;
+
+        return new THREE.Mesh(g, m);
+    }
+
+    //
+    // === TEXTURE RECTS ===
+    //
+
+    // Antenna tip
+    const tipTop = rectInc(41,0,44,3);
+    const tipBot = rectInc(45,0,48,3);
+    const tipSide = rectInc(41,4,44,7);
+
+    // Antenna pole
+    const poleTop = rectInc(39,8,40,9);
+    const poleBot = rectInc(41,8,42,9);
+    const poleNS  = rectInc(39,10,40,13);
+    const poleEW  = rectInc(41,10,42,13);
+
+    // Head
+    const headTop = rectInc(10,0,17,9);
+    const headBot = rectInc(18,0,25,9);
+    const headS = rectInc(10,10,17,14);
+    const headN = rectInc(28,10,35,14);
+    const headW = rectInc(0,10,9,14);
+    const headE = rectInc(18,10,27,14);
+
+    // Nose
+    const noseTop = rectInc(58,0,59,1);
+    const noseBot = rectInc(60,0,61,1);
+    const noseSide = rectInc(58,2,59,4);
+
+    // Body
+    const bodyTB = rectInc(6,15,13,20);
+    const bodyNS = rectInc(6,21,13,26);
+    const bodyEW = rectInc(0,21,5,26);
+
+    // Left arm
+    const laTop = rectInc(40,16,42,19);
+    const laBot = rectInc(43,16,45,19);
+    const laN = rectInc(61,20,63,29);
+    const laS = rectInc(54,20,56,29);
+    const laE = rectInc(36,20,39,29);
+    const laW = rectInc(43,20,46,29);
+
+    // Right arm
+    const raTop = rectInc(40,16,42,19);
+    const raBot = rectInc(57,16,59,19);
+    const raS = rectInc(40,20,42,29);
+    const raN = rectInc(47,20,49,29);
+    const raW = rectInc(36,20,39,29);
+    const raE = rectInc(43,20,46,29);
+
+    // Left leg
+    const llTop = rectInc(4,27,7,30);
+    const llBot = rectInc(8,27,11,30);
+    const llS = rectInc(4,31,7,35);
+    const llN = rectInc(12,31,15,35);
+    const llW = rectInc(0,31,3,35);
+    const llE = rectInc(8,31,11,35);
+
+    // Right leg
+    const rlTop = rectInc(4,27,7,30);
+    const rlBot = rectInc(8,27,11,30);
+    const rlS = rectInc(4,31,7,35);
+    const rlN = rectInc(12,31,15,35);
+    const rlW = rectInc(0,31,3,35);
+    const rlE = rectInc(8,31,11,35);
+
+    //
+    // === GEOMETRY ===
+    // (rough proportions — tweak later if needed)
+    //
+
+    const body = makeBox([4,5,5],[12,11,11]);
+    const head = makeBox([4,11,3],[12,16,13]);
+    const nose = makeBox([7,10,12],[9,13,14]);
+
+    const leftArm  = makeBox([12,2,6],[15,12,10]);
+    const rightArm = makeBox([1,2,6],[4,12,10]);
+
+    const leftLeg  = makeBox([4,0,6],[8,5,10]);
+    const rightLeg = makeBox([8,0,6],[12,5,10]);
+
+    const pole = makeBox([7,16,7],[9,20,9]);
+    const tip  = makeBox([6,20,6],[10,24,10]);
+
+    //
+    // === UV MAPPING ===
+    //
+
+    const mapCube = (mesh, maps) => {
+        const g = mesh.geometry;
+        remap(g, FACE.TOP, maps.top, false, true);
+        remap(g, FACE.BOTTOM, maps.bottom, false, false);
+        remap(g, FACE.FRONT, maps.south, false, true);
+        remap(g, FACE.BACK, maps.north, false, true);
+        remap(g, FACE.LEFT, maps.west, false, true);
+        remap(g, FACE.RIGHT, maps.east, false, true);
+    };
+
+    mapCube(head, {top:headTop,bottom:headBot,south:headS,north:headN,west:headW,east:headE});
+    mapCube(body, {top:bodyTB,bottom:bodyTB,south:bodyNS,north:bodyNS,west:bodyEW,east:bodyEW});
+
+    // mapCube(leftArm,{top:laTop,bottom:laBot,south:laS,north:laN,west:laW,east:laE});
+    // mapCube(rightArm,{top:raTop,bottom:raBot,south:raS,north:raN,west:raW,east:raE});
+
+    // mapCube(leftLeg,{top:llTop,bottom:llBot,south:llS,north:llN,west:llW,east:llE});
+
+    // Left arm
+    const lag = leftArm.geometry;
+    remap(lag, FACE.TOP, laTop, true, true);
+    remap(lag, FACE.BOTTOM, laBot, true, true);
+    remap(lag, FACE.FRONT, laS, false, true);
+    remap(lag, FACE.BACK, laN, false, true);
+    remap(lag, FACE.LEFT, laW, false, true);
+    remap(lag, FACE.RIGHT, laE, true, true);
+
+    // Right arm
+    const rag = rightArm.geometry
+    remap(rag, FACE.TOP, raTop, false, true);
+    remap(rag, FACE.BOTTOM, raBot, true, true);
+    remap(rag, FACE.FRONT, raS, false, true);
+    remap(rag, FACE.BACK, raN, false, true);
+    remap(rag, FACE.LEFT, raW, false, true);
+    remap(rag, FACE.RIGHT, raE, false, true);
+
+    // Left leg
+    const lg = leftLeg.geometry;
+    remap(lg, FACE.TOP, llTop, false, true);
+    remap(lg, FACE.BOTTOM, llBot, false, false);
+    remap(lg, FACE.FRONT, llS, false, true);
+    remap(lg, FACE.BACK, llN, false, true, );   // mirror
+    remap(lg, FACE.LEFT, llW, false, true);   // mirror
+    remap(lg, FACE.RIGHT, llE, false, true);
+
+    // Right leg with mirroring
+    const rg = rightLeg.geometry;
+    remap(rg, FACE.TOP, rlTop, false, true);
+    remap(rg, FACE.BOTTOM, rlBot, false, false);
+    remap(rg, FACE.FRONT, rlS, false, true);
+    remap(rg, FACE.BACK, rlN, true, true, );   // mirror
+    remap(rg, FACE.LEFT, rlW, true, true);   // mirror
+    remap(rg, FACE.RIGHT, rlE, true, true);
+
+    // Nose
+    mapCube(nose,{top:noseTop,bottom:noseBot,south:noseSide,north:noseSide,west:noseSide,east:noseSide});
+
+    // Pole
+    mapCube(pole,{top:poleTop,bottom:poleBot,south:poleNS,north:poleNS,west:poleEW,east:poleEW});
+
+    // Tip
+    mapCube(tip,{top:tipTop,bottom:tipBot,south:tipSide,north:tipSide,west:tipSide,east:tipSide});
+
+    //
+    // === GROUP + FINAL ROTATION ===
+    //
+
+    inner.add(body, head, nose, leftArm, rightArm, leftLeg, rightLeg, pole, tip);
+
+    // inner.rotation.x = Math.PI;
+    // inner.rotation.y = Math.PI;
+    inner.rotation.z = Math.PI;
+    inner.position.set(0, 0.5, 0);
+
+    inner.updateMatrix();
+    inner.matrixAutoUpdate = false;
+
+    group.add(inner);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh, makeShulkerMesh, makeCopperGolemMesh}

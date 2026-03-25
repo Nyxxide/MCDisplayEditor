@@ -59,6 +59,7 @@ async function resolveFullModel(variant, maxDepth = 24) {
     if (!modelIdRaw) return null;
 
     let cur = modelIdRaw;
+
     let merged = {
         textures: {},
         elements: null,
@@ -69,6 +70,7 @@ async function resolveFullModel(variant, maxDepth = 24) {
 
     for (let i = 0; i < maxDepth; i++) {
         const m = await loadModel(cur);
+
         if (!m) return null;
 
         merged.textures = { ...merged.textures, ...(m.textures || {}) };
