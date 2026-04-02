@@ -41,6 +41,25 @@ async function resolveModelIdForBlock(blockId, props = null) {
         props = { age: "7" }; // blockstates usually store as strings in json keys
     }
 
+    // if (!props) {
+    //     const id = (blockId || "").toLowerCase();
+    //
+    //     if (
+    //         id.includes("mushroom_stem") ||
+    //         id.includes("red_mushroom_block") ||
+    //         id.includes("brown_mushroom_block")
+    //     ) {
+    //         props = {
+    //             north: "true",
+    //             south: "true",
+    //             east: "true",
+    //             west: "true",
+    //             up: "true",
+    //             down: "true"
+    //         };
+    //     }
+    // }
+
     if (bs.variants) return getVariantModelId(bs, props, blockId);
 
     // multipart minimal: pick first apply (you can improve later)

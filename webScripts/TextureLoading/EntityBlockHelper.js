@@ -219,6 +219,7 @@ function remapUVsToRectRot90(geom, faceIndex, u0, v0, u1, v1, turnsCW = 1) {
 
 function makeSingleChestMesh(chestTex) {
     const group = new THREE.Group();
+    const inner = new THREE.Group();
     const toBlock = (x) => x / 16 - 0.5;
 
     function makeBox(from, to, texU, texV, uvDims /* {w,h,d} */, removeFaces = []) {
@@ -274,7 +275,12 @@ function makeSingleChestMesh(chestTex) {
         []
     );
 
-    group.add(base, lid, knob);
+    inner.add(base, lid, knob);
+    inner.rotateY(Math.PI);
+    inner.updateMatrix();
+    inner.matrixAutoUpdate = false;
+
+    group.add(inner);
 
     group.traverse((o) => {
         if (o.isMesh) {
@@ -425,6 +431,7 @@ function makeBedMesh(bedTex, id) {
 
         const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
         geom.translate(cx, cy, cz);
+        geom.rotateY(Math.PI);
 
         return new THREE.Mesh(geom, material);
     }
@@ -439,12 +446,12 @@ function makeBedMesh(bedTex, id) {
     mat.toneMapped = false;
 
     // head/pillow half (bed block 1)
-    const bed1Top    = rect(6,  6, 16, 16);
-    const bed1Left   = rect(0,  6,  6, 16);
-    const bed1Front   = rect(6,  0, 16,  6);
-    const bed1Back  = rect(5, 53, 16, 6);
-    const bed1Right  = rect(22, 6,  6, 16);
-    const bed1Bottom = rect(28, 6, 16, 16);
+    // const bed1Top    = rect(6,  6, 16, 16);
+    // const bed1Left   = rect(0,  6,  6, 16);
+    // const bed1Front   = rect(6,  0, 16,  6);
+    // const bed1Back  = rect(5, 53, 16, 6);
+    // const bed1Right  = rect(22, 6,  6, 16);
+    // const bed1Bottom = rect(28, 6, 16, 16);
 
     // foot half (bed block 2)
     const bed2Top    = rect(6,  28, 16, 16);
@@ -462,20 +469,20 @@ function makeBedMesh(bedTex, id) {
     const legInside  = rect(56, 3, 3, 3);
 
 
-    const bed1 = makeBox([0, 3, 0],   [16, 9, 16], mat);    // head/pillow half at origin block
-    const bed2 = makeBox([0, 3, -16], [16, 9, 0],  mat);    // foot half one block north
+    // const bed1 = makeBox([0, 3, 0],   [16, 9, 16], mat);    // head/pillow half at origin block
+    const bed2 = makeBox([0, 3, 0], [16, 9, 16],  mat);    // foot half one block north
 
-    const g1 = bed1.geometry;
+    // const g1 = bed1.geometry;
     const g2 = bed2.geometry;
 
 
     // block 1 (head)
-    remapFace(g1, FACE.TOP,    bed1Top,    false, false);
-    remapFaceRot90(g1, FACE.LEFT,  bed1Left,  3);
-    remapFaceRot90(g1, FACE.RIGHT, bed1Right, 1);
-    remapFace(g1, FACE.BACK,  bed1Back,   true,  true);
-    remapFace(g1, FACE.FRONT,   bed1Front,   true,  false);     // south-facing visible end
-    remapFace(g1, FACE.BOTTOM, bed1Bottom, false, false);
+    // remapFace(g1, FACE.TOP,    bed1Top,    false, false);
+    // remapFaceRot90(g1, FACE.LEFT,  bed1Left,  3);
+    // remapFaceRot90(g1, FACE.RIGHT, bed1Right, 1);
+    // remapFace(g1, FACE.BACK,  bed1Back,   true,  true);
+    // remapFace(g1, FACE.FRONT,   bed1Front,   true,  false);     // south-facing visible end
+    // remapFace(g1, FACE.BOTTOM, bed1Bottom, false, false);
 
     // block 2 (foot)
     remapFace(g2, FACE.TOP,    bed2Top,    false, false);
@@ -486,29 +493,29 @@ function makeBedMesh(bedTex, id) {
     remapFace(g2, FACE.BOTTOM, bed2Bottom, false, false);
 
     // block 1 (left1/right1)
-    const leg1L = makeBox([0, 0, 13],  [3, 3, 16], mat);
-    const leg1R = makeBox([13, 0, 13], [16, 3, 16], mat);
-
-    remapFace(leg1L.geometry, FACE.TOP, legTop, false, true);
-    remapFace(leg1L.geometry, FACE.BOTTOM, legBottom, false, true);
-
-    remapFace(leg1L.geometry, FACE.LEFT, legOutside, true, true);
-    remapFace(leg1L.geometry, FACE.RIGHT, legInside, false, true);
-    remapFace(leg1L.geometry, FACE.FRONT, legOutside, false, true);
-    remapFace(leg1L.geometry, FACE.BACK, legInside, true, true);
-
-
-    remapFace(leg1R.geometry, FACE.TOP, legTop, false, true);
-    remapFace(leg1R.geometry, FACE.BOTTOM, legBottom, false, true);
-
-    remapFace(leg1R.geometry, FACE.LEFT, legInside, true, true);
-    remapFace(leg1R.geometry, FACE.RIGHT, legOutside, false, true);
-    remapFace(leg1R.geometry, FACE.FRONT, legOutside, true, true);
-    remapFace(leg1R.geometry, FACE.BACK, legInside, false, true);
+    // const leg1L = makeBox([0, 0, 13],  [3, 3, 16], mat);
+    // const leg1R = makeBox([13, 0, 13], [16, 3, 16], mat);
+    //
+    // remapFace(leg1L.geometry, FACE.TOP, legTop, false, true);
+    // remapFace(leg1L.geometry, FACE.BOTTOM, legBottom, false, true);
+    //
+    // remapFace(leg1L.geometry, FACE.LEFT, legOutside, true, true);
+    // remapFace(leg1L.geometry, FACE.RIGHT, legInside, false, true);
+    // remapFace(leg1L.geometry, FACE.FRONT, legOutside, false, true);
+    // remapFace(leg1L.geometry, FACE.BACK, legInside, true, true);
+    //
+    //
+    // remapFace(leg1R.geometry, FACE.TOP, legTop, false, true);
+    // remapFace(leg1R.geometry, FACE.BOTTOM, legBottom, false, true);
+    //
+    // remapFace(leg1R.geometry, FACE.LEFT, legInside, true, true);
+    // remapFace(leg1R.geometry, FACE.RIGHT, legOutside, false, true);
+    // remapFace(leg1R.geometry, FACE.FRONT, legOutside, true, true);
+    // remapFace(leg1R.geometry, FACE.BACK, legInside, false, true);
 
     // block 2 (left2/right2)
-    const leg2L = makeBox([0, 0, -16],  [3, 3, -13], mat);
-    const leg2R = makeBox([13, 0, -16], [16, 3, -13], mat);
+    const leg2L = makeBox([0, 0, 0],  [3, 3, 3], mat);
+    const leg2R = makeBox([13, 0, 0], [16, 3, 3], mat);
 
     remapFace(leg2L.geometry, FACE.TOP, legTop, false, true);
     remapFace(leg2L.geometry, FACE.BOTTOM, legBottom, false, true);
@@ -527,7 +534,8 @@ function makeBedMesh(bedTex, id) {
     remapFace(leg2R.geometry, FACE.FRONT, legInside, true, true);
     remapFace(leg2R.geometry, FACE.BACK, legOutside, false, true);
 
-    group.add(bed1, bed2, leg1L, leg1R, leg2L, leg2R);
+    // group.add(bed1, bed2, leg1L, leg1R, leg2L, leg2R);
+    group.add(bed2, leg2L, leg2R);
 
     group.traverse((o) => {
         if (o.isMesh) {
@@ -711,7 +719,9 @@ function makeBannerMesh(bannerTex, id, bannerColor = "white") {
     inner.scale.setScalar(0.75);
     inner.scale.multiply(new THREE.Vector3(0.925, 1, 0.925));
 
-    inner.position.set(-0.06, -0.125, -0.04);
+    inner.position.set(0.06, -0.125, 0.04);
+
+    inner.rotation.y = Math.PI;
 
     group.add(inner);
 
@@ -772,6 +782,7 @@ function makeSkullMesh(headTex, id, { mirrorSides = false } = {}) {
 
     // bake the “sit on floor” offset into vertices instead of mesh.position
     geom.translate(cx, cy, cz);
+    geom.rotateY(Math.PI);
 
     const mesh = new THREE.Mesh(geom, mat);
 
@@ -811,6 +822,7 @@ function makePiglinHeadMesh(headTex) {
         mat.toneMapped = false;
 
         geom.translate(cx, cy, cz);
+        geom.rotateY(Math.PI);
 
         return new THREE.Mesh(geom, mat);
     }
@@ -888,6 +900,7 @@ function makeDragonHeadMesh(headTex) {
         mat.toneMapped = false;
 
         geom.translate(cx, cy, cz);
+        geom.rotateY(Math.PI);
 
         return new THREE.Mesh(geom, mat);
     }
@@ -1195,11 +1208,6 @@ function makeCopperGolemMesh(tex, id) {
     mapCube(head, {top:headTop,bottom:headBot,south:headS,north:headN,west:headW,east:headE});
     mapCube(body, {top:bodyTB,bottom:bodyTB,south:bodyNS,north:bodyNS,west:bodyEW,east:bodyEW});
 
-    // mapCube(leftArm,{top:laTop,bottom:laBot,south:laS,north:laN,west:laW,east:laE});
-    // mapCube(rightArm,{top:raTop,bottom:raBot,south:raS,north:raN,west:raW,east:raE});
-
-    // mapCube(leftLeg,{top:llTop,bottom:llBot,south:llS,north:llN,west:llW,east:llE});
-
     // Left arm
     const lag = leftArm.geometry;
     remap(lag, FACE.TOP, laTop, true, true);
@@ -1251,10 +1259,7 @@ function makeCopperGolemMesh(tex, id) {
 
     inner.add(body, head, nose, leftArm, rightArm, leftLeg, rightLeg, pole, tip);
 
-    // inner.rotation.x = Math.PI;
     inner.rotation.y = Math.PI;
-    // inner.rotation.z = Math.PI;
-    // inner.position.set(0, 0.5, 0);
 
     inner.updateMatrix();
     inner.matrixAutoUpdate = false;
@@ -1272,4 +1277,405 @@ function makeCopperGolemMesh(tex, id) {
     return group;
 }
 
-export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh, makeShulkerMesh, makeCopperGolemMesh}
+function makeConduitMesh(conduitTex, id) {
+    const group = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 32;
+    const TEX_H = 16;
+
+    const rectInc = (x0, y0, x1, y1) => ({
+        u0: x0 / TEX_W,
+        v0: y0 / TEX_H,
+        u1: (x1 + 1) / TEX_W,
+        v1: (y1 + 1) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    const topRect = rectInc(12, 0, 17, 5);
+    const botRect = rectInc(6, 0, 11, 5);
+    const northRect = rectInc(6, 6, 11, 11);
+    const southRect = rectInc(18, 6, 23, 11);
+    const eastRect = rectInc(12, 6, 17, 11);
+    const westRect = rectInc(0, 6, 5, 11);
+
+    const mat = new THREE.MeshBasicMaterial({
+        map: conduitTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    mat.toneMapped = false;
+
+    // centered 6x6x6 cube
+    const conduit = makeBox(
+        [5, 5, 5],
+        [11, 11, 11],
+        mat
+    );
+
+    const g = conduit.geometry;
+
+    remapFace(g, FACE.TOP,    topRect,   false, false);
+    remapFace(g, FACE.BOTTOM, botRect,   false, true);
+    remapFace(g, FACE.FRONT,  southRect, true,  false);
+    remapFace(g, FACE.BACK,   northRect, true,  false);
+    remapFace(g, FACE.LEFT,   westRect,  true,  false);
+    remapFace(g, FACE.RIGHT,  eastRect,  true,  false);
+
+    group.add(conduit);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeDecoratedPotMesh(sideTex, baseTex, id) {
+    const group = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const SIDE_W = 16;
+    const SIDE_H = 16;
+
+    const BASE_W = 32;
+    const BASE_H = 32;
+
+    const rectInc = (x0, y0, x1, y1, texW, texH) => ({
+        u0: x0 / texW,
+        v0: y0 / texH,
+        u1: (x1 + 1) / texW,
+        v1: (y1 + 1) / texH,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+
+        const mesh = new THREE.Mesh(geom, material);
+        mesh.position.set(cx, cy, cz);
+        return mesh;
+    }
+
+    const sideMat = new THREE.MeshBasicMaterial({
+        map: sideTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    sideMat.toneMapped = false;
+
+    const baseMat = new THREE.MeshBasicMaterial({
+        map: baseTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    baseMat.toneMapped = false;
+
+    // UV rects
+    const potSide   = rectInc(1, 0, 14, 15, SIDE_W, SIDE_H);
+    const potTopBot = rectInc(0, 13, 13, 26, BASE_W, BASE_H);
+
+    const neckSide  = rectInc(0, 11, 5, 11, BASE_W, BASE_H);
+
+    const openSouth = rectInc(8, 8, 15, 10, BASE_W, BASE_H);
+    const openWest  = rectInc(0, 8, 7, 10, BASE_W, BASE_H);
+    const openEast  = rectInc(16, 8, 23, 10, BASE_W, BASE_H);
+    const openNorth = rectInc(24, 8, 31, 10, BASE_W, BASE_H);
+    const openTop   = rectInc(8, 0, 15, 7, BASE_W, BASE_H);
+    const openBot   = rectInc(16, 0, 23, 7, BASE_W, BASE_H);
+
+    //
+    // Geometry
+    // base    = 14w x 16h x 14d
+    // neck    = 6w  x 1h  x 6d
+    // opening = 8w  x 3h  x 8d
+    //
+
+    const baseSides = makeBox(
+        [1, 0, 1],
+        [15, 16, 15],
+        sideMat
+    );
+
+    const baseCaps = makeBox(
+        [1, 0, 1],
+        [15, 16, 15],
+        baseMat
+    );
+
+    const neck = makeBox(
+        [5, 16, 5],
+        [11, 17, 11],
+        baseMat
+    );
+
+    const opening = makeBox(
+        [4, 17, 4],
+        [12, 20, 12],
+        baseMat
+    );
+
+    // Base side shell UVs
+    const bsg = baseSides.geometry;
+    remapFace(bsg, FACE.FRONT, potSide, false, true);
+    remapFace(bsg, FACE.BACK,  potSide, false, true);
+    remapFace(bsg, FACE.LEFT,  potSide, false, true);
+    remapFace(bsg, FACE.RIGHT, potSide, false, true);
+
+    // Base caps UVs
+    const bcg = baseCaps.geometry;
+    remapFace(bcg, FACE.TOP,    potTopBot, false, true);
+    remapFace(bcg, FACE.BOTTOM, potTopBot, false, false);
+
+    // Neck UVs
+    const ng = neck.geometry;
+    remapFace(ng, FACE.FRONT, neckSide, false, true);
+    remapFace(ng, FACE.BACK,  neckSide, false, true);
+    remapFace(ng, FACE.LEFT,  neckSide, false, true);
+    remapFace(ng, FACE.RIGHT, neckSide, false, true);
+
+    // Opening UVs
+    const og = opening.geometry;
+    remapFace(og, FACE.FRONT,  openSouth, false, true);
+    remapFace(og, FACE.BACK,   openNorth, false, true);
+    remapFace(og, FACE.LEFT,   openWest,  false, true);
+    remapFace(og, FACE.RIGHT,  openEast,  false, true);
+    remapFace(og, FACE.TOP,    openTop,   false, true);
+    remapFace(og, FACE.BOTTOM, openBot,   false, false);
+
+    // Strip faces AFTER remapping so FACE indices still match
+    baseSides.geometry = stripBoxFaces(baseSides.geometry, [FACE.TOP, FACE.BOTTOM]);
+    baseCaps.geometry  = stripBoxFaces(baseCaps.geometry, [FACE.FRONT, FACE.BACK, FACE.LEFT, FACE.RIGHT]);
+    neck.geometry      = stripBoxFaces(neck.geometry, [FACE.TOP, FACE.BOTTOM]);
+
+    group.add(baseSides, baseCaps, neck, opening);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeShelfMesh(shelfTex, id, { facing = "north", front = "center" } = {}) {
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 32;
+    const TEX_H = 32;
+
+    const rect = (u0, v0, u1, v1) => ({
+        u0: u0 / TEX_W,
+        v0: v0 / TEX_H,
+        u1: u1 / TEX_W,
+        v1: v1 / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        const mesh = new THREE.Mesh(geom, material);
+        mesh.position.set(cx, cy, cz);
+        return mesh;
+    }
+
+    const mat = new THREE.MeshBasicMaterial({
+        map: shelfTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    mat.toneMapped = false;
+
+    //
+    // UVs taken directly from the model JSON you posted
+    //
+
+    // body
+    const bodyEast  = rect(16,   0,  19, 16);
+    const bodySouth = rect(16,   0, 32,   16);
+    const bodyWest  = rect(29,0, 32,   16);
+    const bodyUp    = rect(32,  10,  16,   7);
+    const bodyDown  = rect(32,  12,  16,   9);
+
+    // bottom lip
+    const bottomNorth = rect(0,   12, 16,   16);
+    const bottomEast  = rect(3, 12, 5, 16);
+    const bottomWest  = rect(11, 12, 13, 16);
+    const bottomUp    = rect(16,   7, 32, 9);
+    const bottomDown  = rect(32,  9, 16,  7);
+
+    // top lip
+    const topNorth = rect(0,   0, 16,   4);
+    const topEast  = rect(3, 0, 5, 4);
+    const topWest  = rect(11, 0, 13, 4);
+    const topUp    = rect(32,  12, 16,   10);
+    const topDown  = rect(16,   10, 32,  12);
+
+    // front insert variants
+    const frontRect = rect(0,4,16,12);
+    //
+    // Geometry
+    //
+
+    const body = makeBox(
+        [0, 0, 13],
+        [16, 16, 16],
+        mat
+    );
+
+    const bottomLip = makeBox(
+        [0, 0, 11],
+        [16, 4, 13],
+        mat
+    );
+
+    const topLip = makeBox(
+        [0, 12, 11],
+        [16, 16, 13],
+        mat
+    );
+
+    // thin front insert, inset where the game model places it
+    const frontInsert = makeBox(
+        [0, 4, 12.90],
+        [16, 12, 13.00],
+        mat
+    );
+
+    //
+    // UV remap first, strip after
+    //
+
+    // body
+    const bg = body.geometry;
+    remapFace(bg, FACE.RIGHT,  bodyEast,  false, true);
+    remapFace(bg, FACE.FRONT,  bodySouth, false, true);
+    remapFace(bg, FACE.LEFT,   bodyWest,  false, true);
+    remapFace(bg, FACE.TOP,    bodyUp,    false, false);
+    remapFace(bg, FACE.BOTTOM, bodyDown,  false, false);
+
+    // bottom lip
+    const blg = bottomLip.geometry;
+    remapFace(blg, FACE.BACK,   bottomNorth, false, true);
+    remapFace(blg, FACE.RIGHT,  bottomEast,  false, true);
+    remapFace(blg, FACE.LEFT,   bottomWest,  false, true);
+    remapFace(blg, FACE.TOP,    bottomUp,    false, false);
+    remapFace(blg, FACE.BOTTOM, bottomDown,  false, false);
+
+    // top lip
+    const tlg = topLip.geometry;
+    remapFace(tlg, FACE.BACK,   topNorth, false, true);
+    remapFace(tlg, FACE.RIGHT,  topEast,  false, true);
+    remapFace(tlg, FACE.LEFT,   topWest,  false, true);
+    remapFace(tlg, FACE.TOP,    topUp,    false, false);
+    remapFace(tlg, FACE.BOTTOM, topDown,  false, false);
+
+    // front insert
+    const fig = frontInsert.geometry;
+    remapFace(fig, FACE.BACK, frontRect, false, true);
+
+    // strip unused faces AFTER remap
+    body.geometry       = stripBoxFaces(body.geometry,       [FACE.BACK]);
+    bottomLip.geometry  = stripBoxFaces(bottomLip.geometry,  [FACE.FRONT]);
+    topLip.geometry     = stripBoxFaces(topLip.geometry,     [FACE.FRONT]);
+    frontInsert.geometry = stripBoxFaces(frontInsert.geometry, [FACE.RIGHT, FACE.LEFT, FACE.TOP, FACE.BOTTOM, FACE.FRONT]);
+
+    inner.add(body, bottomLip, topLip, frontInsert);
+
+    // rotate by facing
+    const yRot = {
+        north: 0,
+        east: -Math.PI / 2,
+        south: Math.PI,
+        west: Math.PI / 2,
+    }[facing] ?? 0;
+
+    inner.rotation.y = yRot;
+    inner.updateMatrix();
+    inner.matrixAutoUpdate = false;
+
+    group.add(inner);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh,
+    makeShulkerMesh, makeCopperGolemMesh, makeConduitMesh, makeDecoratedPotMesh, makeShelfMesh}

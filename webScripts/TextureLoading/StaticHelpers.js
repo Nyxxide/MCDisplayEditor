@@ -72,7 +72,7 @@ function inferCutout(model, blockId) {
     if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes") || bid.includes("beetroot") || bid.includes("wart")) return true;
     if (bid.includes("rail")) return true;
     if (bid.includes("vine") || bid.includes("cactus")) return true;
-    if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves")) return true;
+    if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves") || bid.includes("grate")) return true;
     if (bid.includes("seagrass") || bid.includes("vines") || bid.includes("potted") || bid.includes("coral") || bid.includes("calibrated")) return true;
     if (bid.includes("spore") || bid.includes("pitcher") || bid.includes("chain") || bid.includes("sculk") || bid.includes("ladder")) return true;
 
@@ -111,15 +111,37 @@ function shouldMirrorPerFaceCubes(model) {
     return ids.size >= 2;
 }
 
+function defaultFaceUV(faceName, from, to) {
+    const [x1, y1, z1] = from;
+    const [x2, y2, z2] = to;
+
+    switch (faceName) {
+        case "down":  return [x1, 16 - z2, x2, 16 - z1];
+        case "up":    return [x1, z1, x2, z2];
+        case "north": return [16 - x2, 16 - y2, 16 - x1, 16 - y1];
+        case "south": return [x1, 16 - y2, x2, 16 - y1];
+        case "west":  return [z1, 16 - y2, z2, 16 - y1];
+        case "east":  return [16 - z2, 16 - y2, 16 - z1, 16 - y1];
+        default:      return [0, 0, 16, 16];
+    }
+}
 
 function pushFaceIf(
     faces, faceName, v0, v1, v2, v3,
+    from, to,
     textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
 ) {
     const f = faces[faceName];
     if (!f) return idxBase;
 
-    const texId = resolveTextureRef(textures, f.texture);
+    let texRef = f.texture;
+
+    // tolerate bare texture keys like "all"
+    if (texRef && !texRef.startsWith("#") && textures[texRef]) {
+        texRef = `#${texRef}`;
+    }
+
+    const texId = resolveTextureRef(textures, texRef);
     const entry = atlasMeta.textures[texId] || atlasMeta.textures["minecraft:block/debug"];
 
     // atlas rect in TOP-LEFT space (because tex.flipY=false)
@@ -128,7 +150,7 @@ function pushFaceIf(
     const U1 = r.u1, V1 = r.v1;
 
     // model UVs in 0..16, TOP-LEFT origin
-    const uvRect = f.uv || [0, 0, 16, 16];
+    let uvRect = f.uv || defaultFaceUV(faceName, from, to);
 
     let [U0m, V0m, U1m, V1m] = uvRect;
 
@@ -138,17 +160,17 @@ function pushFaceIf(
         );
     }
 
-// detect mirroring
+    // detect mirroring
     const flipU = U0m > U1m;
     const flipV = V0m > V1m;
 
-// normalize so U0m<=U1m and V0m<=V1m
+    // normalize so U0m<=U1m and V0m<=V1m
     if (flipU) [U0m, U1m] = [U1m, U0m];
     if (flipV) [V0m, V1m] = [V1m, V0m];
 
     const rot = f.rotation || 0;
 
-// 1) start with LOCAL quad coords in [0..1]
+    // 1) start with LOCAL quad coords in [0..1]
     let quad = [
         [0, 1], // bottom-left
         [1, 1], // bottom-right
@@ -156,15 +178,20 @@ function pushFaceIf(
         [0, 0], // top-left
     ];
 
-// 2) apply model rotation in LOCAL space
+    // 2) apply model rotation in LOCAL space
     quad = rotateQuadUV(quad, rot);
 
-// 3) apply flip flags in LOCAL space
+    // 3) apply flip flags in LOCAL space
     if (flipU) quad = quad.map(([u, v]) => [1 - u, v]);
     if (flipV) quad = quad.map(([u, v]) => [u, 1 - v]);
 
-// 4) apply your mirrorPerFace in LOCAL space
-    if (mirrorPerFace) {
+    const usesAutoUV = !f.uv;
+    const applyCubeFaceMirror = mirrorPerFace || (usesAutoUV && !isCrossModel);
+
+    // 4) apply cube-face mirroring in LOCAL space
+    // sides -> horizontal flip
+    // top/bottom -> vertical flip
+    if (applyCubeFaceMirror) {
         if (faceName === "up" || faceName === "down") {
             quad = quad.map(([u, v]) => [u, 1 - v]);
         } else {
@@ -180,7 +207,17 @@ function pushFaceIf(
         }
     }
 
-// 5) NOW map LOCAL quad into the model's uvRect (still normalized 0..1 within the texture)
+    const isHeavyCore = (blockId || "").toLowerCase().includes("heavy_core");
+
+    if (isHeavyCore) {
+        if (faceName === "north" || faceName === "south" || faceName === "east" || faceName === "west") {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        } else if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    // 5) NOW map LOCAL quad into the model's uvRect (still normalized 0..1 within the texture)
     const tu0 = U0m / 16, tv0 = V0m / 16;
     const tu1 = U1m / 16, tv1 = V1m / 16;
 
@@ -225,4 +262,4 @@ function pushFaceIf(
 
 
 
-export { shouldMirrorPerFaceCubes, pushFaceIf , stripMcPrefix, loadBlockstate, loadModel, inferCutout, blockIdToTexId};
+export { shouldMirrorPerFaceCubes, pushFaceIf ,stripMcPrefix, loadBlockstate, loadModel, inferCutout, blockIdToTexId};
