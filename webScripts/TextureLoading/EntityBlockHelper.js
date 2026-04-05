@@ -1677,5 +1677,117 @@ function makeShelfMesh(shelfTex, id, { facing = "north", front = "center" } = {}
     return group;
 }
 
+function makeBellMesh(bellTex, id) {
+    const group = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 32;
+    const TEX_H = 32;
+
+    const rectInc = (x0, y0, x1, y1) => ({
+        u0: x0 / TEX_W,
+        v0: y0 / TEX_H,
+        u1: (x1 + 1) / TEX_W,
+        v1: (y1 + 1) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        const mesh = new THREE.Mesh(geom, material);
+        mesh.position.set(cx, cy, cz);
+        return mesh;
+    }
+
+    const mat = new THREE.MeshBasicMaterial({
+        map: bellTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    mat.toneMapped = false;
+
+    //
+    // UV rects
+    //
+
+    // bell body
+    const bodyTop = rectInc(6, 0, 11, 5);
+    const bodyBot = rectInc(12, 0, 17, 6);
+    const bodyN   = rectInc(18, 6, 23, 12);
+    const bodyS   = rectInc(6, 6, 11, 12);
+    const bodyE   = rectInc(12, 6, 17, 12);
+    const bodyW   = rectInc(0, 6, 5, 12);
+
+    // bell tip
+    const tipTop = rectInc(8, 13, 15, 20);
+    const tipBot = rectInc(16, 13, 23, 20);
+    const tipN   = rectInc(16, 21, 23, 22);
+    const tipS   = rectInc(8, 21, 15, 22);
+    const tipE   = rectInc(24, 21, 31, 22);
+    const tipW   = rectInc(0, 21, 7, 22);
+
+
+    const body = makeBox(
+        [5, 6, 5],
+        [11, 13, 11],
+        mat
+    );
+
+    const tip = makeBox(
+        [4, 6, 4],
+        [12, 4, 12],
+        mat
+    );
+
+    //
+    // UV mapping
+    //
+
+    const bg = body.geometry;
+    remapFace(bg, FACE.TOP,    bodyTop, true, true);
+    remapFace(bg, FACE.BOTTOM, bodyBot, false, false);
+    remapFace(bg, FACE.BACK,   bodyN,   true, false);
+    remapFace(bg, FACE.FRONT,  bodyS,   true, false);
+    remapFace(bg, FACE.RIGHT,  bodyE,   true, false);
+    remapFace(bg, FACE.LEFT,   bodyW,   true, false);
+
+    const tg = tip.geometry;
+    remapFace(tg, FACE.TOP,    tipTop, false, true);
+    remapFace(tg, FACE.BOTTOM, tipBot, true, false);
+    remapFace(tg, FACE.BACK,   tipN,   true, true);
+    remapFace(tg, FACE.FRONT,  tipS,   true, true);
+    remapFace(tg, FACE.RIGHT,  tipE,   true, true);
+    remapFace(tg, FACE.LEFT,   tipW,   true, true);
+
+    group.add(body, tip);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
 export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh,
-    makeShulkerMesh, makeCopperGolemMesh, makeConduitMesh, makeDecoratedPotMesh, makeShelfMesh}
+    makeShulkerMesh, makeCopperGolemMesh, makeConduitMesh, makeDecoratedPotMesh, makeShelfMesh, makeBellMesh}

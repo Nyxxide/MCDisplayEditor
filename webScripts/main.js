@@ -3,36 +3,7 @@
 // TODO: Make TAB + move lock into local block coordinates
 
 /*TODO: Texture Fixes;
-*   - Repeating Command Block (Fix Faces)
-*   - Impulse Command Block (Fix Faces)
-*   - Chain Command Block (Fix)
-*   - Lightning Rods (Rotate X 180)
-*   - Chorus Plant (Fix Texture Map)
-*   - Glass Panes (Fix Colored missing mid-section)
-*   - Iron/Copper Bars (Fix missing mid-section)
-*   - Crafter (Swap around faces)
-*   - Grass Block (Sides are black, not dirt)
-*   - Wildflower/Leaf Litter/Pink Petals (Rotate top texture Y 180)
-*   - Rail Variants (Rotate 90 Right facing North)
-*   - Rail (Rotate Y 180)
-*   - Amethyst Clusters (Rotate X 180)
-*   - Observer (Rotate X 90)
-*   - Nether Portal (Mirror Texture Faces Vertically)
-*   - Mushroom Blocks (Mirror Top/Bot Faces Vertically)
-*   - Piston (Faces aren't placed correctly)
-*   - Piston Head (Face North)
-*   - Turtle Egg (Mirror POSITION across the X axis - Over East/West Line)
-*   - Sea Pickle (Little tuft at the top missing)
-*   - Glazed Terracotta (might have misoriented faces)
-*   - End Rod (Rotate X 180)
-*   - Dispenser (Props orientation?)
-*   - Campfires (Need fire texture)
-*   - Redstone Torches (Off, need to be on)
-*   - Redstone Wire (Black 2d square. Fix texture)
-*   - Cocoa Fruit (Stem needs a 180 horiz flip)
-*   - Creaking Heart (Top and Bottom Texture wrong)
-*   - Vine (Apparently displayed like a block of vines, not one faced)
-*   - Add Golden Dandelion*/
+*   - Chorus Plant (Fix Texture Map)*/
 
 import * as THREE from "three";
 import { state, initDom } from "./Misc/StateData.js";

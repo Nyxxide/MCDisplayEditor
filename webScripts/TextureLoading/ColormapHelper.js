@@ -103,6 +103,10 @@ function getTintForBlockFace(blockId, props) {
         return { r: 0x20/255, g: 0x80/255, b: 0x30/255 };
     }
 
+    if (id.includes("redstone_wire")) {
+        return { r: 75/255, g: 0/255, b: 0/255 };
+    }
+
     if (id.includes("melon_stem") || id.includes("pumpkin_stem") ||
         id.includes("attached_melon_stem") || id.includes("attached_pumpkin_stem")) {
         return stemTintFromAge(props?.age);

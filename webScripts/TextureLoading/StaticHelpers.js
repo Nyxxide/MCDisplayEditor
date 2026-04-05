@@ -68,12 +68,12 @@ function inferCutout(model, blockId) {
     if (bid.includes("_stem") || bid.includes("attached_") && bid.includes("_stem")) return true;
     if (bid.includes("leaf_litter") || bid.includes("pink_petals") || bid.includes("dripleaf")) return true;
     if (bid.includes("sapling") || bid.includes("flower") || bid.includes("tall_grass") || bid.includes("fern")) return true;
-    if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire")) return true;
+    if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire") || bid.includes("bars")) return true;
     if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes") || bid.includes("beetroot") || bid.includes("wart")) return true;
-    if (bid.includes("rail")) return true;
-    if (bid.includes("vine") || bid.includes("cactus")) return true;
+    if (bid.includes("rail") || bid.includes("redstone_wire") || bid.includes("stonecutter")) return true;
+    if (bid.includes("vine") || bid.includes("cactus") || bid.includes("cocoa") || bid.includes("grass_block")) return true;
     if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves") || bid.includes("grate")) return true;
-    if (bid.includes("seagrass") || bid.includes("vines") || bid.includes("potted") || bid.includes("coral") || bid.includes("calibrated")) return true;
+    if (bid.includes("seagrass") || bid.includes("vine") || bid.includes("potted") || bid.includes("coral") || bid.includes("calibrated")) return true;
     if (bid.includes("spore") || bid.includes("pitcher") || bid.includes("chain") || bid.includes("sculk") || bid.includes("ladder")) return true;
 
     return false;
@@ -129,9 +129,37 @@ function defaultFaceUV(faceName, from, to) {
 function pushFaceIf(
     faces, faceName, v0, v1, v2, v3,
     from, to,
-    textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+    textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+    sourceModelId = "",
+    sourceWhen = {}
 ) {
-    const f = faces[faceName];
+    const sourceId = (sourceModelId || "").toLowerCase();
+    const when = sourceWhen || {};
+
+    const isChorusCenter = sourceId.endsWith("chorus_plant_noside");
+    const isChorusThin   = sourceId.endsWith("chorus_plant_noside1");
+    const isChorusBulge  = sourceId.endsWith("chorus_plant_noside2");
+    const isChorusThin2  = sourceId.endsWith("chorus_plant_noside3");
+
+    let remappedFaceName = faceName;
+
+    if (isChorusThin && when.south === "false") {
+        if (faceName === "up") remappedFaceName = "down";
+        else if (faceName === "down") remappedFaceName = "up";
+    }
+
+    if (isChorusBulge && when.up === "false"){
+        if (faceName !== "up" && faceName !== "north") remappedFaceName = "up";
+    }
+
+    if (isChorusBulge && when.west === "false") {
+        if (faceName === "up" || faceName === "down") {
+            remappedFaceName = "west";
+        }
+    }
+
+
+    const f = faces[remappedFaceName];
     if (!f) return idxBase;
 
     let texRef = f.texture;
@@ -150,13 +178,13 @@ function pushFaceIf(
     const U1 = r.u1, V1 = r.v1;
 
     // model UVs in 0..16, TOP-LEFT origin
-    let uvRect = f.uv || defaultFaceUV(faceName, from, to);
+    let uvRect = f.uv || defaultFaceUV(remappedFaceName, from, to);
 
     let [U0m, V0m, U1m, V1m] = uvRect;
 
     if ((blockId || "").toLowerCase().includes("attached_") && (blockId || "").toLowerCase().includes("_stem")) {
         console.log("[STEM FACE]",
-            { faceName, texId, uvRect, rot: f.rotation || 0, tint: f.tintindex, mirrorPerFace }
+            { faceName, remappedFaceName, texId, uvRect, rot: f.rotation || 0, tint: f.tintindex, mirrorPerFace }
         );
     }
 
@@ -189,10 +217,8 @@ function pushFaceIf(
     const applyCubeFaceMirror = mirrorPerFace || (usesAutoUV && !isCrossModel);
 
     // 4) apply cube-face mirroring in LOCAL space
-    // sides -> horizontal flip
-    // top/bottom -> vertical flip
     if (applyCubeFaceMirror) {
-        if (faceName === "up" || faceName === "down") {
+        if (remappedFaceName === "up" || remappedFaceName === "down") {
             quad = quad.map(([u, v]) => [u, 1 - v]);
         } else {
             quad = quad.map(([u, v]) => [1 - u, v]);
@@ -200,14 +226,88 @@ function pushFaceIf(
     }
 
     if (isCrossModel) {
-        // Usually the "back" of a vertical plane is the opposing face.
-        // Flipping U here makes the texture read the same from both sides (Minecraft-like).
-        if (faceName === "south" || faceName === "east" || faceName === "west" || faceName === "north") {
+        if (
+            remappedFaceName === "south" ||
+            remappedFaceName === "east" ||
+            remappedFaceName === "west" ||
+            remappedFaceName === "north"
+        ) {
             quad = quad.map(([u, v]) => [1 - u, v]);
         }
     }
 
     const isHeavyCore = (blockId || "").toLowerCase().includes("heavy_core");
+    const isPortal = (blockId || "").toLowerCase().includes("portal");
+    const isRail = (blockId || "").toLowerCase().includes("rail");
+    const isLitter = (blockId || "").toLowerCase().includes("leaf_litter") ||
+        (blockId || "").toLowerCase().includes("pink_petals") ||
+        (blockId || "").toLowerCase().includes("wildflowers");
+    const isGlazedTerracotta = (blockId || "").toLowerCase().includes("glazed_terracotta");
+    const isCocoa = (blockId || "").toLowerCase().includes("cocoa");
+    const isRedstoneWire = (blockId || "").toLowerCase().includes("redstone_wire");
+    const isPiston = (blockId || "").toLowerCase().includes("piston");
+    const isCommandBlock = (blockId || "").toLowerCase().includes("command_block");
+    const isEndPortalFrame = (blockId || "").toLowerCase().includes("end_portal_frame");
+    const isTestBlock = (blockId || "").toLowerCase().includes("test_block") || (blockId || "").toLowerCase().includes("test_instance_block");
+
+    const canonicalQuad = [
+        [0, 1],
+        [1, 1],
+        [1, 0],
+        [0, 0],
+    ];
+
+    // Existing chorus UV experiment block:
+    // Note this is still UV override, not face remap.
+    if (isChorusCenter && faceName === "north") {
+        if (when.down === "false") {
+            quad = canonicalQuad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isChorusThin && faceName === "down" || isChorusThin && faceName === "up") {
+        if (when.south === "false") {
+            quad = canonicalQuad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+    if (isChorusBulge && when.west === "false") {
+        if (faceName === "up") {
+            quad = rotateQuadUV(canonicalQuad, 90);
+            // quad = quad.map(([u, v]) => [u,1 -  v]);
+        }
+        if (faceName === "down") {
+            quad = rotateQuadUV(canonicalQuad, 270);
+            // quad = quad.map(([u, v]) => [u,1 -  v]);
+        }
+    }
+
+    if (isChorusBulge && when.up === "false") {
+        if (faceName === "north") {
+            quad = canonicalQuad.map(([u, v]) => [u, 1 - v]);
+        }
+        if (faceName === "down"){
+            quad = rotateQuadUV(canonicalQuad, 180);
+            quad = quad.map(([u, v]) => [u,1 -  v]);
+        }
+        if (faceName === "west") {
+            quad = rotateQuadUV(canonicalQuad, 270);
+            quad = quad.map(([u, v]) => [u,1 -  v]);
+        }
+        if (faceName === "east") {
+            quad = rotateQuadUV(canonicalQuad, 90);
+            quad = quad.map(([u, v]) => [u,1 -  v]);
+        }
+    }
+
+    // if (isChorusBulge && faceName === "north") {
+    //     console.log(sourceId, faceName);
+    //     // force this face to sample a tiny corner of the texture
+    //     U0m = 0;
+    //     V0m = 0;
+    //     U1m = 2;
+    //     V1m = 2;
+    // }
 
     if (isHeavyCore) {
         if (faceName === "north" || faceName === "south" || faceName === "east" || faceName === "west") {
@@ -217,7 +317,58 @@ function pushFaceIf(
         }
     }
 
-    // 5) NOW map LOCAL quad into the model's uvRect (still normalized 0..1 within the texture)
+    if (isPortal) {
+        if (faceName === "north" || faceName === "south") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isRail || isTestBlock) {
+        if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isLitter || isRedstoneWire) {
+        if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isGlazedTerracotta) {
+        if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+        if (faceName === "east" || faceName === "west") {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+        if (faceName === "north" || faceName === "south") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isCocoa) {
+        if (faceName === "up" || faceName === "down") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+        if (faceName === "east" || faceName === "west" || faceName === "north" || faceName === "south") {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+    if (isPiston || isCommandBlock) {
+        if (faceName === "east" || faceName === "west") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isEndPortalFrame) {
+        if (faceName === "north" || faceName === "south") {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    // 5) NOW map LOCAL quad into the model's uvRect
     const tu0 = U0m / 16, tv0 = V0m / 16;
     const tu1 = U1m / 16, tv1 = V1m / 16;
 

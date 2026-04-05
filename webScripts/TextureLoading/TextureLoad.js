@@ -14,7 +14,10 @@ import {
     makeSkullMesh,
     makeShulkerMesh,
     makeCopperGolemMesh,
-    makeConduitMesh, makeDecoratedPotMesh, makeShelfMesh
+    makeConduitMesh,
+    makeDecoratedPotMesh,
+    makeShelfMesh,
+    makeBellMesh
 } from "./EntityBlockHelper.js";
 
 export async function loadAtlas(atlasPngUrl, atlasJsonUrl) {
@@ -76,12 +79,45 @@ function matchesWhenClause(when, props = {}) {
     return true;
 }
 
-function pickMultipartApply(apply) {
-    if (!Array.isArray(apply)) return apply && typeof apply === "object" ? apply : null;
+function pickMultipartApply(part, blockId, props = {}) {
+    const apply = part?.apply;
+    if (!Array.isArray(apply)) {
+        return apply && typeof apply === "object" ? apply : null;
+    }
 
     if (!apply.length) return null;
 
-    // Prefer highest weight if present, otherwise first entry
+    const bid = (blockId || "").toLowerCase();
+
+    if (bid.includes("chorus_plant")) {
+        const when = part?.when || {};
+
+        const pickBySuffix = (suffix) =>
+            apply.find(a => (a?.model || "").endsWith(suffix));
+
+        const pickBase = () =>
+            pickBySuffix("chorus_plant_noside") || apply[0];
+
+        const pickThin = () =>
+            pickBySuffix("chorus_plant_noside1") ||
+            pickBySuffix("chorus_plant_noside3") ||
+            pickBase();
+
+        const pickBulge = () =>
+            pickBySuffix("chorus_plant_noside2") || pickBase();
+
+        if (when.north === "false") return pickThin();
+        if (when.south === "false") return pickThin();
+
+        if (when.west === "false") return pickBulge();
+        if (when.up === "false")   return pickBulge();
+
+        if (when.east === "false") return pickBase();
+        if (when.down === "false") return pickBase();
+
+        return pickBase();
+    }
+
     let best = apply[0];
     let bestWeight = best?.weight ?? 1;
 
@@ -96,7 +132,7 @@ function pickMultipartApply(apply) {
     return best && typeof best === "object" ? best : null;
 }
 
-function normalizeMultipartApplies(bs, props = {}) {
+function normalizeMultipartApplies(bs, props = {}, blockId = "") {
     props = props ?? {};
 
     if (!bs?.multipart) return [];
@@ -106,8 +142,8 @@ function normalizeMultipartApplies(bs, props = {}) {
     for (const part of bs.multipart) {
         if (!matchesWhenClause(part.when, props)) continue;
 
-        const picked = pickMultipartApply(part.apply);
-        if (picked) out.push(picked);
+        const picked = pickMultipartApply(part, blockId, props);
+        if (picked) out.push({ apply: picked, when: part.when || {} });
     }
 
     return out;
@@ -140,6 +176,196 @@ function defaultMultipartPropsForBlock(blockId) {
             up: "false",
             down: "false"
         };
+    }
+
+    if (id.includes("bars")){
+        return {
+            north: "false",
+            south: "false",
+            east: "false",
+            west: "false",
+            waterlogged: "false"
+        };
+    }
+
+    if (id.includes("pane")){
+        return {
+            north: "false",
+            south: "false",
+            east: "false",
+            west: "false",
+            waterlogged: "false"
+        };
+    }
+
+    if (id.includes("sea_pickle")) {
+        return {
+            waterlogged: "true",
+            pickles: 1
+        }
+    }
+
+    if (id.includes("turtle_egg")) {
+        return {
+            hatch: 0,
+            eggs: 1
+        }
+    }
+
+    if (id.includes("vine")) {
+        return {
+            north: "false",
+            south: "false",
+            west: "false",
+            east: "false",
+            up: "false",
+        }
+    }
+
+    if (id.includes("creaking_heart")) {
+        return {
+            creaking_heart_state: "uprooted",
+            axis: "y"
+        }
+    }
+
+    if (id.includes("dispenser") || id.includes("dropper")) {
+        return {
+            facing: "north"
+        }
+    }
+
+    if (id.includes("command_block")) {
+        return {
+            conditional: "false",
+            facing: "north"
+        }
+    }
+
+    if (id.includes("piston")) {
+        if (id.includes("head")){
+            return {
+                short: "false",
+                type: "normal",
+                facing: "north"
+            }
+        }
+        else{
+            return {
+                extended: "false",
+                facing: "north"
+            }
+        }
+    }
+
+    if (id.includes("tripwire_hook")) {
+        return {
+            powered: "false",
+            attached: "false",
+            facing: "north"
+        }
+    }
+
+    if (id.includes("comparator")) {
+        return {
+            powered: "false",
+            facing: "north",
+            mode: "compare"
+        }
+    }
+
+    if (id.includes("repeater")) {
+        return {
+            powered: "false",
+            facing: "north",
+            locked: "false",
+            delay: 1
+        }
+    }
+
+    if (id.includes("bell")) {
+        return {
+            attachment: "floor",
+            facing: "north"
+        }
+    }
+
+    if (id.includes("grindstone")) {
+        return {
+            face: "wall",
+            facing: "north"
+        }
+    }
+
+    if (id.includes("amethyst_bud") || id.includes("amethyst_cluster")) {
+        return {
+            waterlogged: "false",
+            facing: "up"
+        }
+    }
+
+    if (id.includes("lightning_rod")) {
+        return {
+            powered: "false",
+            waterlogged: "false",
+            facing: "up"
+        }
+    }
+
+    if (id.includes("end_rod")) {
+        return {
+            facing: "up"
+        }
+    }
+
+    if (id.includes("rail")) {
+        if (id.includes("powered") || id.includes("activator") || id.includes("detector")) {
+            return {
+                waterlogged: "false",
+                shape: "north_south",
+                powered: "false"
+            }
+        }
+        else {
+            return {
+                waterlogged: "false",
+                shape: "north_south"
+            }
+        }
+    }
+
+    if (id.includes("test_block") || id.includes("test_instance_block")) {
+        return {
+            mode: "start"
+        }
+    }
+
+    if (id.includes("observer")) {
+        return {
+            facing: "south",
+            powered: false
+        }
+    }
+
+    if (id.includes("crafter")) {
+        return {
+            orientation: "north_up",
+            triggered: "false",
+            crafting: "false"
+        }
+    }
+
+    if (id.includes("redstone_torch")) {
+        return {
+            lit: "true"
+        };
+    }
+
+    if (id.includes("redstone_wall_torch") || id.includes("campfire") || id.includes("soul_campfire")) {
+        return {
+            lit: "true",
+            facing: "north"
+        }
     }
 
     if (id.includes("wall")) {
@@ -207,42 +433,48 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             faces, "north",
             V(X0, Y0, Z0), V(X1, Y0, Z0), V(X1, Y1, Z0), V(X0, Y1, Z0),
             from, to,
-            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+            opts.sourceModelId, opts.sourceWhen
         );
 
         idxBase = pushFaceIf(
             faces, "south",
             V(X1, Y0, Z1), V(X0, Y0, Z1), V(X0, Y1, Z1), V(X1, Y1, Z1),
             from, to,
-            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+            opts.sourceModelId, opts.sourceWhen
         );
 
         idxBase = pushFaceIf(
             faces, "west",
             V(X0, Y0, Z1), V(X0, Y0, Z0), V(X0, Y1, Z0), V(X0, Y1, Z1),
             from, to,
-            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+            opts.sourceModelId, opts.sourceWhen
         );
 
         idxBase = pushFaceIf(
             faces, "east",
             V(X1, Y0, Z0), V(X1, Y0, Z1), V(X1, Y1, Z1), V(X1, Y1, Z0),
             from, to,
-            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+            opts.sourceModelId, opts.sourceWhen
         );
 
         idxBase = pushFaceIf(
             faces, "up",
             V(X0, Y1, Z0), V(X1, Y1, Z0), V(X1, Y1, Z1), V(X0, Y1, Z1),
             from, to,
-            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+            opts.sourceModelId, opts.sourceWhen
         );
 
         idxBase = pushFaceIf(
             faces, "down",
             V(X0, Y0, Z1), V(X1, Y0, Z1), V(X1, Y0, Z0), V(X0, Y0, Z0),
             from, to,
-            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel
+            model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
+            opts.sourceModelId, opts.sourceWhen
         );
     }
 
@@ -333,7 +565,6 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
     }
 
     if (bidLower.includes("_shelf")) {
-        console.log("are we in here?");
         let texPath = null;
 
         if (bidLower.includes("oak_shelf")) texPath = "../Resources/textures/block/oak_shelf.png";
@@ -361,16 +592,19 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
     // Proper multipart handling (fixes mushroom blocks, etc.)
     if (bs?.multipart?.length) {
-        const applies = normalizeMultipartApplies(bs, effectiveProps);
+        const applies = normalizeMultipartApplies(bs, effectiveProps, blockId);
 
         if (applies.length) {
             const group = new THREE.Group();
 
-            for (const apply of applies) {
+            for (const entry of applies) {
+                const apply = entry.apply;
+                const when = entry.when;
+
                 const model = await resolveFullModel(apply);
                 if (!model || !model.elements) continue;
 
-                const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps);
+                const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps, {sourceModelId: apply.model, sourceWhen: when});
                 if (!mesh) continue;
 
                 const vx = apply.x ?? 0;
@@ -390,6 +624,10 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
                         "YXZ"
                     )
                 );
+
+                if (bidLower.includes("mushroom_block") || bidLower.includes("mushroom_stem")) {
+                    rot.multiply(new THREE.Matrix4().makeRotationY(Math.PI));
+                }
 
                 mesh.geometry.applyMatrix4(rot);
 
@@ -696,6 +934,11 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
         )
     );
 
+    if (bidLower.includes("turtle_egg")) {
+        rot.multiply(new THREE.Matrix4().makeRotationY(Math.PI));
+    }
+
+
     mesh.geometry.applyMatrix4(rot);
 
     const chain = (model.parentChain || []).join(" ").toLowerCase();
@@ -708,6 +951,15 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
     mesh.position.set(0, 0, 0);
     mesh.quaternion.identity();
     mesh.scale.set(1, 1, 1);
+
+    if(blockId.includes("bell")){
+        const bellTex = await loadExternalTexture("../Resources/textures/blockentity/bell/bell_body.png");
+        const bellMesh = makeBellMesh(bellTex, (blockId || "").toLowerCase());
+        let bellGroup = new THREE.Group();
+        bellGroup.add(bellMesh,mesh);
+        finalizeMesh(bellGroup, blockId);
+        return bellGroup;
+    }
 
     finalizeMesh(mesh, blockId);
     return mesh;
