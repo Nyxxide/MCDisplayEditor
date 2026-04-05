@@ -84,10 +84,6 @@ function isGrassTint(blockId) {
 }
 
 function stemTintFromAge(age) {
-    // Vanilla-like formula: red increases, green decreases, blue slightly increases
-    // age: 0..7
-    // const a = Math.max(0, Math.min(7, Number(age ?? 0)));
-    console.log(age);
     const a = age;
     const r = (a * 32) / 255;          // 0 .. 224
     const g = (255 - a * 8) / 255;     // 255 .. 199

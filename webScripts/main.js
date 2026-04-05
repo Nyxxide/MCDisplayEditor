@@ -1,9 +1,23 @@
 // TODO: Make touchpad pinch/expand work like scroll, not resize page
 // TODO: Make group moves by -+ 0.25 instead of locking to 0.25. they dont adhere to regular block coordinates.
 // TODO: Make TAB + move lock into local block coordinates
+// TODO: Fix item icons that appear in the selection menu to match how they appear in editor, fix missing textures
+// TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
+// TODO: Make UI look nicer, add button toggles for every keystroke
+// TODO: Double check if coordinates for blocks/groups map to universal grid plane or locally set per selection (group problem mainly)
 
-/*TODO: Texture Fixes;
-*   - Chorus Plant (Fix Texture Map)*/
+/*
+*  TODO Housekeeping:
+*   - Move DefaultMultipartPropsForBlock out of TextureLoad into it's own file
+*   - Reogranize Resources to split into Icons/Blocks/Items/Atlases (move everything currently in there for blocks into Blocks folder
+*/
+
+/*
+*  TODO Long Term Texture Additions:
+*   - Every different property render for every block (rotations are pointless, only shit that changes look of block)
+*   - Item Displays
+*   - Text Displays with every possible atlas texture
+*/
 
 import * as THREE from "three";
 import { state, initDom } from "./Misc/StateData.js";

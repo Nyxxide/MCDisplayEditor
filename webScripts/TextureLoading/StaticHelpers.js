@@ -182,12 +182,6 @@ function pushFaceIf(
 
     let [U0m, V0m, U1m, V1m] = uvRect;
 
-    if ((blockId || "").toLowerCase().includes("attached_") && (blockId || "").toLowerCase().includes("_stem")) {
-        console.log("[STEM FACE]",
-            { faceName, remappedFaceName, texId, uvRect, rot: f.rotation || 0, tint: f.tintindex, mirrorPerFace }
-        );
-    }
-
     // detect mirroring
     const flipU = U0m > U1m;
     const flipV = V0m > V1m;
@@ -299,15 +293,6 @@ function pushFaceIf(
             quad = quad.map(([u, v]) => [u,1 -  v]);
         }
     }
-
-    // if (isChorusBulge && faceName === "north") {
-    //     console.log(sourceId, faceName);
-    //     // force this face to sample a tiny corner of the texture
-    //     U0m = 0;
-    //     V0m = 0;
-    //     U1m = 2;
-    //     V1m = 2;
-    // }
 
     if (isHeavyCore) {
         if (faceName === "north" || faceName === "south" || faceName === "east" || faceName === "west") {
