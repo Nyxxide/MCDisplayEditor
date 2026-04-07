@@ -11,6 +11,7 @@
 import * as THREE from "three";
 import { attachKeepWorldMatrix, setObjectWorldMatrix, setObjectWorldTRS } from "./TransformLogic.js";
 import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
+import { defaultMultipartPropsForBlock } from "../TextureLoading/DefaultPropGen.js";
 
 export function initSelectionLogic(state) {
     // --- Selection box element (DOM overlay) ---
@@ -471,7 +472,12 @@ export function initSelectionLogic(state) {
     // ---- copy/paste blocks for TransformLogic ----
     function serializeEntity(ent) {
         ent.mesh.updateMatrixWorld(true);
-        return { blockName: ent.blockName, mat: ent.mesh.matrixWorld.elements.slice() };
+        return {
+            blockName: ent.blockName,
+            properties: ent.properties ?? null,
+            brightness: ent.brightness ?? null,
+            mat: ent.mesh.matrixWorld.elements.slice()
+        };
     }
 
     function serializeSelectedBlock() {
@@ -493,6 +499,8 @@ export function initSelectionLogic(state) {
             ent.mesh.updateMatrixWorld(true);
             items.push({
                 blockName: ent.blockName,
+                properties: ent.properties ?? null,
+                brightness: ent.brightness ?? null,
                 mat: ent.mesh.matrixWorld.elements.slice(),
             });
         }
@@ -504,7 +512,12 @@ export function initSelectionLogic(state) {
     async function pasteBlockFromClipboard(offset = true) {
         if (!state.blockClipboard) return;
 
-        const mesh = await makeCubeForBlock(state, state.blockClipboard.blockName);
+        const mesh = await makeCubeForBlock(
+            state,
+            state.blockClipboard.blockName,
+            state.blockClipboard.properties ?? null
+        );
+
         const m = new THREE.Matrix4().fromArray(state.blockClipboard.mat);
 
         if (offset) m.premultiply(new THREE.Matrix4().makeTranslation(0.25, 0, 0.25));
@@ -513,7 +526,13 @@ export function initSelectionLogic(state) {
         setObjectWorldMatrix(mesh, m);
 
         const id = crypto.randomUUID();
-        state.entities.push({ id, blockName: state.blockClipboard.blockName, mesh });
+        state.entities.push({
+            id,
+            blockName: state.blockClipboard.blockName,
+            properties: state.blockClipboard.properties ?? null,
+            brightness: state.blockClipboard.brightness ?? null,
+            mesh
+        });
 
         state.selectedRefId = null;
         state.selectedIds.clear();
@@ -533,23 +552,32 @@ export function initSelectionLogic(state) {
         const newIds = [];
 
         for (const it of state.groupClipboard.items) {
-            const mesh = await makeCubeForBlock(state, it.blockName);
+            const mesh = await makeCubeForBlock(
+                state,
+                it.blockName,
+                it.properties ?? null
+            );
+
             const m = new THREE.Matrix4().fromArray(it.mat).premultiply(t);
 
             state.scene.add(mesh);
             setObjectWorldMatrix(mesh, m);
 
             const id = crypto.randomUUID();
-            state.entities.push({ id, blockName: it.blockName, mesh });
+            state.entities.push({
+                id,
+                blockName: it.blockName,
+                properties: it.properties ?? null,
+                brightness: it.brightness ?? null,
+                mesh
+            });
             newIds.push(id);
         }
 
-        // ✅ AUTO-GROUP the pasted members
         const g = { id: crypto.randomUUID(), members: newIds.slice().sort() };
         state.groups.push(g);
         ensureGroupNode(g);
 
-        // select the new group
         state.selectedRefId = null;
         state.selectedIds.clear();
         for (const id of g.members) state.selectedIds.add(id);
@@ -564,8 +592,10 @@ export function initSelectionLogic(state) {
     // ---- placement ----
     async function placeAt(point) {
         const blockName = state.ui.paletteValue;
-        if(!blockName) return;
-        const mesh = await makeCubeForBlock(state, blockName);
+        if (!blockName) return;
+
+        const properties = defaultMultipartPropsForBlock(blockName)
+        const mesh = await makeCubeForBlock(state, blockName, properties);
 
         const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
         const pos = new THREE.Vector3(snap(point.x), snap(point.y + 0.5), snap(point.z));
@@ -578,7 +608,13 @@ export function initSelectionLogic(state) {
         setObjectWorldMatrix(mesh, world);
 
         const id = crypto.randomUUID();
-        state.entities.push({ id, blockName, mesh });
+        state.entities.push({
+            id,
+            blockName,
+            properties,
+            brightness: null,
+            mesh
+        });
 
         state.selectedRefId = null;
         state.selectedIds.clear();
@@ -919,7 +955,13 @@ export function initSelectionLogic(state) {
         return {
             entities: state.entities.map((e) => {
                 e.mesh.updateMatrixWorld(true);
-                return { id: e.id, blockName: e.blockName, mat: e.mesh.matrixWorld.elements.slice() };
+                return {
+                    id: e.id,
+                    blockName: e.blockName,
+                    properties: e.properties ?? null,
+                    brightness: e.brightness ?? null,
+                    mat: e.mesh.matrixWorld.elements.slice()
+                };
             }),
             groups: structuredClone(state.groups),
             refs: state.refs.map(r => {
@@ -953,10 +995,16 @@ export function initSelectionLogic(state) {
         state.entities.length = 0;
 
         for (const se of snap.entities) {
-            const mesh = await makeCubeForBlock(state, se.blockName);
+            const mesh = await makeCubeForBlock(state, se.blockName, se.properties ?? null);
             state.scene.add(mesh);
             setObjectWorldMatrix(mesh, new THREE.Matrix4().fromArray(se.mat));
-            state.entities.push({ id: se.id, blockName: se.blockName, mesh });
+            state.entities.push({
+                id: se.id,
+                blockName: se.blockName,
+                properties: se.properties ?? null,
+                brightness: se.brightness ?? null,
+                mesh
+            });
         }
 
         state.groups.length = 0;

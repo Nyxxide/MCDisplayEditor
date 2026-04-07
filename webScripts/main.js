@@ -5,6 +5,7 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Make UI look nicer, add button toggles for every keystroke
 // TODO: Double check if coordinates for blocks/groups map to universal grid plane or locally set per selection (group problem mainly)
+// TODO: Fix beacon in the block selection list
 
 /*
 *  TODO Housekeeping:
@@ -30,6 +31,7 @@ import { initSaveLoadLogic } from "./FileHandling/SaveLoadLogic.js"
 import { loadBlockList } from "./TextureLoading/TextureLoad.js";
 import { initPaletteUI } from "./TextureLoading/PaletteUI.js";
 import { loadMcmetaAnimatedTexture, setMcmetaAnimatorFlip, tickMcmetaAnimator } from "./TextureLoading/BlockAnimationLogic.js";
+import { initImportCommandLogic } from "./Misc/ImportModelFromCommand.js";
 
 
 
@@ -88,6 +90,8 @@ initImportLogic(state);
 
 // save/load functionality import
 initSaveLoadLogic(state);
+
+initImportCommandLogic(state)
 
 // -------------------- Left UI actions --------------------
 state.ui.placeBtn?.addEventListener("click", () => {

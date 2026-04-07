@@ -1,5 +1,5 @@
 html, body {
-    margin:0;
+    margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
@@ -24,7 +24,8 @@ canvas {
     top: 8px;
     left: 8px;
     z-index: 10;
-    background: rgba(0,0,0,.65); color: white;
+    background: rgba(0, 0, 0, .65);
+    color: white;
     padding: 10px 12px;
     border-radius: 10px;
     width: 340px;
@@ -38,7 +39,7 @@ canvas {
     font-size: 14px;
 }
 
-#ui button{
+#ui button {
     width: 100%;
     margin: 6px 0;
     padding: 8px;
@@ -48,21 +49,23 @@ canvas {
     width: 100%;
     height: 180px;
     margin-top: 8px;
-    background: rgba(255,255,255,.08); color: #d7faff;
-    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(255, 255, 255, .08);
+    color: #d7faff;
+    border: 1px solid rgba(255, 255, 255, .2);
     border-radius: 8px;
     padding: 8px;
     resize: vertical;
+    box-sizing: border-box;
 }
 
-#uiTopbar{
+#uiTopbar {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 10px;
 }
 
-#uiTopbar h3{
+#uiTopbar h3 {
     margin: 0;
 }
 
@@ -86,8 +89,8 @@ canvas {
     gap: 10px;
     padding: 8px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,.2);
-    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .08);
     color: #fff;
     cursor: pointer;
 }
@@ -120,11 +123,11 @@ canvas {
     right: 0;
     top: calc(100% + 6px);
     z-index: 9999;
-    background: rgba(0,0,0,.92);
-    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(0, 0, 0, .92);
+    border: 1px solid rgba(255, 255, 255, .2);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
 }
 
 .paletteSearch {
@@ -133,7 +136,7 @@ canvas {
     padding: 10px;
     border: 0;
     outline: none;
-    background: rgba(255,255,255,.08);
+    background: rgba(255, 255, 255, .08);
     color: #d7faff;
 }
 
@@ -152,14 +155,14 @@ canvas {
 }
 
 .paletteRow:hover {
-    background: rgba(255,255,255,.08);
+    background: rgba(255, 255, 255, .08);
 }
 
 .paletteRowIcon {
     width: 18px;
     height: 18px;
     border-radius: 4px;
-    background: rgba(255,255,255,.12); /* placeholder icon */
+    background: rgba(255, 255, 255, .12);
     flex: 0 0 auto;
 }
 
@@ -172,14 +175,14 @@ canvas {
     font-size: 13px;
 }
 
-#projectBtns{
+#projectBtns {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-width: 120px; /* optional, makes them align nicely */
+    min-width: 120px;
 }
 
-#projectBtns button{
+#projectBtns button {
     width: 100%;
 }
 
@@ -190,15 +193,16 @@ canvas {
 }
 
 .cmdBlock {
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.2);
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .2);
     border-radius: 8px;
     padding: 8px;
+    margin-top: 6px;
 }
 
 .cmdBlock textarea {
     width: 100%;
-    height: 70px;
+    height: 140px;
     background: transparent;
     color: #d7faff;
     border: 0;
@@ -206,6 +210,7 @@ canvas {
     outline: none;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 12px;
+    margin-top: 8px;
 }
 
 .cmdBlock button {
@@ -214,57 +219,78 @@ canvas {
     padding: 6px;
 }
 
+.cmdHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.cmdTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.miniBtn {
+    width: auto !important;
+    min-width: 70px;
+    margin: 0 !important;
+    padding: 6px 10px !important;
+    flex: 0 0 auto;
+}
 
 /* RIGHT UI */
 
-#xformUI{
+#xformUI {
     position: fixed;
     top: 8px;
     right: 8px;
     z-index: 10;
     width: 260px;
-    background: rgba(0,0,0,.65);
+    background: rgba(0, 0, 0, .65);
     color: #fff;
     padding: 10px 12px;
     border-radius: 10px;
     font-family: system-ui, sans-serif;
 }
-#xformUI input{
+
+#xformUI input {
     width: 64px;
     padding: 6px;
     border-radius: 8px;
-    border: 1px solid rgba(255,255,255,.2);
-    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .08);
     color: #d7faff;
 }
-#xformUI button{
+
+#xformUI button {
     padding: 6px 8px;
     border-radius: 8px;
 }
-.xHdr{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:8px;
+
+.xHdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
-.xRow{
-    display:flex;
-    align-items:center;
-    gap:6px;
+
+.xRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     margin: 6px 0;
 }
-.xRow span{
+
+.xRow span {
     width: 44px;
     opacity: .9;
 }
-.xSmall{
-    margin-top:8px;
+
+.xSmall {
+    margin-top: 8px;
     font-size: 12px;
     opacity: .85;
     line-height: 1.35;
 }
-
-
-
-
-

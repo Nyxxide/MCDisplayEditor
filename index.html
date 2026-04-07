@@ -29,7 +29,7 @@
     Left click: select<br>
     Shift+Left click on ground: place<br>
     W/E/R: translate/rotate/scale<br>
-    Del: delete selected 
+    Del: delete selected
   </div>
 
   <div id="facing" style="margin-top:8px;font-size:12px;opacity:.95;"></div>
@@ -52,10 +52,24 @@
   <button id="importRefBtn">Import Reference Model (.glb/.gltf/.obj/.stl)</button>
   <input id="importRefInput" type="file" accept=".glb,.gltf,.obj,.mtl,.stl" style="display:none;" />
 
+  <button id="importCmdBtn">Import Model From Command</button>
+
   <button id="exportMany">Export: one summon per entity</button>
   <button id="exportOne">Export: single “one-command” (minecart chain)</button>
 
-  <div id="outList"></div>
+  <div id="outList">
+    <div id="importCmdPanel" class="cmdBlock" style="display:none;">
+      <div class="cmdHeaderRow">
+        <div class="cmdTitle">Paste summon command</div>
+        <button id="importCmdClose" type="button" class="miniBtn">Close</button>
+      </div>
+      <textarea
+              id="importCmdInput"
+              placeholder="Paste a summon command, minecart chain, or passenger chain here..."
+      ></textarea>
+      <button id="importCmdRun" type="button">Import Command Into Editor</button>
+    </div>
+  </div>
 </div>
 
 <div id="xformUI">

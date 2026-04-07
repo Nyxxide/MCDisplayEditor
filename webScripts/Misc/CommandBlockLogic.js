@@ -19,17 +19,6 @@ function mat4ToMcArray(m) {
     );
 }
 
-export function entityToSummonCmd(ent, origin = "~0.5 ~0.5 ~0.5") {
-    const m = ent.mesh;
-    m.updateMatrixWorld(true);
-
-    const pivotFix = new THREE.Matrix4().makeTranslation(-0.5, -0.5, -0.5);
-    const M = new THREE.Matrix4().multiplyMatrices(m.matrixWorld, pivotFix).transpose();
-
-    const nbt = `{block_state:{Name:"${ent.blockName}"},transformation:${mat4ToMcArray(M)}}`;
-    return `summon minecraft:block_display ${origin} ${nbt}`;
-}
-
 function escapeForMinecartCommand(cmd) {
     return cmd.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
@@ -38,7 +27,68 @@ function buildFallingBlockCmd(passengers) {
     return `summon minecraft:falling_block ~ ~1 ~ {BlockState:{Name:"minecraft:activator_rail",Properties:{powered:"true"}},Time:1,Passengers:[${passengers.join(",")}]}`
 }
 
-// NEW: returns an array of commands (waves)
+function mcQuoteString(s) {
+    return `"${String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+
+function propsToMcNbt(props) {
+    if (!props || typeof props !== "object" || Array.isArray(props)) return null;
+
+    const entries = Object.entries(props);
+    if (!entries.length) return `Properties:{}`;
+
+    const parts = entries.map(([k, v]) => `${k}:${mcQuoteString(v)}`);
+    return `Properties:{${parts.join(",")}}`;
+}
+
+function brightnessToMcNbt(brightness) {
+    if (brightness == null) return null;
+
+    // accept:
+    // 1) number -> brightness:1
+    // 2) object -> brightness:{block:15,sky:15}
+    if (typeof brightness === "number") {
+        return `brightness:${brightness}`;
+    }
+
+    if (typeof brightness === "object") {
+        const parts = [];
+        if (brightness.block != null) parts.push(`block:${Number(brightness.block)}`);
+        if (brightness.sky != null) parts.push(`sky:${Number(brightness.sky)}`);
+        if (!parts.length) return null;
+        return `brightness:{${parts.join(",")}}`;
+    }
+
+    return null;
+}
+
+function buildBlockStateNbt(ent) {
+    const propsNbt = propsToMcNbt(ent.properties);
+    if (propsNbt) {
+        return `{Name:"${ent.blockName}",${propsNbt}}`;
+    }
+    return `{Name:"${ent.blockName}"}`;
+}
+
+export function entityToSummonCmd(ent, origin = "~0.5 ~0.5 ~0.5") {
+    const m = ent.mesh;
+    m.updateMatrixWorld(true);
+
+    const pivotFix = new THREE.Matrix4().makeTranslation(-0.5, -0.5, -0.5);
+    const M = new THREE.Matrix4().multiplyMatrices(m.matrixWorld, pivotFix).transpose();
+
+    const nbtParts = [
+        `block_state:${buildBlockStateNbt(ent)}`,
+        `transformation:${mat4ToMcArray(M)}`
+    ];
+
+    const brightnessNbt = brightnessToMcNbt(ent.brightness);
+    if (brightnessNbt) nbtParts.push(brightnessNbt);
+
+    const nbt = `{${nbtParts.join(",")}}`;
+    return `summon minecraft:block_display ${origin} ${nbt}`;
+}
+
 export function exportOneCommand(entities, { maxLen = 32500, safety = 200 } = {}) {
     const limit = Math.max(1000, maxLen - safety);
 
@@ -53,30 +103,24 @@ export function exportOneCommand(entities, { maxLen = 32500, safety = 200 } = {}
     const waves = [];
     let cur = [];
 
-    // packs passengers into waves by checking final command length
     for (const p of perEntityPassengers) {
         if (cur.length === 0) {
             cur.push(p);
             continue;
         }
 
-        // test if adding this passenger still fits
         const testCmd = buildFallingBlockCmd([...cur, p]);
         if (testCmd.length <= limit) {
             cur.push(p);
         } else {
-            // finalize current wave (no kill yet)
             waves.push(buildFallingBlockCmd(cur));
             cur = [p];
         }
     }
 
-    // finalize last wave (add kill)
     if (cur.length === 0) {
-        // no entities -> still return a minimal wave that just kills (optional)
         waves.push(buildFallingBlockCmd([killPassenger]));
     } else {
-        // ensure kill fits; if not, make kill its own wave
         const lastWithKill = buildFallingBlockCmd([...cur, killPassenger]);
         if (lastWithKill.length <= limit) {
             waves.push(lastWithKill);

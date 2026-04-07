@@ -11,7 +11,7 @@ import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
  * Save format:
  * {
  *   version: 1,
- *   entities: [{ id, blockName, mat:[16] }],
+ *   entities: [{ id, blockName, properties, brightness, mat:[16] }],
  *   groups: [{ id, members:[entityId...] }],
  *   refAssets: [{ assetId, kind, name, bytesBase64 }],
  *   refs: [{ id, assetId, kind, name, mat:[16] }]
@@ -55,20 +55,19 @@ export function initSaveLoadLogic(state) {
 /** -------------------- SAVE -------------------- */
 
 function buildSaveObject(state) {
-    // blocks
     const entities = state.entities.map((e) => {
         e.mesh.updateMatrixWorld(true);
         return {
             id: e.id,
             blockName: e.blockName,
+            properties: e.properties ?? null,
+            brightness: e.brightness ?? null,
             mat: e.mesh.matrixWorld.elements.slice(),
         };
     });
 
-    // groups
     const groups = structuredClone(state.groups);
 
-    // assets (Option A embed bytes)
     const refAssets = [];
     for (const [assetId, a] of state.refAssets.entries()) {
         if (!a?.bytesBase64) continue;
@@ -80,7 +79,6 @@ function buildSaveObject(state) {
         });
     }
 
-    // refs instances
     const refs = state.refs.map((r) => {
         r.root.updateMatrixWorld(true);
         return {
@@ -147,13 +145,19 @@ async function loadSaveFileMerge(state, file) {
             const newId = crypto.randomUUID();
             idMap.set(se.id, newId);
 
-            const mesh = await makeCubeForBlock(state, se.blockName);
+            const mesh = await makeCubeForBlock(state, se.blockName, se.properties ?? null);
             state.scene.add(mesh);
 
             const wm = new THREE.Matrix4().fromArray(se.mat);
             setObjectWorldMatrix(mesh, wm);
 
-            state.entities.push({ id: newId, blockName: se.blockName, mesh });
+            state.entities.push({
+                id: newId,
+                blockName: se.blockName,
+                properties: se.properties ?? null,
+                brightness: se.brightness ?? null,
+                mesh
+            });
         }
     }
 

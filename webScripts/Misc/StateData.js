@@ -85,6 +85,7 @@ export function initDom() {
     state.ui.placeBtn = document.getElementById("place");
     state.ui.exportManyBtn = document.getElementById("exportMany");
     state.ui.exportOneBtn = document.getElementById("exportOne");
+    state.ui.importCmdBtn = document.getElementById("importCmdBtn");
 
     // ----- Transform UI -----
     state.ui.xformUI = document.getElementById("xformUI");
