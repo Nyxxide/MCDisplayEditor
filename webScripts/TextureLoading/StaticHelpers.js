@@ -33,7 +33,7 @@ function stripMcPrefix(id) {
 }
 
 async function loadBlockstate(name) {
-    if(name==="beacon") name = "bcn";
+    // if(name==="beacon") name = "bcn";
     const url = `${BLOCKSTATES_BASE}${name}.json`;
     return await fetchJsonCached(url, _blockstateCache);
 }

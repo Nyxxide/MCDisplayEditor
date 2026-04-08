@@ -9,7 +9,6 @@
 
 /*
 *  TODO Housekeeping:
-*   - Move DefaultMultipartPropsForBlock out of TextureLoad into it's own file
 *   - Reogranize Resources to split into Icons/Blocks/Items/Atlases (move everything currently in there for blocks into Blocks folder
 */
 
@@ -75,6 +74,7 @@ state.scene.add(markerMesh);
 
 // palette blocks
 const BLOCKS = await loadBlockList();
+console.log(BLOCKS);
 
 // fill palette
 initPaletteUI(state, BLOCKS);

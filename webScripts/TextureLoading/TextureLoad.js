@@ -425,7 +425,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
     const modelIdRaw = await resolveModelIdForBlock(blockId, effectiveProps);
     const model = await resolveFullModel(modelIdRaw);
 
-    if (bidLower.includes("beacon") && model && model.elements) {
+    if (bidLower.includes("bcn") && model && model.elements) {
         const glassElements = model.elements.filter(isBeaconGlassElement);
         const solidElements = model.elements.filter(el => !isBeaconGlassElement(el));
 
@@ -750,5 +750,8 @@ export async function loadBlockList() {
 
 export async function makeCubeForBlock(state, blockId, props = null) {
     const atlas = state.atlas;
+    if(blockId.includes("beacon")) {
+        blockId = blockId.replace("beacon", "bcn");
+    }
     return await makeMeshForBlockId(atlas, blockId, props);
 }
