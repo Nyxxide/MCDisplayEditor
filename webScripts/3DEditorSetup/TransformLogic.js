@@ -111,10 +111,17 @@ export function initTransformLogic(state) {
         if (e.value) {
             state.api.stopMeshDrag?.();
             state.api.stopRefDrag?.();
+
             if (transform.getMode() === "scale" && transform.object) {
                 state.scaleDragStart = transform.object.scale.clone();
             } else {
                 state.scaleDragStart = null;
+            }
+
+            if (transform.getMode() === "translate" && transform.object) {
+                beginTranslateSession(state, transform.object);
+            } else {
+                state.translateSession = null;
             }
         } else {
             // commit temp-rig transforms
@@ -122,13 +129,19 @@ export function initTransformLogic(state) {
                 state.api.bakeRigToMeshes?.();
                 state.api.rebuildSelectionRig?.();
             }
+
             state.scaleDragStart = null;
+            state.translateSession = null;
             state.api.pushHistory?.("transform");
         }
     });
 
     transform.addEventListener("change", () => {
         if (!transform.object) return;
+
+        if (transform.getMode() === "translate") {
+            applyTranslateConstraints(state, transform.object);
+        }
 
         if (state.shiftHeld && transform.getMode() === "rotate") {
             snapRotationAbsolute(transform.object, state.const.ROT_SNAP_DEG);
@@ -181,9 +194,17 @@ export function initTransformLogic(state) {
             updateSnaps(state, transform);
         }
 
+        if (e.key === "Tab") {
+            if (!isTextInputFocused()) {
+                e.preventDefault();
+            }
+            state.tabHeld = true;
+            updateTransformSpace(state, transform);
+        }
+
         // --- Arrow key nudge (camera-cardinal) ---
         if (isArrowKey(e.key)) {
-            if(isPaletteOpen(state) && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+            if (isPaletteOpen(state) && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
                 return;
             }
 
@@ -191,11 +212,22 @@ export function initTransformLogic(state) {
 
             e.preventDefault();
 
-            const step = e.shiftKey ? 1.0 : state.const.TRANS_SNAP; // shift=1, otherwise 0.25
+            let step = 0.005;
+            if (state.tabHeld) step = 1.0;
+            else if (e.shiftKey) step = 0.25;
+
             const did = nudgeSelectedByArrow(state, transform, e.key, step);
             if (did) return;
         }
 
+        if (e.key === "`") {
+            if (isTextInputFocused()) return;
+
+            e.preventDefault();
+
+            const did = snapSelectedToHalfBlockCenters(state, transform);
+            if (did) return;
+        }
 
         if (isTextInputFocused()) return;
 
@@ -214,14 +246,17 @@ export function initTransformLogic(state) {
         // W/E/R mode switching (lets SelectionLogic not care)
         if (e.key === "w" || e.key === "W") {
             transform.setMode("translate");
+            updateTransformSpace(state, transform);
             attachTransformToActiveRig(state, transform);
         }
         if (e.key === "e" || e.key === "E") {
             transform.setMode("rotate");
+            updateTransformSpace(state, transform);
             attachTransformToActiveRig(state, transform);
         }
         if (e.key === "r" || e.key === "R") {
             transform.setMode("scale");
+            updateTransformSpace(state, transform);
             attachTransformToActiveRig(state, transform);
         }
         if (e.key === "h" || e.key === "H") {
@@ -236,6 +271,11 @@ export function initTransformLogic(state) {
             state.shiftHeld = false;
             updateSnaps(state, transform);
             if (transform.getMode() === "scale") state.scaleDragStart = null;
+        }
+
+        if (e.key === "Tab") {
+            state.tabHeld = false;
+            updateTransformSpace(state, transform);
         }
     });
 
@@ -315,6 +355,76 @@ function cameraSnappedCardinalVectors(state) {
     return { fwd, right };
 }
 
+function updateTransformSpace(state, transform) {
+    // Tab is now reserved for arrow-key stepping only.
+    // Gizmo translate should always stay in world space.
+    transform.setSpace("world");
+}
+
+function getWorldPositionOf(obj) {
+    const v = new THREE.Vector3();
+    obj.updateMatrixWorld(true);
+    obj.getWorldPosition(v);
+    return v;
+}
+
+function setWorldPositionOf(obj, worldPos) {
+    if (!obj) return;
+
+    if (obj.parent) {
+        obj.parent.updateMatrixWorld(true);
+        const local = worldPos.clone();
+        obj.parent.worldToLocal(local);
+        obj.position.copy(local);
+    } else {
+        obj.position.copy(worldPos);
+    }
+
+    obj.updateMatrixWorld(true);
+}
+
+function beginTranslateSession(state, obj) {
+    const startWorld = getWorldPositionOf(obj);
+    const startQuat = new THREE.Quaternion();
+    obj.getWorldQuaternion(startQuat);
+
+    const basisX = new THREE.Vector3(1, 0, 0).applyQuaternion(startQuat).normalize();
+    const basisY = new THREE.Vector3(0, 1, 0).applyQuaternion(startQuat).normalize();
+    const basisZ = new THREE.Vector3(0, 0, 1).applyQuaternion(startQuat).normalize();
+
+    state.translateSession = {
+        startWorld,
+        basisX,
+        basisY,
+        basisZ,
+        prevRawDeltaLocal: { x: 0, y: 0, z: 0 },
+    };
+}
+
+function applyTranslateConstraints(state, obj) {
+    if (!state.translateSession) return;
+
+    // SHIFT: 0.25 incremental motion from drag start, not absolute grid lock.
+    if (state.shiftHeld) {
+        applyIncrementalTranslateSnap(state, obj, 0.25);
+    }
+}
+
+function applyIncrementalTranslateSnap(state, obj, step) {
+    const session = state.translateSession;
+    if (!session) return;
+
+    const curWorld = getWorldPositionOf(obj);
+    const delta = curWorld.clone().sub(session.startWorld);
+
+    delta.x = Math.round(delta.x / step) * step;
+    delta.y = Math.round(delta.y / step) * step;
+    delta.z = Math.round(delta.z / step) * step;
+
+    const snappedWorld = session.startWorld.clone().add(delta);
+    setWorldPositionOf(obj, snappedWorld);
+}
+
 
 function nudgeSelectedByArrow(state, transform, key, step) {
     if (!state.activeRig) return false;
@@ -359,9 +469,80 @@ function nudgeSelectedByArrow(state, transform, key, step) {
     return true;
 }
 
+function snapHalfCentered(v) {
+    // Allowed lattice: ..., -1.5, -0.5, 0.5, 1.5, 2.5, ...
+    // Ties like 1.0 / 2.0 / 0.0 fall to the lower .5 value.
+    return Math.floor(v) + 0.5;
+}
+
+function snapSelectedToHalfBlockCenters(state, transform) {
+    if (!state.activeRig) return false;
+
+    // don’t fight with gizmo dragging / plane drags
+    if (state.isTransforming || transform?.dragging || state.isDraggingMesh || state.isDraggingRef) {
+        return false;
+    }
+
+    // --- Single selected block: snap the actual mesh world origin,
+    // not the temp selection rig center / bbox center. ---
+    if (state.selectedIds.size === 1 && !state.selectedRefId) {
+        const mesh = state.api.getOnlySelectedMesh?.();
+        if (!mesh) return false;
+
+        const wpos = new THREE.Vector3();
+        const wquat = new THREE.Quaternion();
+        const wscale = new THREE.Vector3();
+
+        mesh.updateMatrixWorld(true);
+        mesh.matrixWorld.decompose(wpos, wquat, wscale);
+
+        wpos.set(
+            snapHalfCentered(wpos.x),
+            snapHalfCentered(wpos.y),
+            snapHalfCentered(wpos.z)
+        );
+
+        const world = new THREE.Matrix4().compose(wpos, wquat, wscale);
+        setObjectWorldMatrix(mesh, world);
+
+        state.api.rebuildSelectionRig?.();
+        fillTransformUI(state, mesh);
+        state.api.updateHighlight?.();
+        state.api.pushHistory?.("snap-half-block");
+        return true;
+    }
+
+    // --- Group / ref / other rig-driven selection: snap the rig/root position. ---
+    const rig = state.activeRig;
+
+    rig.position.set(
+        snapHalfCentered(rig.position.x),
+        snapHalfCentered(rig.position.y),
+        snapHalfCentered(rig.position.z)
+    );
+
+    rig.updateMatrixWorld(true);
+
+    if (state.selectionIsTempRig && rig === state.selectionRig) {
+        state.api.bakeRigToMeshes?.();
+        state.api.rebuildSelectionRig?.();
+    }
+
+    if (state.selectedRefId && state.activeRig) {
+        fillTransformUI(state, state.activeRig);
+    } else if (state.selectionBase && state.activeRig && !state.selectionIsTempRig) {
+        fillTransformUIRelative(state, state.activeRig, state.selectionBase);
+    }
+
+    state.api.updateHighlight?.();
+    state.api.pushHistory?.("snap-half-block");
+    return true;
+}
 
 function updateSnaps(state, transform) {
-    transform.setTranslationSnap(state.shiftHeld ? state.const.TRANS_SNAP : null);
+    // translation snapping is handled manually so group motion is incremental
+    // from the drag start instead of locking to the global 0.25 grid.
+    transform.setTranslationSnap(null);
     transform.setRotationSnap(null); // we do absolute snapping ourselves
 }
 

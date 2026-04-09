@@ -10,6 +10,7 @@ export const state = {
     renderer: null,
     composer: null,
     orbit: null,
+    floorOriginRoot: null,
 
     // post
     post: {

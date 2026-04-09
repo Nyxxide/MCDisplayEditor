@@ -4,8 +4,7 @@
 // TODO: Fix item icons that appear in the selection menu to match how they appear in editor, fix missing textures
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Make UI look nicer, add button toggles for every keystroke
-// TODO: Double check if coordinates for blocks/groups map to universal grid plane or locally set per selection (group problem mainly)
-// TODO: Fix beacon in the block selection list
+// TODO: Change BlockData UI in the top right corner to only reflect the coordinates of the given mode (dont show all 3 all the time)
 
 /*
 *  TODO Housekeeping:
@@ -62,14 +61,14 @@ markerMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), markerMat);
 
 // flat on ground, slightly raised to avoid z-fighting
 markerMesh.rotation.x = -Math.PI / 2;
-markerMesh.position.set(-0.5, 0.001, -0.5);
+markerMesh.position.set(0, 0.001, 0);
 
 // optional: fight z-fighting even harder
 markerMat.polygonOffset = true;
 markerMat.polygonOffsetFactor = -1;
 markerMat.polygonOffsetUnits = -1;
 
-state.scene.add(markerMesh);
+(state.floorOriginRoot || state.scene).add(markerMesh);
 
 
 // palette blocks

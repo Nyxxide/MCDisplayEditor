@@ -11,8 +11,8 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { loadAtlas } from "../TextureLoading/TextureLoad.js";
 
 const GRID_COLOR = 0x8a8a8a;
-const gridFine = new THREE.GridHelper(40, 160, GRID_COLOR, GRID_COLOR);
-const gridCoarse = new THREE.GridHelper(40, 40, GRID_COLOR, GRID_COLOR);
+const gridFine = new THREE.GridHelper(41, 164, GRID_COLOR, GRID_COLOR);
+const gridCoarse = new THREE.GridHelper(41, 41, GRID_COLOR, GRID_COLOR);
 
 export async function initScene(state) {
     const scene = new THREE.Scene();
@@ -40,6 +40,11 @@ export async function initScene(state) {
     // separate scene for gizmos
     const gizmoScene = new THREE.Scene();
 
+    const floorOriginRoot = new THREE.Group();
+    floorOriginRoot.name = "floorOriginRoot";
+    floorOriginRoot.position.set(-0.5, 0, -0.5);
+    scene.add(floorOriginRoot);
+
     // postprocessing outline
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
@@ -58,13 +63,13 @@ export async function initScene(state) {
     // grids
     gridFine.position.y = 0.002;
     gridFine.visible = false;
-    scene.add(gridFine);
+    floorOriginRoot.add(gridFine);
 
     gridCoarse.position.y = 0.001;
-    scene.add(gridCoarse);
+    floorOriginRoot.add(gridCoarse);
 
     // axes + lighting
-    scene.add(new THREE.AxesHelper(2));
+    // scene.add(new THREE.AxesHelper(2));
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
     const dir = new THREE.DirectionalLight(0xffffff, 0.7);
     dir.position.set(8, 14, 6);
@@ -90,7 +95,7 @@ export async function initScene(state) {
         })
     );
     ground.rotation.x = -Math.PI / 2;
-    scene.add(ground);
+    floorOriginRoot.add(ground);
 
     // selection rig (blocks/groups multiselect)
     const selectionRig = new THREE.Group();
@@ -111,7 +116,7 @@ export async function initScene(state) {
     S.position.set(0, 0.002, compassRadius);
     E.position.set(compassRadius, 0.002, 0);
     W.position.set(-compassRadius, 0.002, 0);
-    scene.add(N, E, S, W);
+    floorOriginRoot.add(N, E, S, W);
 
     // store
     state.scene = scene;
@@ -120,6 +125,7 @@ export async function initScene(state) {
     state.composer = composer;
     state.orbit = orbit;
     state.gizmoScene = gizmoScene;
+    state.floorOriginRoot = floorOriginRoot;
     state.post.outlinePass = outlinePass;
     state.selectionRig = selectionRig;
 
