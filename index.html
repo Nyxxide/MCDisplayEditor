@@ -21,15 +21,18 @@
     <div id="topBarTitle">Command Block Toolbox - Display Builder</div>
 
     <div id="topBarActions">
-      <button id="instructionsBtn" title="Show instructions">Instructions</button>
-      <button id="saveBtn" title="Download a .json save">Save</button>
-      <button id="loadBtn" title="Load + merge a .json save (Shift = replace)">Load</button>
+      <button id="instructionsBtn" title="Show instructions"></button>
+      <button id="toggleGridBtn" title="Toggle grid visibility"></button>
+      <button id="saveBtn" title="Download .json file of your model"></button>
+
+      <button id="loadBtn" title="Load a .json file save into the editor"></button>
       <input id="loadInput" type="file" accept=".json,application/json" style="display:none;" />
 
-      <button id="importRefBtn">Import Reference Model (.glb/.gltf/.obj/.stl)</button>
+      <button id="importRefBtn" title="Import a Reference Model (.glb/.gltf/.obj/.stl)"></button>
       <input id="importRefInput" type="file" accept=".glb,.gltf,.obj,.mtl,.stl" style="display:none;" />
 
-      <button id="importCmdBtn">Import Model From Command</button>
+      <button id="importCmdBtn" title="Import Model from Minecraft Command"></button>
+      <button id="modelLibraryBtn" title="Open Model Library"></button>
     </div>
   </div>
 
@@ -97,8 +100,8 @@
         </div>
 
         <div id="exportSection">
-          <button id="exportMany">Export: one summon per entity</button>
-          <button id="exportOne">Export: single “one-command” (Minecart Chain)</button>
+          <button id="exportMany">Export Many</button>
+          <button id="exportOne">Export One</button>
         </div>
 
         <div id="outList"></div>
@@ -110,7 +113,7 @@
 <div id="importCmdModal" class="modalOverlay" style="display:none;">
   <div class="modalCard">
     <div class="modalHeader">
-      <div class="modalTitle">Import Model From Command</div>
+      <div class="modalTitle">Import Model From Command (Experimental)</div>
       <button id="importCmdClose" type="button" class="modalClose">Close</button>
     </div>
 
@@ -129,34 +132,38 @@
 <div id="instructionsModal" class="modalOverlay" style="display:none;">
   <div class="modalCard">
     <div class="modalHeader">
-      <div class="modalTitle">Instructions</div>
+      <div id="instLabel" class="modalTitle">Instructions</div>
       <button id="instructionsClose" type="button" class="modalClose">Close</button>
     </div>
 
     <div id="instructionsContent" class="instructionsContent">
       <h3>Editor Controls</h3>
-      <p>Left click: select</p>
-      <p>Alt + Left click on ground: place selected block</p>
-      <p>Ctrl + Click / Ctrl + Drag: multiselect / box select</p>
-      <p>W / E / R: translate / rotate / scale</p>
-      <p>Delete: delete selected</p>
+      <p>Left Click: Select Block/Group</p>
+      <p>Alt + Left Click on Grid: Place Selected Block</p>
+      <p>Ctrl + Click / Ctrl + Drag: Multiselect / Box Select</p>
 
-      <h3>Transform Shortcuts</h3>
-      <p>Arrow keys: tiny nudge</p>
-      <p>Shift + Arrow: 0.25 nudge</p>
-      <p>Tab + Arrow: 1.0 nudge</p>
-      <p>` : snap selected to half-block centers</p>
+      <h3>Editor Hotkeys</h3>
+      <p>T: Translate</p>
+      <p>R: Rotate</p>
+      <p>S: Scale</p>
+      <p>H: Change Grid Interval (1.0/0.25)</p>
+      <p>G: Group Selected</p>
+      <p>U: Ungroup Selected</p>
+      <p>Ctrl/Cmd + C: Copy Selected</p>
+      <p>Ctrl/Cmd + V: Paste Selected</p>
+      <p>Delete: Delete Selected</p>
+      <p>Arrow keys: Move Selected 0.001</p>
+      <p>Shift + Arrow: Move Selected 0.25</p>
+      <p>Tab + Arrow: Move Selected 1.0</p>
+      <p>` : Snap Selected to Nearest "Block"</p>
 
-      <h3>Grouping</h3>
-      <p>G: group selected</p>
-      <p>U: ungroup selected group</p>
-
-      <h3>Clipboard</h3>
-      <p>Ctrl/Cmd + C: copy selected</p>
-      <p>Ctrl/Cmd + V: paste selected</p>
 
       <h3>Exports</h3>
-      <p>Use the sidebar buttons to export one summon per entity or a minecart-chain one-command export.</p>
+      <p>Export Many: Gives one summon command per entity for all entities in editor - (One summon per object)</p>
+      </br>
+      <p>Export One: Gives Minecart Chain summon commands that fit as many entity summons as possible
+        into a "One-Command-Block" command - (One command for everything in editor/multiple commands if command block
+        character limit exceeded)</p>
     </div>
   </div>
 </div>
@@ -179,6 +186,17 @@
     <div class="modalActions">
       <button id="saveModalConfirm" type="button">Save Model</button>
     </div>
+  </div>
+</div>
+
+<div id="modelLibraryModal" class="modalOverlay" style="display:none;">
+  <div class="modalCard modelLibraryModalCard">
+    <div class="modalHeader">
+      <div class="modalTitle">Model Library</div>
+      <button id="modelLibraryClose" type="button" class="modalClose">Close</button>
+    </div>
+
+    <div id="modelLibraryGrid" class="modelLibraryGrid"></div>
   </div>
 </div>
 
@@ -248,6 +266,44 @@
       <span class="axisBadge">Z</span>
       <input id="sz" type="number" step="0.01">
     </label>
+  </div>
+
+  <div id="metaSection" class="metaSection">
+    <div class="metaHdr">Display Data **OPTIONAL**</div>
+
+    <div class="metaRow">
+      <label class="metaLabel" for="tagsInput">Tags</label>
+      <input id="tagsInput" class="metaWideInput" type="text" placeholder="Comma Separated Text">
+    </div>
+
+    <div class="metaRow">
+      <label class="metaLabel" for="viewRangeInput">View Range</label>
+      <input id="viewRangeInput" type="number" step="0.1" placeholder="Any Number">
+    </div>
+
+    <div class="metaRow metaRowSplit">
+      <label class="metaLabel">Brightness</label>
+
+      <label id="blockBri">
+        <span class="axisBadge">Block</span>
+        <input id="blockLightInput" type="number" step="1" min="0" max="15" placeholder="0-15">
+      </label>
+
+      <label id="skyBri">
+        <span class="axisBadge">Sky</span>
+        <input id="skyLightInput" type="number" step="1" min="0" max="15" placeholder="0-15">
+      </label>
+    </div>
+
+    <div class="metaRow">
+      <label class="metaLabel" for="shadowRadiusInput">Shadow Radius</label>
+      <input id="shadowRadiusInput" type="number" step="0.1" placeholder="Any Number">
+    </div>
+
+    <div class="metaRow">
+      <label class="metaLabel" for="shadowStrengthInput">Shadow Strength</label>
+      <input id="shadowStrengthInput" type="number" step="0.1" placeholder="Any Number">
+    </div>
   </div>
 </div>
 

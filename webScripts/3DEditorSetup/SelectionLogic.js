@@ -416,6 +416,7 @@ export function initSelectionLogic(state) {
         } else if (groupEdit && state.activeRig && state.selectionBase) {
             state.api.fillTransformUIRelative?.(state.activeRig, state.selectionBase);
         }
+        state.api.fillMetaUI?.();
 
         const canGroup =
             !refEdit &&
@@ -490,7 +491,11 @@ export function initSelectionLogic(state) {
         return {
             blockName: ent.blockName,
             properties: ent.properties ?? null,
+            tags: Array.isArray(ent.tags) ? [...ent.tags] : [],
+            viewRange: ent.viewRange ?? null,
             brightness: ent.brightness ?? null,
+            shadowRadius: ent.shadowRadius ?? null,
+            shadowStrength: ent.shadowStrength ?? null,
             mat: ent.mesh.matrixWorld.elements.slice()
         };
     }
@@ -515,8 +520,40 @@ export function initSelectionLogic(state) {
             items.push({
                 blockName: ent.blockName,
                 properties: ent.properties ?? null,
+                tags: Array.isArray(ent.tags) ? [...ent.tags] : [],
+                viewRange: ent.viewRange ?? null,
                 brightness: ent.brightness ?? null,
+                shadowRadius: ent.shadowRadius ?? null,
+                shadowStrength: ent.shadowStrength ?? null,
                 mat: ent.mesh.matrixWorld.elements.slice(),
+            });
+        }
+
+        if (!items.length) return null;
+        return { items };
+    }
+
+    function serializeSelectedMulti() {
+        if (state.selectedRefId) return null;
+        if (state.selectedIds.size < 2) return null;
+
+        const items = [];
+
+        for (const id of state.selectedIds) {
+            const ent = state.entities.find(e => e.id === id);
+            if (!ent) continue;
+
+            ent.mesh.updateMatrixWorld(true);
+
+            items.push({
+                blockName: ent.blockName,
+                properties: ent.properties ?? null,
+                tags: Array.isArray(ent.tags) ? [...ent.tags] : [],
+                viewRange: ent.viewRange ?? null,
+                brightness: ent.brightness ?? null,
+                shadowRadius: ent.shadowRadius ?? null,
+                shadowStrength: ent.shadowStrength ?? null,
+                mat: ent.mesh.matrixWorld.elements.slice()
             });
         }
 
@@ -535,7 +572,9 @@ export function initSelectionLogic(state) {
 
         const m = new THREE.Matrix4().fromArray(state.blockClipboard.mat);
 
-        if (offset) m.premultiply(new THREE.Matrix4().makeTranslation(0.25, 0, 0.25));
+        if (offset) {
+            m.premultiply(new THREE.Matrix4().makeTranslation(1, 0, 0));
+        }
 
         state.scene.add(mesh);
         setObjectWorldMatrix(mesh, m);
@@ -545,7 +584,13 @@ export function initSelectionLogic(state) {
             id,
             blockName: state.blockClipboard.blockName,
             properties: state.blockClipboard.properties ?? null,
+
+            tags: Array.isArray(state.blockClipboard.tags) ? [...state.blockClipboard.tags] : [],
+            viewRange: state.blockClipboard.viewRange ?? null,
             brightness: state.blockClipboard.brightness ?? null,
+            shadowRadius: state.blockClipboard.shadowRadius ?? null,
+            shadowStrength: state.blockClipboard.shadowStrength ?? null,
+
             mesh
         });
 
@@ -561,7 +606,7 @@ export function initSelectionLogic(state) {
         if (!state.groupClipboard) return;
 
         const t = offset
-            ? new THREE.Matrix4().makeTranslation(0.25, 0, 0.25)
+            ? new THREE.Matrix4().makeTranslation(1, 0, 0)
             : new THREE.Matrix4().identity();
 
         const newIds = [];
@@ -583,7 +628,13 @@ export function initSelectionLogic(state) {
                 id,
                 blockName: it.blockName,
                 properties: it.properties ?? null,
+
+                tags: Array.isArray(it.tags) ? [...it.tags] : [],
+                viewRange: it.viewRange ?? null,
                 brightness: it.brightness ?? null,
+                shadowRadius: it.shadowRadius ?? null,
+                shadowStrength: it.shadowStrength ?? null,
+
                 mesh
             });
             newIds.push(id);
@@ -600,6 +651,55 @@ export function initSelectionLogic(state) {
         rebuildSelectionRig();
         updateXformPanelState();
         state.api.pushHistory?.("paste-group");
+    }
+
+    async function pasteMultiFromClipboard(offset = true) {
+        if (!state.multiClipboard) return;
+
+        const newIds = [];
+
+        for (const item of state.multiClipboard.items) {
+            const mesh = await makeCubeForBlock(
+                state,
+                item.blockName,
+                item.properties ?? null
+            );
+
+            const m = new THREE.Matrix4().fromArray(item.mat);
+
+            if (offset) {
+                m.premultiply(new THREE.Matrix4().makeTranslation(1, 0, 0));
+            }
+
+            state.scene.add(mesh);
+            setObjectWorldMatrix(mesh, m);
+
+            const id = crypto.randomUUID();
+
+            state.entities.push({
+                id,
+                blockName: item.blockName,
+                properties: item.properties ?? null,
+                tags: Array.isArray(item.tags) ? [...item.tags] : [],
+                viewRange: item.viewRange ?? null,
+                brightness: item.brightness ?? null,
+                shadowRadius: item.shadowRadius ?? null,
+                shadowStrength: item.shadowStrength ?? null,
+                mesh
+            });
+
+            newIds.push(id);
+        }
+
+        // select pasted set (UNGROUPED)
+        state.selectedIds.clear();
+        for (const id of newIds) state.selectedIds.add(id);
+
+        state.selectedRefId = null;
+
+        rebuildSelectionRig();
+
+        state.api.pushHistory?.("paste-multi");
     }
 
 
@@ -627,9 +727,17 @@ export function initSelectionLogic(state) {
             id,
             blockName,
             properties,
+
+            tags: [],
+            viewRange: null,
             brightness: null,
+            shadowRadius: null,
+            shadowStrength: null,
+
             mesh
         });
+
+        console.log(state.entities);
 
         state.selectedRefId = null;
         state.selectedIds.clear();
@@ -668,10 +776,13 @@ export function initSelectionLogic(state) {
     // ---- interaction state for drags ----
     const dragOffset = new THREE.Vector3();
     const refDragOffset = new THREE.Vector3();
+    const dragStartRigPos = new THREE.Vector3();
+    const dragStartRefPos = new THREE.Vector3();
 
     // ---- pointer handlers ----
     window.addEventListener("pointerdown", (e) => {
         if (modalOpen()) return;
+        if (state.isRestoringHistory) return;
         if (e.target.closest("#ui")) return;
         if (e.target.closest("#xformUI")) return;
 
@@ -697,6 +808,7 @@ export function initSelectionLogic(state) {
                     // plane drag ref
                     const gp = getGroundPoint(e);
                     refDragOffset.copy(ref.root.position).sub(gp);
+                    dragStartRefPos.copy(ref.root.position);
                     state.isDraggingRef = true;
                     updateOrbitEnabled();
                 }
@@ -755,6 +867,7 @@ export function initSelectionLogic(state) {
             const gp = getGroundPoint(e);
             const rig = state.activeRig || state.selectionRig;
             dragOffset.copy(rig.position).sub(gp);
+            dragStartRigPos.copy(rig.position);
             state.isDraggingMesh = true;
             updateOrbitEnabled();
         }
@@ -762,6 +875,7 @@ export function initSelectionLogic(state) {
 
     window.addEventListener("pointermove", (e) => {
         if (modalOpen()) return;
+        if (state.isRestoringHistory) return;
         if (state.boxSelecting) {
             const x1 = Math.min(state.boxStart.x, e.clientX);
             const y1 = Math.min(state.boxStart.y, e.clientY);
@@ -780,27 +894,46 @@ export function initSelectionLogic(state) {
         // drag ref on plane
         if (state.isDraggingRef && state.selectedRefId) {
             const gp = getGroundPoint(e).add(refDragOffset);
-            const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
 
             const r = state.refs.find((x) => x.id === state.selectedRefId);
             if (r) {
-                r.root.position.set(snap(gp.x), r.root.position.y, snap(gp.z));
+                if (e.shiftKey) {
+                    const dx = gp.x - dragStartRefPos.x;
+                    const dz = gp.z - dragStartRefPos.z;
+
+                    const steppedX = dragStartRefPos.x + Math.round(dx / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+                    const steppedZ = dragStartRefPos.z + Math.round(dz / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+
+                    r.root.position.set(steppedX, r.root.position.y, steppedZ);
+                } else {
+                    r.root.position.set(gp.x, r.root.position.y, gp.z);
+                }
+
                 state.api.fillTransformUI?.(r.root);
                 shadow.visible = true;
                 shadow.position.set(r.root.position.x, 0.002, r.root.position.z);
             }
-            return;
         }
 
+        // drag blocks on plane
         // drag blocks on plane
         if (!state.isDraggingMesh) return;
         if (state.selectedIds.size === 0) return;
 
         const p = getGroundPoint(e).add(dragOffset);
-        const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
-
         const rig = state.activeRig || state.selectionRig;
-        rig.position.set(snap(p.x), rig.position.y, snap(p.z));
+
+        if (e.shiftKey) {
+            const dx = p.x - dragStartRigPos.x;
+            const dz = p.z - dragStartRigPos.z;
+
+            const steppedX = dragStartRigPos.x + Math.round(dx / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+            const steppedZ = dragStartRigPos.z + Math.round(dz / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+
+            rig.position.set(steppedX, rig.position.y, steppedZ);
+        } else {
+            rig.position.set(p.x, rig.position.y, p.z);
+        }
 
         if (state.selectedIds.size === 1) {
             const m = getOnlySelectedMesh();
@@ -810,6 +943,7 @@ export function initSelectionLogic(state) {
 
     window.addEventListener("pointerup", () => {
         if (modalOpen()) return;
+        if (state.isRestoringHistory) return;
         if (state.boxSelecting) {
             state.boxSelecting = false;
             selBox.style.display = "none";
@@ -866,6 +1000,7 @@ export function initSelectionLogic(state) {
 
     window.addEventListener("pointercancel", () => {
         if (modalOpen()) return;
+        if (state.isRestoringHistory) return;
         state.isDraggingMesh = false;
         state.isDraggingRef = false;
         updateOrbitEnabled();
@@ -874,10 +1009,19 @@ export function initSelectionLogic(state) {
     // ---- keyboard (group / ungroup / delete / undo / redo) ----
     window.addEventListener("keydown", (e) => {
         if (modalOpen()) return;
+        if (state.isRestoringHistory) return;
         const isMac = navigator.platform.toLowerCase().includes("mac");
         const mod = isMac ? e.metaKey : e.ctrlKey;
 
         if (isTextInputFocused()) return;
+
+        if (e.key === "Alt") {
+            e.preventDefault();
+        }
+
+        if (e.altKey) {
+            e.preventDefault();
+        }
 
         // undo / redo
         if (mod && e.key.toLowerCase() === "z") {
@@ -970,6 +1114,12 @@ export function initSelectionLogic(state) {
         }
     });
 
+    window.addEventListener("keyup", (e) => {
+        if (e.key === "Alt") {
+            e.preventDefault();
+        }
+    })
+
     // ---- history snapshots ----
     function takeSnapshot() {
         return {
@@ -979,7 +1129,11 @@ export function initSelectionLogic(state) {
                     id: e.id,
                     blockName: e.blockName,
                     properties: e.properties ?? null,
+                    tags: Array.isArray(e.tags) ? [...e.tags] : [],
+                    viewRange: e.viewRange ?? null,
                     brightness: e.brightness ?? null,
+                    shadowRadius: e.shadowRadius ?? null,
+                    shadowStrength: e.shadowStrength ?? null,
                     mat: e.mesh.matrixWorld.elements.slice()
                 };
             }),
@@ -1022,7 +1176,13 @@ export function initSelectionLogic(state) {
                 id: se.id,
                 blockName: se.blockName,
                 properties: se.properties ?? null,
+
+                tags: Array.isArray(se.tags) ? [...se.tags] : [],
+                viewRange: se.viewRange ?? null,
                 brightness: se.brightness ?? null,
+                shadowRadius: se.shadowRadius ?? null,
+                shadowStrength: se.shadowStrength ?? null,
+
                 mesh
             });
         }
@@ -1104,16 +1264,30 @@ export function initSelectionLogic(state) {
         state.historyIndex = state.history.length - 1;
     }
 
-    function undo() {
+    async function undo() {
         if (state.historyIndex <= 0) return;
-        state.historyIndex--;
-        restoreSnapshot(state.history[state.historyIndex]);
+        if (state.isRestoringHistory) return;
+
+        state.isRestoringHistory = true;
+        try {
+            state.historyIndex--;
+            await restoreSnapshot(state.history[state.historyIndex]);
+        } finally {
+            state.isRestoringHistory = false;
+        }
     }
 
-    function redo() {
+    async function redo() {
         if (state.historyIndex >= state.history.length - 1) return;
-        state.historyIndex++;
-        restoreSnapshot(state.history[state.historyIndex]);
+        if (state.isRestoringHistory) return;
+
+        state.isRestoringHistory = true;
+        try {
+            state.historyIndex++;
+            await restoreSnapshot(state.history[state.historyIndex]);
+        } finally {
+            state.isRestoringHistory = false;
+        }
     }
 
     // init snapshot
@@ -1136,8 +1310,10 @@ export function initSelectionLogic(state) {
     state.api.getOnlySelectedMesh = getOnlySelectedMesh;
     state.api.serializeSelectedBlock = serializeSelectedBlock;
     state.api.serializeSelectedGroup = serializeSelectedGroup;
+    state.api.serializeSelectedMulti = serializeSelectedMulti;
     state.api.pasteBlockFromClipboard = pasteBlockFromClipboard;
     state.api.pasteGroupFromClipboard = pasteGroupFromClipboard;
+    state.api.pasteMultiFromClipboard = pasteMultiFromClipboard;
 
     state.api.groupSelected = groupSelected;
     state.api.ungroupSelection = ungroupSelection;

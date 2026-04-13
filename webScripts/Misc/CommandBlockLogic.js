@@ -48,10 +48,10 @@ function brightnessToMcNbt(brightness) {
     // 1) number -> brightness:1
     // 2) object -> brightness:{block:15,sky:15}
     if (typeof brightness === "number") {
-        return `brightness:${brightness}`;
+        return `brightness:${fmt(brightness)}f`;
     }
 
-    if (typeof brightness === "object") {
+    if (typeof brightness === "object" && !Array.isArray(brightness)) {
         const parts = [];
         if (brightness.block != null) parts.push(`block:${Number(brightness.block)}`);
         if (brightness.sky != null) parts.push(`sky:${Number(brightness.sky)}`);
@@ -60,6 +60,27 @@ function brightnessToMcNbt(brightness) {
     }
 
     return null;
+}
+
+function tagsToMcNbt(tags) {
+    if (!Array.isArray(tags)) return null;
+
+    const cleaned = tags
+        .map((t) => String(t).trim())
+        .filter(Boolean);
+
+    if (!cleaned.length) return null;
+
+    return `Tags:[${cleaned.map(mcQuoteString).join(",")}]`;
+}
+
+function numberFieldToMcNbt(key, value) {
+    if (value == null || value === "") return null;
+
+    const n = Number(value);
+    if (!Number.isFinite(n)) return null;
+
+    return `${key}:${fmt(n)}f`;
 }
 
 function buildBlockStateNbt(ent) {
@@ -82,8 +103,20 @@ export function entityToSummonCmd(ent, origin = "~0.5 ~0.5 ~0.5") {
         `transformation:${mat4ToMcArray(M)}`
     ];
 
+    const tagsNbt = tagsToMcNbt(ent.tags);
+    if (tagsNbt) nbtParts.push(tagsNbt);
+
     const brightnessNbt = brightnessToMcNbt(ent.brightness);
     if (brightnessNbt) nbtParts.push(brightnessNbt);
+
+    const viewRangeNbt = numberFieldToMcNbt("view_range", ent.viewRange);
+    if (viewRangeNbt) nbtParts.push(viewRangeNbt);
+
+    const shadowRadiusNbt = numberFieldToMcNbt("shadow_radius", ent.shadowRadius);
+    if (shadowRadiusNbt) nbtParts.push(shadowRadiusNbt);
+
+    const shadowStrengthNbt = numberFieldToMcNbt("shadow_strength", ent.shadowStrength);
+    if (shadowStrengthNbt) nbtParts.push(shadowStrengthNbt);
 
     const nbt = `{${nbtParts.join(",")}}`;
     return `summon minecraft:block_display ${origin} ${nbt}`;

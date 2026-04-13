@@ -10,7 +10,7 @@
 import * as THREE from "three";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import {gridFine, gridCoarse} from "./SceneFunctions.js"
-import { playUiClick } from "../Misc/UISetup.js";
+import { playUiClick } from "../Misc/AudioControl.js";
 
 /** -------------------- Matrix helpers -------------------- */
 
@@ -86,6 +86,209 @@ export function attachKeepWorldMatrix(obj, newParent) {
     obj.matrix.copy(local);
     obj.matrixWorldNeedsUpdate = true;
     obj.updateMatrixWorld(true);
+}
+
+function getSelectedEntity(state) {
+    if (state.selectedRefId) return null;
+    if (state.selectedIds.size !== 1) return null;
+
+    const id = [...state.selectedIds][0];
+    return state.entities.find((e) => e.id === id) || null;
+}
+
+function getExactSelectedGroupEntities(state) {
+    if (state.selectedRefId) return null;
+
+    const g = state.api.exactGroupForSelection?.();
+    if (!g) return null;
+
+    const ents = g.members
+        .map((id) => state.entities.find((e) => e.id === id))
+        .filter(Boolean);
+
+    return ents.length ? ents : null;
+}
+
+function normalizeTagsFromInput(value) {
+    return String(value || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+}
+
+function setMetaInputsDisabled(state, disabled) {
+    for (const el of [
+        state.ui.tagsInput,
+        state.ui.viewRangeInput,
+        state.ui.blockLightInput,
+        state.ui.skyLightInput,
+        state.ui.shadowRadiusInput,
+        state.ui.shadowStrengthInput
+    ]) {
+        if (el) el.disabled = disabled;
+    }
+}
+
+function clearMetaInputs(state) {
+    if (state.ui.tagsInput) state.ui.tagsInput.value = "";
+    if (state.ui.viewRangeInput) state.ui.viewRangeInput.value = "";
+    if (state.ui.blockLightInput) state.ui.blockLightInput.value = "";
+    if (state.ui.skyLightInput) state.ui.skyLightInput.value = "";
+    if (state.ui.shadowRadiusInput) state.ui.shadowRadiusInput.value = "";
+    if (state.ui.shadowStrengthInput) state.ui.shadowStrengthInput.value = "";
+}
+
+function fillMetaUIFromEntity(state, ent) {
+    if (!ent) {
+        clearMetaInputs(state);
+        setMetaInputsDisabled(state, true);
+        return;
+    }
+
+    setMetaInputsDisabled(state, false);
+
+    if (state.ui.tagsInput) {
+        state.ui.tagsInput.value = Array.isArray(ent.tags) ? ent.tags.join(", ") : "";
+    }
+
+    if (state.ui.viewRangeInput) {
+        state.ui.viewRangeInput.value = ent.viewRange ?? "";
+    }
+
+    if (state.ui.blockLightInput) {
+        state.ui.blockLightInput.value =
+            (ent.brightness && typeof ent.brightness === "object" && ent.brightness.block != null)
+                ? ent.brightness.block
+                : "";
+    }
+
+    if (state.ui.skyLightInput) {
+        state.ui.skyLightInput.value =
+            (ent.brightness && typeof ent.brightness === "object" && ent.brightness.sky != null)
+                ? ent.brightness.sky
+                : "";
+    }
+
+    if (state.ui.shadowRadiusInput) {
+        state.ui.shadowRadiusInput.value = ent.shadowRadius ?? "";
+    }
+
+    if (state.ui.shadowStrengthInput) {
+        state.ui.shadowStrengthInput.value = ent.shadowStrength ?? "";
+    }
+}
+
+function fillMetaUI(state) {
+    if (state.selectedRefId) {
+        clearMetaInputs(state);
+        setMetaInputsDisabled(state, true);
+        return;
+    }
+
+    const single = getSelectedEntity(state);
+    if (single) {
+        fillMetaUIFromEntity(state, single);
+        return;
+    }
+
+    const groupEnts = getExactSelectedGroupEntities(state);
+    if (groupEnts?.length) {
+        // Use first entity as displayed value baseline for now.
+        fillMetaUIFromEntity(state, groupEnts[0]);
+        return;
+    }
+
+    clearMetaInputs(state);
+    setMetaInputsDisabled(state, true);
+}
+
+function parseOptionalNumberInput(el) {
+    if (!el) return null;
+    const raw = String(el.value ?? "").trim();
+    if (!raw) return null;
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+}
+
+function buildBrightnessFromInputs(state) {
+    const block = parseOptionalNumberInput(state.ui.blockLightInput);
+    const sky = parseOptionalNumberInput(state.ui.skyLightInput);
+
+    if (block == null && sky == null) return null;
+
+    const out = {};
+    if (block != null) out.block = block;
+    if (sky != null) out.sky = sky;
+    return out;
+}
+
+function applyMetaToEntities(state, entities) {
+    if (!entities?.length) return false;
+
+    const tags = normalizeTagsFromInput(state.ui.tagsInput?.value ?? "");
+    const viewRange = parseOptionalNumberInput(state.ui.viewRangeInput);
+    const brightness = buildBrightnessFromInputs(state);
+    const shadowRadius = parseOptionalNumberInput(state.ui.shadowRadiusInput);
+    const shadowStrength = parseOptionalNumberInput(state.ui.shadowStrengthInput);
+
+    for (const ent of entities) {
+        ent.tags = [...tags];
+        ent.viewRange = viewRange;
+        ent.brightness = brightness ? { ...brightness } : null;
+        ent.shadowRadius = shadowRadius;
+        ent.shadowStrength = shadowStrength;
+    }
+
+    return true;
+}
+
+function applyMetaFromUI(state) {
+    if (state.selectedRefId) return false;
+
+    const single = getSelectedEntity(state);
+    if (single) {
+        const changed = applyMetaToEntities(state, [single]);
+        if (changed) state.api.pushHistory?.("meta-edit");
+        return changed;
+    }
+
+    const groupEnts = getExactSelectedGroupEntities(state);
+    if (groupEnts?.length) {
+        const changed = applyMetaToEntities(state, groupEnts);
+        if (changed) state.api.pushHistory?.("meta-edit-group");
+        return changed;
+    }
+
+    return false;
+}
+
+function hookMetaUI(state) {
+    const fields = [
+        state.ui.tagsInput,
+        state.ui.viewRangeInput,
+        state.ui.blockLightInput,
+        state.ui.skyLightInput,
+        state.ui.shadowRadiusInput,
+        state.ui.shadowStrengthInput
+    ].filter(Boolean);
+
+    for (const el of fields) {
+        el.addEventListener("change", () => {
+            applyMetaFromUI(state);
+        });
+
+        el.addEventListener("blur", () => {
+            applyMetaFromUI(state);
+        });
+
+        el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                applyMetaFromUI(state);
+                el.blur();
+            }
+        });
+    }
 }
 
 /** -------------------- TransformControls + UI -------------------- */
@@ -194,12 +397,13 @@ export function initTransformLogic(state) {
         } else if (state.selectionBase && state.activeRig && !state.selectionIsTempRig) {
             fillTransformUIRelative(state, state.activeRig, state.selectionBase);
         }
-
+        fillMetaUI(state);
         state.api.updateHighlight?.();
     });
 
     // numeric input listeners
     hookNumericUI(state);
+    hookMetaUI(state);
 
     // copy/paste buttons
     if (state.ui.copyBtn) state.ui.copyBtn.addEventListener("click", () => doCopy(state));
@@ -277,22 +481,26 @@ export function initTransformLogic(state) {
         }
 
         // W/E/R mode switching (lets SelectionLogic not care)
-        if (e.key === "w" || e.key === "W") {
+        if (e.key === "t" || e.key === "T") {
             playUiClick();
             setTransformMode(state, transform, "translate");
         }
-        if (e.key === "e" || e.key === "E") {
+        if (e.key === "r" || e.key === "R") {
             playUiClick();
             setTransformMode(state, transform, "rotate");
         }
-        if (e.key === "r" || e.key === "R") {
+        if (e.key === "s" || e.key === "S") {
             playUiClick();
             setTransformMode(state, transform, "scale");
         }
         if (e.key === "h" || e.key === "H") {
-                showCoarseGrid = !showCoarseGrid;
+            showCoarseGrid = !showCoarseGrid;
+            state.debug.showCoarseGrid = showCoarseGrid;
+
+            if (state.debug.floorHelpersVisible !== false) {
                 gridFine.visible = !showCoarseGrid;
                 gridCoarse.visible = showCoarseGrid;
+            }
         }
     });
 
@@ -314,6 +522,7 @@ export function initTransformLogic(state) {
     // expose in state
     state.api.transform = transform;
     state.api.attachTransformToActiveRig = () => attachTransformToActiveRig(state, transform);
+    state.api.fillMetaUI = () => fillMetaUI(state);
 
     return transform;
 }
@@ -895,43 +1104,80 @@ function doCopy(state) {
     if (exactGroup) {
         const g = state.api.serializeSelectedGroup?.();
         if (!g) return;
-
+        flashBtnText(state.ui.copyBtn, "Copied", "Copy");
+        state.multiClipboard = null;
         state.groupClipboard = g;
         state.blockClipboard = null;
         state.refClipboard = null;
         return;
     }
 
+    const multi = state.api.serializeSelectedMulti?.();
+    if (multi) {
+        flashBtnText(state.ui.copyBtn, "Copied", "Copy");
+        state.multiClipboard = multi;
+        state.blockClipboard = null;
+        state.groupClipboard = null;
+        state.refClipboard = null;
+        return;
+    }
+
     const b = state.api.serializeSelectedBlock?.();
     if (b) {
+        flashBtnText(state.ui.copyBtn, "Copied", "Copy");
+        state.multiClipboard = null;
         state.blockClipboard = b;
         state.refClipboard = null;
         state.groupClipboard = null;
+        return;
     }
 
     if (state.selectedRefId) {
         const r = state.api.serializeSelectedRef?.();
         if (!r) return;
-
+        flashBtnText(state.ui.copyBtn, "Copied", "Copy");
+        state.multiClipboard = null;
         state.refClipboard = r;
         state.blockClipboard = null;
         state.groupClipboard = null;
         return;
     }
+
 }
 
 function doPaste(state, offset = true) {
     if (state.groupClipboard) {
+        flashBtnText(state.ui.pasteBtn, "Pasted", "Paste");
         state.api.pasteGroupFromClipboard?.(offset);
         return;
     }
+    if (state.multiClipboard) {
+        flashBtnText(state.ui.pasteBtn, "Pasted", "Paste");
+        state.api.pasteMultiFromClipboard?.(offset);
+        return;
+    }
     if (state.blockClipboard) {
+        flashBtnText(state.ui.pasteBtn, "Pasted", "Paste");
         state.api.pasteBlockFromClipboard?.(offset);
         return;
     }
     if (state.refClipboard) {
+        flashBtnText(state.ui.pasteBtn, "Pasted", "Paste");
         state.api.pasteRefFromClipboard?.(offset);
+        return;
     }
+}
+
+function flashBtnText(btn, flashText, revertText, delay = 500) {
+    if (!btn) return;
+
+    btn.innerText = flashText;
+
+    clearTimeout(btn._flashTimeout);
+
+    btn._flashTimeout = setTimeout(() => {
+        btn.innerText = revertText;
+    }, delay);
 }
 
 

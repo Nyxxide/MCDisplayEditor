@@ -1,8 +1,7 @@
+// UISetup.js
+
 import {state} from "./StateData.js";
 import {entityToSummonCmd, exportOneCommand} from "./CommandBlockLogic.js";
-
-const uiClickSound = new Audio("../Static/Audio/ClickSFX.mp3");
-uiClickSound.preload = "auto";
 
 export function initInstructionsModal(state) {
   const openBtn = state.ui.instructionsBtn;
@@ -11,14 +10,30 @@ export function initInstructionsModal(state) {
 
   if (!openBtn || !modal || !closeBtn) return;
 
+  const SEEN_KEY = "cbt_seen_instructions_v1";
+
   function openModal() {
     modal.style.display = "flex";
     if (state.orbit) state.orbit.enabled = false;
   }
 
-  function closeModal() {
+  function closeModal({ markSeen = true } = {}) {
     modal.style.display = "none";
     if (state.orbit) state.orbit.enabled = true;
+
+    if (markSeen) {
+      try {
+        localStorage.setItem(SEEN_KEY, "1");
+      } catch {}
+    }
+  }
+
+  function hasSeenInstructions() {
+    try {
+      return localStorage.getItem(SEEN_KEY) === "1";
+    } catch {
+      return false;
+    }
   }
 
   openBtn.addEventListener("click", () => {
@@ -40,6 +55,19 @@ export function initInstructionsModal(state) {
       closeModal();
     }
   });
+
+  // Auto-open on first visit
+  if (!hasSeenInstructions()) {
+    openModal();
+  }
+
+  // Optional debug helper you can call from console:
+  // state.api.resetInstructionsSeen?.()
+  state.api.resetInstructionsSeen = () => {
+    try {
+      localStorage.removeItem(SEEN_KEY);
+    } catch {}
+  };
 }
 
 export function initSidebarToggle(state) {
@@ -104,22 +132,3 @@ export function initCommandOutputBtns(state) {
   });
 }
 
-export function playUiClick() {
-  const s = uiClickSound.cloneNode()
-  s.currentTime = 0.1; // optional skip
-  s.play().catch(() => {});
-}
-
-function bindClickSound(selector) {
-  document.querySelectorAll(selector).forEach((el) => {
-    el.addEventListener("click", () => {
-      playUiClick();
-    });
-  });
-}
-
-export function initAudioTriggers() {
-  bindClickSound(".modalClose");
-  bindClickSound("#exportOne, #exportMany");
-  bindClickSound(".modeSwitches button");
-}

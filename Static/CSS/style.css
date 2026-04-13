@@ -6,6 +6,7 @@ html, body {
     overflow: hidden;
     font-family: system-ui, sans-serif;
     background: #111;
+    user-select: none;
 }
 
 body {
@@ -16,17 +17,17 @@ body {
     width: 100vw;
     height: 100vh;
     display: grid;
-    grid-template-rows: 44px 1fr;
+    grid-template-rows: 54px 1fr;
 }
 
 #topBar {
     font-family: "Minecraft";
     grid-row: 1;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     gap: 16px;
-    padding: 0 14px;
+    padding-left: 14px;
     background: rgba(0, 0, 0, 0.72);
     border-bottom: 1px solid rgba(255,255,255,0.12);
     color: #fff;
@@ -34,25 +35,24 @@ body {
 }
 
 #topBarTitle {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 600;
     white-space: nowrap;
+    align-self: center;
 }
 
 #topBarActions {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    align-items: stretch;
     justify-content: flex-end;
+    height: 100%;
 }
 
 #topBarActions button {
-    padding: 7px 10px;
-    border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.18);
-    background: rgba(255,255,255,0.08);
+    background-color: #1c1c1c;
     color: #fff;
+    aspect-ratio: 1/1;
     cursor: pointer;
     font-size: 12px;
     font-family: "Minecraft";
@@ -395,7 +395,7 @@ body {
 }
 
 .modalTitle {
-    font-size: 16px;
+    font-size: 25px;
     font-weight: 700;
     color: #fff;
     font-family: "Minecraft";
@@ -428,8 +428,22 @@ body {
 }
 
 .modalCardSmall {
-    width: min(460px, 90vw);
+    width: min(550px, 120vw);
     max-height: none;
+}
+
+#saveBtn {
+    background-image: url("../Images/Save.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#loadBtn {
+    background-image: url("../Images/Load.gif");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .saveNameInput {
@@ -449,20 +463,48 @@ body {
     font-family: "Minecraft";
 }
 
+#toggleGridBtn {
+    background-image: url("../Images/InvisGrid.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#toggleGridBtn.active {
+    background-image: url("../Images/VisGrid.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#instructionsBtn {
+    background-image: url("../Images/Instructions.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .instructionsContent {
     overflow-y: auto;
     max-height: 60vh;
     padding-right: 4px;
-    color: #e9f7ff;
+    color: #fff;
+    text-shadow: #2c2c2c 2px 2px 1px;
     line-height: 1.45;
     font-size: 14px;
     font-family: "Minecraft";
 }
 
+#instLabel {
+    color: #ffff55;
+    text-shadow: #3f3f15 2px 2px 1px;
+}
+
 .instructionsContent h3 {
     margin: 14px 0 6px;
-    font-size: 15px;
-    color: #fff;
+    font-size: 20px;
+    color: #55ffff;
+    text-shadow: #153f3f 2px 2px 1px;
 }
 
 .instructionsContent h3:first-child {
@@ -479,6 +521,135 @@ body {
 
 #importCmdRun {
     font-family: "Minecraft";
+}
+
+#importCmdBtn {
+    background-image: url("../Images/ImportViaCommand.gif");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#importRefBtn {
+    background-image: url("../Images/Import3DModel.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#modelLibraryBtn {
+    background-image: url("../Images/LibraryButton.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.modelLibraryModalCard {
+    width: min(1100px, 94vw);
+    max-height: min(86vh, 900px);
+}
+
+.modelLibraryGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 18px;
+    overflow-y: auto;
+    max-height: 70vh;
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.modelLibraryCard {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #797979;
+    border: 2px solid rgba(0,0,0,0.12);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+    min-height: 260px;
+}
+
+.modelLibraryPreview {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 190px;
+    background: #424242;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.modelLibraryPreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #1f1f1f;
+}
+
+.modelLibraryBanner {
+    padding: 14px 16px;
+    text-align: center;
+    background: #000000;
+    color: #ff55ff;
+    text-shadow: #3f153f 2px 2px 1px;
+    font-family: "Minecraft";
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.modelLibraryHover {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 120ms ease, transform 120ms ease;
+    pointer-events: none;
+}
+
+.modelLibraryCard:hover .modelLibraryHover {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.modelLibraryLoadBtn {
+    border: black 2px solid;
+    padding: 10px 18px;
+    background-image: url("../Images/StoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #fff;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    font-family: "Minecraft";
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+
+.modelLibraryLoadBtn:hover {
+    border: white 2px solid;
+}
+
+.modelLibraryEmpty {
+    color: white;
+    font-family: "Minecraft";
+    font-size: 18px;
+    padding: 20px;
+}
+
+.modelLibraryError {
+    color: #ff8080;
+    font-family: "Minecraft";
+    font-size: 18px;
+    padding: 20px;
 }
 
 #topSegment {
@@ -678,6 +849,15 @@ body {
     border: 1px solid rgba(255,255,255,0.16);
     background: rgba(255,255,255,0.08);
     color: #fff;
+    cursor: pointer;
+}
+
+#xformUI button:hover {
+    background-color: #606060;
+}
+
+#xformUI button. {
+    background-color: #606060;
 }
 
 #xformUI button:disabled {
@@ -740,4 +920,69 @@ body {
 
 .axisZ .axisBadge {
     color: #5aa8ff;
+}
+
+.metaSection {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metaHdr {
+    font-weight: 700;
+    font-size: 13px;
+    opacity: 0.95;
+}
+
+.metaRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.metaRowSplit {
+    align-items: center;
+}
+
+.metaLabel {
+    width: 92px;
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.95;
+}
+
+.metaWideInput {
+    width: 100%;
+    min-width: 0;
+}
+
+#metaSection input {
+    flex: 1 1 auto;
+}
+
+#blockLightInput,
+#skyLightInput,
+#shadowRadiusInput,
+#shadowStrengthInput,
+#viewRangeInput {
+    width: 100%;
+}
+
+#blockBri {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: #55dd55;
+}
+
+#skyBri {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #5aa8ff;
+    flex: 0 0 auto;
 }

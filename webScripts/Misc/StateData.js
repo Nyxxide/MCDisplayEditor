@@ -50,6 +50,7 @@ export const state = {
     // history
     history: [],
     historyIndex: -1,
+    isRestoringHistory: false,
 
     // clipboard
     blockClipboard: null,
@@ -68,6 +69,10 @@ export const state = {
 
     // cross-module hooks (wired in main)
     api: {},
+
+    debug: {
+        floorHelpersVisible: true,
+    },
 
     // atlas
     atlas: null,
@@ -102,6 +107,13 @@ export function initDom() {
     state.ui.posRow = document.getElementById("posRow");
     state.ui.rotRow = document.getElementById("rotRow");
     state.ui.scaleRow = document.getElementById("scaleRow");
+    state.ui.metaSection = document.getElementById("metaSection");
+    state.ui.tagsInput = document.getElementById("tagsInput");
+    state.ui.viewRangeInput = document.getElementById("viewRangeInput");
+    state.ui.blockLightInput = document.getElementById("blockLightInput");
+    state.ui.skyLightInput = document.getElementById("skyLightInput");
+    state.ui.shadowRadiusInput = document.getElementById("shadowRadiusInput");
+    state.ui.shadowStrengthInput = document.getElementById("shadowStrengthInput");
 
     state.ui.px = document.getElementById("px");
     state.ui.py = document.getElementById("py");
@@ -123,4 +135,6 @@ export function initDom() {
 
     // ----- Top UI -----
     state.ui.instructionsBtn = document.getElementById("instructionsBtn");
+    state.ui.toggleGridBtn = document.getElementById("toggleGridBtn");
+    state.ui.modelLibraryBtn = document.getElementById("modelLibraryBtn");
 }

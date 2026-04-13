@@ -115,6 +115,11 @@ export async function initScene(state) {
     const E = makeLabelPlane("E");
     const S = makeLabelPlane("S");
     const W = makeLabelPlane("W");
+    N.name = "compass:N";
+    E.name = "compass:E";
+    S.name = "compass:S";
+    W.name = "compass:W";
+
     N.position.set(0, 0.002, -compassRadius);
     S.position.set(0, 0.002, compassRadius);
     E.position.set(compassRadius, 0.002, 0);
@@ -131,6 +136,7 @@ export async function initScene(state) {
     state.floorOriginRoot = floorOriginRoot;
     state.post.outlinePass = outlinePass;
     state.selectionRig = selectionRig;
+    state.debug.floorCompassLabels = [N, E, S, W];
 
     // resize handler
     function resizeRendererToViewport() {

@@ -112,7 +112,11 @@ export async function importCommandTextMerge(state, text) {
             id,
             blockName: se.blockName,
             properties: se.properties ?? null,
+            tags: Array.isArray(se.tags) ? [...se.tags] : [],
+            viewRange: se.viewRange ?? null,
             brightness: se.brightness ?? null,
+            shadowRadius: se.shadowRadius ?? null,
+            shadowStrength: se.shadowStrength ?? null,
             mesh,
         });
         newIds.push(id);
@@ -138,7 +142,11 @@ export function parseCommandTextToSaveObject(text) {
             id: crypto.randomUUID(),
             blockName: parsed.blockName,
             properties: parsed.properties,
-            brightness: parsed.brightness,
+            tags: parsed.tags ?? [],
+            viewRange: parsed.viewRange ?? null,
+            brightness: parsed.brightness ?? null,
+            shadowRadius: parsed.shadowRadius ?? null,
+            shadowStrength: parsed.shadowStrength ?? null,
             mat: parsed.mat,
         };
     });
@@ -321,7 +329,32 @@ function parseSingleBlockDisplaySummon(cmd) {
     const mat = normalizeTransformationToSavedWorldMat(nbt.transformation);
     const brightness = normalizeBrightness(nbt.brightness ?? null);
 
-    return { blockName, properties, brightness, mat };
+    const tags = normalizeTags(nbt.Tags ?? nbt.tags ?? null);
+    const viewRange = normalizeOptionalNumber(nbt.view_range ?? nbt.viewRange ?? null);
+    const shadowRadius = normalizeOptionalNumber(nbt.shadow_radius ?? nbt.shadowRadius ?? null);
+    const shadowStrength = normalizeOptionalNumber(nbt.shadow_strength ?? nbt.shadowStrength ?? null);
+
+    return {
+        blockName,
+        properties,
+        tags,
+        viewRange,
+        brightness,
+        shadowRadius,
+        shadowStrength,
+        mat
+    };
+}
+
+function normalizeTags(v) {
+    if (!Array.isArray(v)) return [];
+    return v.map((t) => String(t).trim()).filter(Boolean);
+}
+
+function normalizeOptionalNumber(v) {
+    if (v == null || v === "") return null;
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
 }
 
 function normalizeTransformationToSavedWorldMat(transformation) {

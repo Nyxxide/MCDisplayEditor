@@ -114,6 +114,8 @@ export function initSaveLoadLogic(state) {
     state.api.loadSaveMerge = (file) => loadSaveFileMerge(state, file);
 
     state.api.instantiateRefFromAsset = (assetId) => instantiateRefFromAsset(state, assetId);
+
+    state.api.loadSaveDataMerge = (data) => loadSaveDataMerge(state, data);
 }
 
 /** -------------------- SAVE -------------------- */
@@ -125,7 +127,11 @@ function buildSaveObject(state) {
             id: e.id,
             blockName: e.blockName,
             properties: e.properties ?? null,
+            tags: Array.isArray(e.tags) ? [...e.tags] : [],
+            viewRange: e.viewRange ?? null,
             brightness: e.brightness ?? null,
+            shadowRadius: e.shadowRadius ?? null,
+            shadowStrength: e.shadowStrength ?? null,
             mat: e.mesh.matrixWorld.elements.slice(),
         };
     });
@@ -186,7 +192,10 @@ function downloadJson(obj, filename) {
 async function loadSaveFileMerge(state, file) {
     const text = await file.text();
     const data = JSON.parse(text);
+    await loadSaveDataMerge(state, data);
+}
 
+export async function loadSaveDataMerge(state, data) {
     if (!data || typeof data !== "object" || data.version !== 1) {
         alert("Unsupported save format.");
         return;
@@ -201,18 +210,16 @@ async function loadSaveFileMerge(state, file) {
                     kind: a.kind,
                     name: a.name,
                     bytesBase64: a.bytesBase64,
-                    template: null, // built below
+                    template: null,
                 });
             }
         }
 
-        // Build templates for assets that don't have one yet
-        // This is async but only happens during load, not during undo.
         await buildTemplatesForAllAssets(state);
     }
 
     // 2) Merge blocks (new ids) and build an id remap for groups
-    const idMap = new Map(); // old -> new
+    const idMap = new Map();
     if (Array.isArray(data.entities)) {
         for (const se of data.entities) {
             const newId = crypto.randomUUID();
@@ -228,7 +235,11 @@ async function loadSaveFileMerge(state, file) {
                 id: newId,
                 blockName: se.blockName,
                 properties: se.properties ?? null,
+                tags: Array.isArray(se.tags) ? [...se.tags] : [],
+                viewRange: se.viewRange ?? null,
                 brightness: se.brightness ?? null,
+                shadowRadius: se.shadowRadius ?? null,
+                shadowStrength: se.shadowStrength ?? null,
                 mesh
             });
         }
@@ -255,7 +266,6 @@ async function loadSaveFileMerge(state, file) {
             const root = instantiateRefFromAsset(state, rr.assetId);
             if (!root) continue;
 
-            // standardize
             root.userData.kind = "ref";
             root.userData.exportable = false;
 
@@ -276,11 +286,10 @@ async function loadSaveFileMerge(state, file) {
         }
     }
 
-    // 5) Rebuild group nodes (so groups behave)
+    // 5) Rebuild group nodes
     for (const g of state.groups) state.api.ensureGroupNode?.(g);
 
-    // 6) Keep camera position / selection (you requested that)
-    // We'll just refresh selection rig/UI with whatever was currently selected.
+    // 6) Refresh UI / rig
     state.api.rebuildSelectionRig?.();
     state.api.updateXformPanelState?.();
 

@@ -163,6 +163,7 @@ export async function initAnimations(state, clock) {
     markerMat.polygonOffsetUnits = -1;
 
     (state.floorOriginRoot || state.scene).add(markerMesh);
+    state.debug.floorMarkerMesh = markerMesh;
 
     function animate() {
         const dt = clock.getDelta();

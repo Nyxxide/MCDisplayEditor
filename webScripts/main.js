@@ -1,13 +1,8 @@
 // TODO: Fix item icons that appear in the selection menu to match how they appear in editor, fix missing textures
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
-// TODO: Make UI look nicer, add button toggles for every keystroke
-// TODO: Change BlockData UI in the top right corner to only reflect the values of the given mode (dont show all 3 all the time)
-// TODO: Make click and drag move (not via gizmo) not lock into intervals of 0.25, instead +/- shift of 0.25
-// TODO: When multi-selected and not grouped, copy/paste makes them a group upon pasting?
-// TODO: Add Tagging in the block/group specific UI (change how block data is stored backend again, esp with save/load)
-// TODO: Make entire grid floor have toggleable visibility (screencap purposes)
-// TODO: Add button for library of default models (Currently only T-Rex)
-// TODO: Look at latest gpt message for fix on modal editor blocking
+// TODO: Gotta make my favicon
+// TODO: Make Instructions Prettier & Add top bar/xForm stuff into it
+// TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like)
 
 
 /* TODO Texture Stuff:
@@ -19,6 +14,8 @@
 /*
 *  TODO Housekeeping:
 *   - Reogranize Resources to split into Icons/Blocks/Items/Atlases (move everything currently in there for blocks into Blocks folder
+*   - For the love of God split the CSS file into multiple it's a mess
+*   - Maybe go through all the large webScript files again and see about cutting them down?
 */
 
 /*
@@ -27,6 +24,12 @@
 *   - Item Displays
 *   - Text Displays with every possible atlas texture
 */
+
+/*
+*  TODO Backend:
+*   - Design a script to watch for the latest Minecraft update if a new one was released.
+*     -- If there is a new update, call genBlockList and compare output to the old one (diff). If anything new, find file and add it to resources accordingly. If not, leave alone.
+ */
 
 import * as THREE from "three";
 import { state, initDom } from "./Misc/StateData.js";
@@ -39,8 +42,10 @@ import { loadBlockList } from "./TextureLoading/TextureLoad.js";
 import { initPaletteUI } from "./TextureLoading/PaletteUI.js";
 import { initAnimations } from "./TextureLoading/BlockAnimationLogic.js";
 import { initImportCommandLogic } from "./Misc/ImportModelFromCommand.js";
-import { initCommandOutputBtns, initInstructionsModal, initSidebarToggle, initAudioTriggers } from "./Misc/UISetup.js";
-
+import { initCommandOutputBtns, initInstructionsModal, initSidebarToggle } from "./Misc/UISetup.js";
+import { initAudioTriggers } from "./Misc/AudioControl.js"
+import { initDebugVisibilityUI } from "./Misc/DebugGridVisibility.js";
+import { initModelLibraryModal } from "./Misc/ModelLibrarySetup.js";
 
 
 // -------------------- Init --------------------
@@ -81,6 +86,12 @@ initCommandOutputBtns(state)
 
 // ui audio
 initAudioTriggers()
+
+// hide grid debug
+initDebugVisibilityUI(state);
+
+// setup model library
+initModelLibraryModal(state);
 
 // start page animations
 await initAnimations(state, clock);
