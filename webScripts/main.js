@@ -3,7 +3,7 @@
 // TODO: Gotta make my favicon
 // TODO: Make Instructions Prettier & Add top bar/xForm stuff into it
 // TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like)
-// TODO: Come to a decision on grouping nbt data to be handled that way (grouping objects with different values overwrites them all to the latest placed object values)
+// TODO: Fix nbt behavior on grouping (make grouped objects retain previous values unless new ones are set. Tags append changes to existing, everything else overwrite)
 // TODO: Also decide if i want multiselect to prevent nbt modification (probably)
 
 
@@ -22,7 +22,7 @@
 
 /*
 *  TODO Long Term Texture Additions:
-*   - Every different property render for every block (rotations are pointless, only shit that changes look of block)
+*   - Every different property render for every block (rotations are pointless, only shit that changes look of block. Toggle in NBT xForm)
 *   - Item Displays
 *   - Text Displays with every possible atlas texture
 */
