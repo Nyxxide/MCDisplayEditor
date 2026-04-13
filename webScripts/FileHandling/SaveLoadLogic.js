@@ -19,7 +19,6 @@ import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
  */
 
 export function initSaveLoadLogic(state) {
-    // --- UI mount (top-right inside #ui) ---
     const uiRoot = document.getElementById("ui");
     if (!uiRoot) return;
 
@@ -27,10 +26,77 @@ export function initSaveLoadLogic(state) {
     const loadBtn = document.getElementById("loadBtn");
     const fileInput = document.getElementById("loadInput");
 
+    const saveModal = document.getElementById("saveModal");
+    const saveModalClose = document.getElementById("saveModalClose");
+    const saveModalConfirm = document.getElementById("saveModalConfirm");
+    const saveNameInput = document.getElementById("saveNameInput");
+
+    function openSaveModal() {
+        if (!saveModal) return;
+        saveModal.style.display = "flex";
+        if (state.orbit) state.orbit.enabled = false;
+
+        if (saveNameInput) {
+            saveNameInput.value = "display-entity-save";
+            requestAnimationFrame(() => {
+                saveNameInput.focus();
+                saveNameInput.select();
+            });
+        }
+    }
+
+    function closeSaveModal() {
+        if (!saveModal) return;
+        saveModal.style.display = "none";
+        if (state.orbit) state.orbit.enabled = true;
+    }
+
+    function confirmSave() {
+        const data = buildSaveObject(state);
+        const rawName = saveNameInput?.value?.trim() || "display-entity-save";
+        const safeName = sanitizeSaveFilename(rawName);
+        downloadJson(data, `${safeName}.json`);
+        closeSaveModal();
+    }
+
     // --- Actions ---
     saveBtn.addEventListener("click", () => {
-        const data = buildSaveObject(state);
-        downloadJson(data, "display-entity-save.json");
+        openSaveModal();
+    });
+
+    if (saveModalClose) {
+        saveModalClose.addEventListener("click", () => {
+            closeSaveModal();
+        });
+    }
+
+    if (saveModalConfirm) {
+        saveModalConfirm.addEventListener("click", () => {
+            confirmSave();
+        });
+    }
+
+    if (saveNameInput) {
+        saveNameInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                confirmSave();
+            }
+        });
+    }
+
+    if (saveModal) {
+        saveModal.addEventListener("click", (e) => {
+            if (e.target === saveModal) {
+                closeSaveModal();
+            }
+        });
+    }
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && saveModal?.style.display !== "none") {
+            closeSaveModal();
+        }
     });
 
     loadBtn.addEventListener("click", () => fileInput.click());
@@ -43,12 +109,10 @@ export function initSaveLoadLogic(state) {
 
     // expose API hooks if you want to call programmatically
     state.api.saveNow = () => {
-        const data = buildSaveObject(state);
-        downloadJson(data, "display-entity-save.json");
+        openSaveModal();
     };
     state.api.loadSaveMerge = (file) => loadSaveFileMerge(state, file);
 
-    // ---- Provide ref instantiation helper to other modules (history restore uses it) ----
     state.api.instantiateRefFromAsset = (assetId) => instantiateRefFromAsset(state, assetId);
 }
 
@@ -91,6 +155,15 @@ function buildSaveObject(state) {
     });
 
     return { version: 1, entities, groups, refAssets, refs };
+}
+
+function sanitizeSaveFilename(name) {
+    return name
+        .replace(/[<>:"/\\|?*\x00-\x1F]/g, "_") // illegal filename chars
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\.+$/, "")                    // no trailing dots
+        .slice(0, 120) || "display-entity-save";
 }
 
 function downloadJson(obj, filename) {

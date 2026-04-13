@@ -744,7 +744,15 @@ function finalizeMesh(mesh, blockId) {
 }
 
 export async function loadBlockList() {
-    const data = await fetch("../Data/json/BlockList.json").then(r => r.json());
+    const res = await fetch("../Data/json/BlockList.json", {
+        cache: "no-cache"
+    });
+
+    if (!res.ok) {
+        throw new Error(`Failed to load BlockList.json: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
     return data.BLOCKS;
 }
 

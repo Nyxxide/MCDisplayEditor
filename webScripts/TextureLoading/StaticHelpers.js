@@ -72,7 +72,7 @@ function inferCutout(model, blockId) {
     if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes") || bid.includes("beetroot") || bid.includes("wart")) return true;
     if (bid.includes("rail") || bid.includes("redstone_wire") || bid.includes("stonecutter") || bid.includes("pointed_dripstone")) return true;
     if (bid.includes("vine") || bid.includes("cactus") || bid.includes("cocoa") || bid.includes("grass_block")) return true;
-    if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves") || bid.includes("grate")) return true;
+    if (bid.includes("door") || bid.includes("trapdoor") || bid.includes("leaves") || bid.includes("grate") || bid.includes("glow_lichen")) return true;
     if (bid.includes("seagrass") || bid.includes("vine") || bid.includes("potted") || bid.includes("coral") || bid.includes("calibrated")) return true;
     if (bid.includes("spore") || bid.includes("pitcher") || bid.includes("chain") || bid.includes("sculk") || bid.includes("ladder")) return true;
 
@@ -243,6 +243,13 @@ function pushFaceIf(
     const isCommandBlock = (blockId || "").toLowerCase().includes("command_block");
     const isEndPortalFrame = (blockId || "").toLowerCase().includes("end_portal_frame");
     const isTestBlock = (blockId || "").toLowerCase().includes("test_block") || (blockId || "").toLowerCase().includes("test_instance_block");
+    const isBeacon = (blockId || "").toLowerCase().includes("bcn");
+    const isGlowLichen = (blockId || "").toLowerCase().includes("glow_lichen");
+    const isVine = (blockId || "").toLowerCase().includes("vine");
+    const isButton = (blockId || "").toLowerCase().includes("button");
+    const isAnythingElse = !isHeavyCore && !isPortal && !isRail && !isLitter && !isGlazedTerracotta && !isCocoa
+    && !isRedstoneWire && !isPiston && !isCommandBlock && !isEndPortalFrame && !isBeacon && !isGlowLichen &&!isVine
+    && !isChorusCenter && !isChorusThin && !isChorusThin2 && !isChorusBulge && !isButton;
 
     const canonicalQuad = [
         [0, 1],
@@ -350,6 +357,30 @@ function pushFaceIf(
     if (isEndPortalFrame) {
         if (faceName === "north" || faceName === "south") {
             quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isBeacon) {
+        if (faceName !== "up") {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+        else {
+            quad = quad.map(([u, v]) => [u, 1 - v]);
+        }
+    }
+
+    if (isVine || isGlowLichen) {
+        if(faceName !== "up") {
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+        else{
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+    if (isAnythingElse) {
+        if(faceName === "up") {
+            quad = quad.map(([u, v]) => [1 - u, 1 - v]);
         }
     }
 

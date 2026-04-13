@@ -24,6 +24,14 @@ export function initSelectionLogic(state) {
     selBox.style.zIndex = "9999";
     document.body.appendChild(selBox);
 
+    if (state.ui.groupBtn) {
+        state.ui.groupBtn.addEventListener("click", () => groupSelected());
+    }
+
+    if (state.ui.ungroupBtn) {
+        state.ui.ungroupBtn.addEventListener("click", () => ungroupSelection());
+    }
+
     // --- Raycast + ground plane ---
     const xzPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     const raycaster = new THREE.Raycaster();
@@ -55,6 +63,14 @@ export function initSelectionLogic(state) {
         raycaster.setFromCamera(mouse, state.camera);
     }
 
+    function modalOpen() {
+        const modals = document.querySelectorAll(".modalOverlay");
+        for (const m of modals) {
+            if (window.getComputedStyle(m).display !== "none") return true;
+        }
+        return false;
+    }
+
     function getGroundPoint(e) {
         screenToRay(e);
         const point = new THREE.Vector3();
@@ -63,9 +79,13 @@ export function initSelectionLogic(state) {
     }
 
     function worldToScreen(v3) {
+        const rect = state.renderer.domElement.getBoundingClientRect();
+
         const v = v3.clone().project(state.camera);
-        const x = (v.x * 0.5 + 0.5) * window.innerWidth;
-        const y = (-v.y * 0.5 + 0.5) * window.innerHeight;
+
+        const x = (v.x * 0.5 + 0.5) * rect.width + rect.left;
+        const y = (-v.y * 0.5 + 0.5) * rect.height + rect.top;
+
         return { x, y, ndcZ: v.z };
     }
 
@@ -397,27 +417,22 @@ export function initSelectionLogic(state) {
             state.api.fillTransformUIRelative?.(state.activeRig, state.selectionBase);
         }
 
-        if (state.ui.xformHintsEl) {
-            const parts = [];
-            parts.push("Alt+Click: place");
-            parts.push("Shift: snap rotate/scale/translate");
-            parts.push("Ctrl+Click: multiselect");
-            if (state.selectedIds.size >= 2) parts.push("G: group selected");
-            if (state.selectedIds.size > 0 && selectionTouchesAnyGroup()) parts.push("U: ungroup");
-            if (groupEdit) parts.push("Group UI shows Δrot + scale ratio");
-            if (refEdit) parts.push("Reference object (not exportable)");
-            state.ui.xformHintsEl.textContent = parts.join("   |   ");
-        }
-    }
+        const canGroup =
+            !refEdit &&
+            state.selectedIds.size >= 2 &&
+            !groupEdit;
 
-    function selectionTouchesAnyGroup() {
-        if (state.selectedIds.size === 0) return false;
-        for (const g of state.groups) {
-            for (const id of g.members) {
-                if (state.selectedIds.has(id)) return true;
-            }
+        const canUngroup =
+            !refEdit &&
+            groupEdit;
+
+        if (state.ui.groupBtn) {
+            state.ui.groupBtn.disabled = !canGroup;
         }
-        return false;
+
+        if (state.ui.ungroupBtn) {
+            state.ui.ungroupBtn.disabled = !canUngroup;
+        }
     }
 
     // ---- grouping ----
@@ -656,6 +671,7 @@ export function initSelectionLogic(state) {
 
     // ---- pointer handlers ----
     window.addEventListener("pointerdown", (e) => {
+        if (modalOpen()) return;
         if (e.target.closest("#ui")) return;
         if (e.target.closest("#xformUI")) return;
 
@@ -745,6 +761,7 @@ export function initSelectionLogic(state) {
     });
 
     window.addEventListener("pointermove", (e) => {
+        if (modalOpen()) return;
         if (state.boxSelecting) {
             const x1 = Math.min(state.boxStart.x, e.clientX);
             const y1 = Math.min(state.boxStart.y, e.clientY);
@@ -792,6 +809,7 @@ export function initSelectionLogic(state) {
     });
 
     window.addEventListener("pointerup", () => {
+        if (modalOpen()) return;
         if (state.boxSelecting) {
             state.boxSelecting = false;
             selBox.style.display = "none";
@@ -847,6 +865,7 @@ export function initSelectionLogic(state) {
     });
 
     window.addEventListener("pointercancel", () => {
+        if (modalOpen()) return;
         state.isDraggingMesh = false;
         state.isDraggingRef = false;
         updateOrbitEnabled();
@@ -854,6 +873,7 @@ export function initSelectionLogic(state) {
 
     // ---- keyboard (group / ungroup / delete / undo / redo) ----
     window.addEventListener("keydown", (e) => {
+        if (modalOpen()) return;
         const isMac = navigator.platform.toLowerCase().includes("mac");
         const mod = isMac ? e.metaKey : e.ctrlKey;
 

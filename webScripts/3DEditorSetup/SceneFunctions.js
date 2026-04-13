@@ -23,19 +23,20 @@ export async function initScene(state) {
 
     scene.background = new THREE.Color(0x111111);
 
-    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.5, 200);
+    const viewportEl = document.getElementById("viewport3d");
+    if (!viewportEl) throw new Error("Missing #viewport3d container");
+
+    const camera = new THREE.PerspectiveCamera(
+        60,
+        Math.max(1, viewportEl.clientWidth) / Math.max(1, viewportEl.clientHeight),
+        0.5,
+        200
+    );
     camera.position.set(6, 6, 10);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(innerWidth, innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-
-    // color/tone
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1;
-
-    document.body.appendChild(renderer.domElement);
+    viewportEl.appendChild(renderer.domElement);
 
     // separate scene for gizmos
     const gizmoScene = new THREE.Scene();
@@ -82,6 +83,8 @@ export async function initScene(state) {
     // orbit
     const orbit = new OrbitControls(camera, renderer.domElement);
     orbit.enableDamping = true;
+    orbit.target.set(-0.5, 0, -0.5);
+    orbit.update();
 
 
     // ground tint plane
@@ -130,13 +133,26 @@ export async function initScene(state) {
     state.selectionRig = selectionRig;
 
     // resize handler
-    window.addEventListener("resize", () => {
-        camera.aspect = innerWidth / innerHeight;
+    function resizeRendererToViewport() {
+        const width = Math.max(1, viewportEl.clientWidth);
+        const height = Math.max(1, viewportEl.clientHeight);
+
+        camera.aspect = width / height;
         camera.updateProjectionMatrix();
-        renderer.setSize(innerWidth, innerHeight);
-        composer.setSize(innerWidth, innerHeight);
-        outlinePass.setSize(innerWidth, innerHeight);
+
+        renderer.setSize(width, height, false);
+        composer.setSize(width, height);
+        outlinePass.setSize(width, height);
+    }
+
+    resizeRendererToViewport();
+
+    const viewportResizeObserver = new ResizeObserver(() => {
+        resizeRendererToViewport();
     });
+    viewportResizeObserver.observe(viewportEl);
+
+    window.addEventListener("resize", resizeRendererToViewport);
 }
 
 function makeLabelPlane(text) {
@@ -146,7 +162,7 @@ function makeLabelPlane(text) {
     canvas.height = 256;
 
     ctx.clearRect(0, 0, 256, 256);
-    ctx.fillStyle = "rgba(0,0,0,0.65)";
+    ctx.fillStyle = "rgba(0,0,0,0)";
     ctx.fillRect(32, 64, 192, 128);
 
     ctx.font = "bold 140px system-ui";

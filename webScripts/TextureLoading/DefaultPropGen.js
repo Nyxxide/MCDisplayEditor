@@ -1,8 +1,6 @@
 export function defaultMultipartPropsForBlock(blockId) {
     const id = (blockId || "").toLowerCase();
 
-    console.log(blockId);
-
     if (
         id.includes("mushroom_stem") ||
         id.includes("red_mushroom_block") ||
@@ -78,6 +76,18 @@ export function defaultMultipartPropsForBlock(blockId) {
             west: "false",
             east: "false",
             up: "false",
+        }
+    }
+
+    if (id.includes("glow_lichen")) {
+        return {
+            north: "false",
+            south: "false",
+            west: "false",
+            east: "false",
+            up: "false",
+            down: "false",
+            waterlogged: "false"
         }
     }
 

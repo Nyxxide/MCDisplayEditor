@@ -1,10 +1,20 @@
-// TODO: Make touchpad pinch/expand work like scroll, not resize page
-// TODO: Make group moves by -+ 0.25 instead of locking to 0.25. they dont adhere to regular block coordinates.
-// TODO: Make TAB + move lock into local block coordinates
 // TODO: Fix item icons that appear in the selection menu to match how they appear in editor, fix missing textures
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Make UI look nicer, add button toggles for every keystroke
-// TODO: Change BlockData UI in the top right corner to only reflect the coordinates of the given mode (dont show all 3 all the time)
+// TODO: Change BlockData UI in the top right corner to only reflect the values of the given mode (dont show all 3 all the time)
+// TODO: Make click and drag move (not via gizmo) not lock into intervals of 0.25, instead +/- shift of 0.25
+// TODO: When multi-selected and not grouped, copy/paste makes them a group upon pasting?
+// TODO: Add Tagging in the block/group specific UI (change how block data is stored backend again, esp with save/load)
+// TODO: Make entire grid floor have toggleable visibility (screencap purposes)
+// TODO: Add button for library of default models (Currently only T-Rex)
+// TODO: Look at latest gpt message for fix on modal editor blocking
+
+
+/* TODO Texture Stuff:
+*   - Fucking hanging signs
+*   - Wall Variants of signs/banners
+*   - Some textures are off but dont worry about it too much. Buttons are of note right now but that's all I'm aware of
+*/
 
 /*
 *  TODO Housekeeping:
@@ -24,56 +34,23 @@ import { initScene } from "./3DEditorSetup/SceneFunctions.js";
 import { initSelectionLogic } from "./3DEditorSetup/SelectionLogic.js";
 import { initTransformLogic} from "./3DEditorSetup/TransformLogic.js";
 import { initImportLogic } from "./FileHandling/FileImportLogic.js";
-import { entityToSummonCmd, exportOneCommand } from "./Misc/CommandBlockLogic.js";
 import { initSaveLoadLogic } from "./FileHandling/SaveLoadLogic.js"
 import { loadBlockList } from "./TextureLoading/TextureLoad.js";
 import { initPaletteUI } from "./TextureLoading/PaletteUI.js";
-import { loadMcmetaAnimatedTexture, setMcmetaAnimatorFlip, tickMcmetaAnimator } from "./TextureLoading/BlockAnimationLogic.js";
+import { initAnimations } from "./TextureLoading/BlockAnimationLogic.js";
 import { initImportCommandLogic } from "./Misc/ImportModelFromCommand.js";
+import { initCommandOutputBtns, initInstructionsModal, initSidebarToggle, initAudioTriggers } from "./Misc/UISetup.js";
 
 
 
 // -------------------- Init --------------------
 const clock = new THREE.Clock();
-let markerAnim = null;
-let markerMesh = null;
 
 initDom();
 await initScene(state);
 
-// --- Command block marker (animated) ---
-markerAnim = await loadMcmetaAnimatedTexture(
-    "/Resources/textures/block/command_block_front.png",
-    "/Resources/textures/block/command_block_front.png.mcmeta"
-);
-
-setMcmetaAnimatorFlip(markerAnim, true, true);
-
-const markerMat = new THREE.MeshBasicMaterial({
-  map: markerAnim.tex,
-  transparent: true
-});
-
-markerMat.toneMapped = false;
-
-
-markerMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), markerMat);
-
-// flat on ground, slightly raised to avoid z-fighting
-markerMesh.rotation.x = -Math.PI / 2;
-markerMesh.position.set(0, 0.001, 0);
-
-// optional: fight z-fighting even harder
-markerMat.polygonOffset = true;
-markerMat.polygonOffsetFactor = -1;
-markerMat.polygonOffsetUnits = -1;
-
-(state.floorOriginRoot || state.scene).add(markerMesh);
-
-
 // palette blocks
 const BLOCKS = await loadBlockList();
-console.log(BLOCKS);
 
 // fill palette
 initPaletteUI(state, BLOCKS);
@@ -90,85 +67,23 @@ initImportLogic(state);
 // save/load functionality import
 initSaveLoadLogic(state);
 
+// import model from minecraft command
 initImportCommandLogic(state)
 
-// -------------------- Left UI actions --------------------
-state.ui.placeBtn?.addEventListener("click", () => {
-  const p = new THREE.Vector3();
-  state.camera.getWorldDirection(p);
-  p.multiplyScalar(5).add(state.camera.position);
-  p.y = 0;
-  state.api.placeAt?.(p);
-});
+// hide sidebar tab
+initSidebarToggle(state)
 
-function clearOutList() {
-  while (state.ui.outList.firstChild) state.ui.outList.removeChild(state.ui.outList.firstChild);
-}
+// instructions popup
+initInstructionsModal(state)
 
-function addCommandBlock(text) {
-  const wrap = document.createElement("div");
-  wrap.className = "cmdBlock";
+// buttons to generate commands
+initCommandOutputBtns(state)
 
-  const ta = document.createElement("textarea");
-  ta.value = text;
-  ta.readOnly = true;
+// ui audio
+initAudioTriggers()
 
-  const btn = document.createElement("button");
-  btn.textContent = "Copy";
-  btn.addEventListener("click", async () => {
-    await navigator.clipboard.writeText(text);
-    btn.textContent = "Copied!";
-    setTimeout(() => (btn.textContent = "Copy"), 700);
-  });
+// start page animations
+await initAnimations(state, clock);
 
-  wrap.appendChild(ta);
-  wrap.appendChild(btn);
-  state.ui.outList.appendChild(wrap);
-}
 
-state.ui.exportManyBtn?.addEventListener("click", () => {
-  clearOutList();
-  const lines = state.entities.map((ent) => entityToSummonCmd(ent, "~0.5 ~0.5 ~0.5"));
-  lines.forEach(addCommandBlock);
-});
 
-state.ui.exportOneBtn?.addEventListener("click", () => {
-  clearOutList();
-  
-  const waves = exportOneCommand(state.entities); // now returns array
-  waves.forEach(addCommandBlock);
-});
-
-// -------------------- Render loop --------------------
-function cameraYawDeg() {
-  const dir = new THREE.Vector3();
-  state.camera.getWorldDirection(dir);
-  const yaw = Math.atan2(-dir.x, dir.z) * (180 / Math.PI);
-  return (yaw + 360) % 360;
-}
-function yawToCompass(yaw) {
-  const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-  const idx = Math.round(((yaw + 180) % 360) / 45) % 8;
-  return dirs[idx];
-}
-
-function animate() {
-  const dt = clock.getDelta();
-
-  if (markerAnim) tickMcmetaAnimator(markerAnim, dt);
-
-  state.orbit.update();
-  state.composer.render();
-
-  // render gizmo scene after
-  state.renderer.autoClear = false;
-  state.renderer.clearDepth();
-  state.renderer.render(state.gizmoScene, state.camera);
-  state.renderer.autoClear = true;
-
-  const yaw = cameraYawDeg();
-  if (state.ui.facingEl) state.ui.facingEl.textContent = `Facing: ${yawToCompass(yaw)} (${yaw.toFixed(0)}°)`;
-
-  requestAnimationFrame(animate);
-}
-animate();

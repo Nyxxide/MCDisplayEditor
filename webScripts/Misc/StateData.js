@@ -74,23 +74,34 @@ export const state = {
 };
 
 export function initDom() {
-    // ----- Left UI -----
+    // ----- Right UI -----
+    // main area and sidebar
+    state.ui.mainArea = document.getElementById("mainArea");
+    state.ui.rightSidebar = document.getElementById("rightSidebar");
+    state.ui.sidebarToggle = document.getElementById("sidebarToggle");
+    state.ui.modeReadout = document.getElementById("modeReadout");
+    state.ui.modeTranslateBtn = document.getElementById("modeTranslateBtn");
+    state.ui.modeRotateBtn = document.getElementById("modeRotateBtn");
+    state.ui.modeScaleBtn = document.getElementById("modeScaleBtn");
+
     // palette picker (custom UI sets these)
     state.ui.paletteValue = null;
     state.ui.outList = document.getElementById("outList");
-    state.ui.facingEl = document.getElementById("facing");
+    state.ui.facingEl = document.getElementById("compassFacingLabel");
 
     state.ui.importRefBtn = document.getElementById("importRefBtn");
     state.ui.importRefInput = document.getElementById("importRefInput");
 
-    state.ui.placeBtn = document.getElementById("place");
     state.ui.exportManyBtn = document.getElementById("exportMany");
     state.ui.exportOneBtn = document.getElementById("exportOne");
     state.ui.importCmdBtn = document.getElementById("importCmdBtn");
 
     // ----- Transform UI -----
     state.ui.xformUI = document.getElementById("xformUI");
-    state.ui.xformHintsEl = state.ui.xformUI ? state.ui.xformUI.querySelector(".xSmall") : null;
+
+    state.ui.posRow = document.getElementById("posRow");
+    state.ui.rotRow = document.getElementById("rotRow");
+    state.ui.scaleRow = document.getElementById("scaleRow");
 
     state.ui.px = document.getElementById("px");
     state.ui.py = document.getElementById("py");
@@ -102,9 +113,14 @@ export function initDom() {
     state.ui.sy = document.getElementById("sy");
     state.ui.sz = document.getElementById("sz");
 
+    state.ui.groupBtn = document.getElementById("groupBtn");
+    state.ui.ungroupBtn = document.getElementById("ungroupBtn");
     state.ui.copyBtn = document.getElementById("copyBtn");
     state.ui.pasteBtn = document.getElementById("pasteBtn");
 
     // Hide xform panel initially
     if (state.ui.xformUI) state.ui.xformUI.style.display = "none";
+
+    // ----- Top UI -----
+    state.ui.instructionsBtn = document.getElementById("instructionsBtn");
 }

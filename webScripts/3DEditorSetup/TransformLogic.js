@@ -10,6 +10,7 @@
 import * as THREE from "three";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import {gridFine, gridCoarse} from "./SceneFunctions.js"
+import { playUiClick } from "../Misc/UISetup.js";
 
 /** -------------------- Matrix helpers -------------------- */
 
@@ -97,11 +98,31 @@ export function initTransformLogic(state) {
     transform.setSpace("world"); // important for shear behavior
     gizmoScene.add(transform);
 
+    if (state.ui.modeTranslateBtn) {
+        state.ui.modeTranslateBtn.addEventListener("click", () => {
+            setTransformMode(state, transform, "translate");
+        });
+    }
+
+    if (state.ui.modeRotateBtn) {
+        state.ui.modeRotateBtn.addEventListener("click", () => {
+            setTransformMode(state, transform, "rotate");
+        });
+    }
+
+    if (state.ui.modeScaleBtn) {
+        state.ui.modeScaleBtn.addEventListener("click", () => {
+            setTransformMode(state, transform, "scale");
+        });
+    }
+
     // hide helper lines/wires
     killGizmoWiresHard(transform);
 
     // snapping (translation uses built-in snap; rotation uses our absolute snapping)
     updateSnaps(state, transform);
+    updateVisibleTransformRows(state, transform);
+    updateModeButtons(state, transform);
 
     // ctrl state
     transform.addEventListener("dragging-changed", (e) => {
@@ -184,14 +205,26 @@ export function initTransformLogic(state) {
     if (state.ui.copyBtn) state.ui.copyBtn.addEventListener("click", () => doCopy(state));
     if (state.ui.pasteBtn) state.ui.pasteBtn.addEventListener("click", () => doPaste(state, true));
 
+    window.addEventListener("pointerdown", (e) => {
+        const a = document.activeElement;
+        if (!a) return;
+
+        const clickedInsideXform = !!e.target.closest("#xformUI");
+        if (clickedInsideXform) return;
+
+        commitFocusedTransformInput(state);
+    }, true);
+
     // hotkeys: Ctrl/Cmd+C/V (ignore when typing in inputs)
     window.addEventListener("keydown", (e) => {
+        if (modalOpen()) return;
         const isMac = navigator.platform.toLowerCase().includes("mac");
         const mod = isMac ? e.metaKey : e.ctrlKey;
 
         if (e.key === "Shift") {
             state.shiftHeld = true;
             updateSnaps(state, transform);
+            updateVisibleTransformRows(state, transform);
         }
 
         if (e.key === "Tab") {
@@ -245,19 +278,16 @@ export function initTransformLogic(state) {
 
         // W/E/R mode switching (lets SelectionLogic not care)
         if (e.key === "w" || e.key === "W") {
-            transform.setMode("translate");
-            updateTransformSpace(state, transform);
-            attachTransformToActiveRig(state, transform);
+            playUiClick();
+            setTransformMode(state, transform, "translate");
         }
         if (e.key === "e" || e.key === "E") {
-            transform.setMode("rotate");
-            updateTransformSpace(state, transform);
-            attachTransformToActiveRig(state, transform);
+            playUiClick();
+            setTransformMode(state, transform, "rotate");
         }
         if (e.key === "r" || e.key === "R") {
-            transform.setMode("scale");
-            updateTransformSpace(state, transform);
-            attachTransformToActiveRig(state, transform);
+            playUiClick();
+            setTransformMode(state, transform, "scale");
         }
         if (e.key === "h" || e.key === "H") {
                 showCoarseGrid = !showCoarseGrid;
@@ -267,9 +297,11 @@ export function initTransformLogic(state) {
     });
 
     window.addEventListener("keyup", (e) => {
+        if (modalOpen()) return;
         if (e.key === "Shift") {
             state.shiftHeld = false;
             updateSnaps(state, transform);
+            updateVisibleTransformRows(state, transform);
             if (transform.getMode() === "scale") state.scaleDragStart = null;
         }
 
@@ -295,6 +327,48 @@ export function attachTransformToActiveRig(state, transform) {
     else transform.attach(state.activeRig);
 
     killGizmoWiresHard(transform);
+}
+
+function modalOpen() {
+    const modals = document.querySelectorAll(".modalOverlay");
+    for (const m of modals) {
+        if (window.getComputedStyle(m).display !== "none") return true;
+    }
+    return false;
+}
+
+function setTransformMode(state, transform, mode) {
+    transform.setMode(mode);
+    updateTransformSpace(state, transform);
+    updateVisibleTransformRows(state, transform);
+    attachTransformToActiveRig(state, transform);
+    updateModeButtons(state, transform);
+}
+
+function updateModeButtons(state, transform) {
+    const mode = transform?.getMode?.() || "translate";
+
+    const t = state.ui.modeTranslateBtn;
+    const r = state.ui.modeRotateBtn;
+    const s = state.ui.modeScaleBtn;
+
+    if (t) {
+        const active = mode === "translate";
+        t.classList.toggle("active", active);
+        t.disabled = active;
+    }
+
+    if (r) {
+        const active = mode === "rotate";
+        r.classList.toggle("active", active);
+        r.disabled = active;
+    }
+
+    if (s) {
+        const active = mode === "scale";
+        s.classList.toggle("active", active);
+        s.disabled = active;
+    }
 }
 
 function isPaletteOpen(state) {
@@ -588,7 +662,18 @@ function safeRatio(a, b) {
 function hookNumericUI(state) {
     const { px, py, pz, rx, ry, rz, sx, sy, sz } = state.ui;
     const inputs = [px, py, pz, rx, ry, rz, sx, sy, sz].filter(Boolean);
-    for (const el of inputs) el.addEventListener("change", () => applyTransformFromUI(state));
+
+    for (const el of inputs) {
+        el.addEventListener("change", () => applyTransformFromUI(state));
+        el.addEventListener("blur", () => applyTransformFromUI(state));
+        el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                applyTransformFromUI(state);
+                el.blur();
+            }
+        });
+    }
 }
 
 function degToRad(d) {
@@ -769,6 +854,38 @@ function applyTransformFromUI(state) {
 
     state.activeRig.updateMatrixWorld(true);
     state.api.pushHistory?.("numeric");
+}
+
+function updateVisibleTransformRows(state, transform) {
+    const mode = transform?.getMode?.() || "translate";
+
+    if (state.ui.posRow) {
+        state.ui.posRow.style.display = mode === "translate" ? "flex" : "none";
+    }
+
+    if (state.ui.rotRow) {
+        state.ui.rotRow.style.display = mode === "rotate" ? "flex" : "none";
+    }
+
+    if (state.ui.scaleRow) {
+        state.ui.scaleRow.style.display = mode === "scale" ? "flex" : "none";
+    }
+}
+
+function commitFocusedTransformInput(state) {
+    const a = document.activeElement;
+    if (!a) return;
+
+    const transformInputs = [
+        state.ui.px, state.ui.py, state.ui.pz,
+        state.ui.rx, state.ui.ry, state.ui.rz,
+        state.ui.sx, state.ui.sy, state.ui.sz
+    ].filter(Boolean);
+
+    if (!transformInputs.includes(a)) return;
+
+    applyTransformFromUI(state);
+    a.blur();
 }
 
 /** -------------------- Copy / Paste -------------------- */

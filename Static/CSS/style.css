@@ -1,0 +1,743 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: system-ui, sans-serif;
+    background: #111;
+}
+
+body {
+    display: block;
+}
+
+#appShell {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 44px 1fr;
+}
+
+#topBar {
+    font-family: "Minecraft";
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 14px;
+    background: rgba(0, 0, 0, 0.72);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    box-sizing: border-box;
+}
+
+#topBarTitle {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+#topBarActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+#topBarActions button {
+    padding: 7px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: "Minecraft";
+}
+
+#mainArea {
+    grid-row: 2;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    transition: grid-template-columns 180ms ease;
+}
+
+#mainArea.sidebar-collapsed {
+    grid-template-columns: minmax(0, 1fr) 0px;
+}
+
+#viewport3d {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #111;
+}
+
+#viewport3d canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+#rightSidebar {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    background: rgb(28, 28, 28);
+    border-left: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overflow: visible;
+    transition: width 180ms ease, min-width 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+#sidebarToggle {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(-100%, -50%);
+    width: 22px;
+    height: 92px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-right: none;
+    background: linear-gradient(to right, #000000 70%, #1c1c1c);
+    color: #fff;
+    cursor: pointer;
+    border-radius: 10px 0 0 10px;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+#sidebarToggle:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+#rightSidebar.collapsed {
+    width: 0;
+    min-width: 0;
+    border-left-color: transparent;
+    background: transparent;
+}
+
+#rightSidebar.collapsed #ui {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#rightSidebar.collapsed #sidebarToggle {
+    background: rgba(0, 0, 0, 1);
+}
+
+#ui {
+    position: static;
+    background: transparent;
+    color: white;
+    padding: 12px 14px 14px;
+    width: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    max-height: none;
+    opacity: 1;
+    transition: opacity 120ms ease;
+}
+
+#ui button {
+    width: 100%;
+    margin: 6px 0;
+    padding: 8px;
+}
+
+#ui textarea {
+    width: 100%;
+    height: 180px;
+    margin-top: 8px;
+    background: rgba(255, 255, 255, .08);
+    color: #d7faff;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 8px;
+    padding: 8px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+#facing {
+    margin-top: 4px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    opacity: .95;
+}
+
+/* Palette */
+.palette {
+    width: 100%;
+    margin: 6px 0 10px;
+    position: relative;
+}
+
+.paletteBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border: 3px solid rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 1);
+    color: #fff;
+    cursor: pointer;
+}
+
+.paletteRowIconImg,
+.paletteIconImg {
+    width: 30px;
+    height: 30px;
+    image-rendering: pixelated;
+    border-radius: 4px;
+    flex: 0 0 auto;
+}
+
+.paletteLabel {
+    flex: 1 1 auto;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Minecraft";
+    font-size: 18px;
+    color: white;
+}
+
+.paletteCaret {
+    opacity: .85;
+    flex: 0 0 auto;
+}
+
+.palettePopup {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 9999;
+    background: rgba(0, 0, 0, .94);
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+}
+
+.paletteSearch {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 0;
+    outline: none;
+    background: rgba(255, 255, 255, .08);
+    color: #d7faff;
+    font-family: "Minecraft";
+}
+
+.paletteList {
+    max-height: 320px;
+    overflow: auto;
+}
+
+.paletteRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.paletteRow:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+.paletteRowIcon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, .12);
+    flex: 0 0 auto;
+}
+
+.paletteRowLabel {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    font-size: 13px;
+    font-family: "Minecraft";
+}
+
+#exportSection {
+    margin-top: 4px;
+}
+
+#exportOne,
+#exportMany {
+    background-image: url("../Images/StoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: "Minecraft";
+    color: white;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    border: black 2px solid;
+}
+
+#exportOne:hover,
+#exportMany:hover {
+    border: white 2px solid;
+}
+
+#outList {
+    flex: 1;
+    min-height: 120px;
+    overflow-y: auto;
+    margin-top: 8px;
+}
+
+/* command output / import panel */
+.cmdBlock {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 6px;
+    font-family: "Minecraft";
+}
+
+.cmdBlock button {
+    width: 100%;
+    margin-top: 6px;
+    padding: 6px;
+    font-family: "Minecraft";
+}
+
+.cmdHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.cmdTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.modalClose {
+    width: auto !important;
+    min-width: 70px;
+    margin: 0 !important;
+    padding: 6px 10px !important;
+    flex: 0 0 auto;
+    font-family: "Minecraft";
+    background-image: url("../Images/StoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #ffffff;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    border: black 2px solid;
+}
+
+.modalClose:hover {
+    border: white 2px solid;
+}
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.modalCard {
+    width: min(820px, 90vw);
+    max-height: min(80vh, 760px);
+    background: rgba(18, 18, 18, 0.96);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    box-sizing: border-box;
+}
+
+.modalHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.modalTitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    font-family: "Minecraft";
+}
+
+.modalTextarea {
+    width: 100%;
+    min-height: 260px;
+    max-height: 55vh;
+    resize: vertical;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    color: #d7faff;
+    outline: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+}
+
+.modalActions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.modalActions button {
+    min-width: 220px;
+}
+
+.modalCardSmall {
+    width: min(460px, 90vw);
+    max-height: none;
+}
+
+.saveNameInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    color: #d7faff;
+    outline: none;
+    font-size: 14px;
+    font-family: "Minecraft";
+}
+
+#saveModalConfirm {
+    font-family: "Minecraft";
+}
+
+.instructionsContent {
+    overflow-y: auto;
+    max-height: 60vh;
+    padding-right: 4px;
+    color: #e9f7ff;
+    line-height: 1.45;
+    font-size: 14px;
+    font-family: "Minecraft";
+}
+
+.instructionsContent h3 {
+    margin: 14px 0 6px;
+    font-size: 15px;
+    color: #fff;
+}
+
+.instructionsContent h3:first-child {
+    margin-top: 0;
+}
+
+.instructionsContent p {
+    margin: 4px 0;
+}
+
+#importCmdInput {
+    font-family: "Minecraft";
+}
+
+#importCmdRun {
+    font-family: "Minecraft";
+}
+
+#topSegment {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 14px;
+    width: 100%;
+}
+
+#modeSect {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+}
+
+#dirSect {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+}
+
+#hint {
+    font-size: 17px;
+    font-family: "Minecraft";
+    opacity: 1;
+    line-height: 1.35;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.modeSwitches {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    height: 100%;
+    flex: 1 1 auto;
+}
+
+.modeSwitches button {
+    display: block;
+    width: 100%;
+    flex: 1 1 0;
+    margin: 0 !important;
+    padding: 10px 8px !important;
+    border: black 2px solid;
+    background-image: url("../Images/StoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #ffffff;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: "Minecraft";
+    box-sizing: border-box;
+}
+
+.modeSwitches button.active {
+    background-image: url("../Images/ClickedStoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: black 2px solid;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    color: #777777;
+}
+
+.modeSwitches button:hover {
+    border: white 2px solid
+}
+
+.modeSwitches button.active:hover {
+    cursor: default;
+    border: black 2px solid;
+}
+
+.compassWidget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 14px;
+}
+
+.compassFace {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 999px;
+    border: 1px solid rgb(154, 154, 154);
+    background: rgb(4, 4, 4);
+    flex: 0 0 auto;
+}
+
+.compassRing {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+}
+
+.compassLabel {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    font-weight: 700;
+    font-family: "Minecraft";
+    color: #ffffff;
+    user-select: none;
+}
+
+.compassLabel.north      { left: 50%; top: 10%; }
+.compassLabel.northeast  { left: 78%; top: 22%; }
+.compassLabel.east       { left: 90%; top: 50%; }
+.compassLabel.southeast  { left: 78%; top: 78%; }
+.compassLabel.south      { left: 50%; top: 90%; }
+.compassLabel.southwest  { left: 22%; top: 78%; }
+.compassLabel.west       { left: 10%; top: 50%; }
+.compassLabel.northwest  { left: 22%; top: 22%; }
+
+.compassNeedle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5px;
+    height: 40px;
+    background: #ff0000;
+    transform-origin: center 100%;
+    transform: translate(-50%, -100%) rotate(0deg);
+    /*border-radius: 999px;*/
+    box-shadow: 0 0 8px rgba(255,85,85,0.35);
+}
+
+.compassNeedle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    width: 5px;
+    height: 15px;
+    background: #524e4d;
+    transform: translateX(-50%);
+    /*border-radius: 999px;*/
+    opacity: 0.9;
+}
+
+.compassCenterDot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    /*border-radius: 999px;*/
+    background: #7c7c7c;
+    transform: translate(-50%, -50%);
+}
+
+.compassFacing,
+.compassDegrees {
+    font-size: 12px;
+    color: #ff55ff;
+    text-shadow: #3f153f 2px 2px 1px;
+    opacity: 1;
+    font-family: "Minecraft";
+}
+/* ---------- Transform UI (top-left overlay) ---------- */
+
+#xformUI {
+    position: fixed;
+    top: 56px;
+    left: 12px;
+    z-index: 30;
+    width: 360px;
+    background: rgba(0, 0, 0, .72);
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-family: system-ui, sans-serif;
+    pointer-events: auto;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+#xformUI input {
+    width: 74px;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .08);
+    color: #d7faff;
+    box-sizing: border-box;
+}
+
+#xformUI button {
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+#xformUI button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.xHdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.xBtns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.xRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.rowLabel {
+    width: 48px;
+    opacity: .95;
+    font-weight: 600;
+    flex: 0 0 auto;
+}
+
+.axisField {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+}
+
+.axisBadge {
+    width: 18px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.axisX .axisBadge {
+    color: #ff5555;
+}
+
+.axisY .axisBadge {
+    color: #55dd55;
+}
+
+.axisZ .axisBadge {
+    color: #5aa8ff;
+}

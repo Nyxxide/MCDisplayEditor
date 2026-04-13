@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
 <head>
-  <link rel="stylesheet" href="CSS/style.css">
+  <link rel="stylesheet" href="Static/CSS/fonts.css">
+  <link rel="stylesheet" href="Static/CSS/style.css">
   <script type="importmap">
     {
       "imports": {
@@ -11,63 +12,172 @@
     }
   </script>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>CBT - Display Builder</title>
 </head>
 <body>
-<div id="ui">
-  <div id="uiTopbar">
-    <h3>Command Block Toolbox - Display Builder</h3>
+<div id="appShell">
+  <div id="topBar">
+    <div id="topBarTitle">Command Block Toolbox - Display Builder</div>
 
-    <div id="projectBtns">
+    <div id="topBarActions">
+      <button id="instructionsBtn" title="Show instructions">Instructions</button>
       <button id="saveBtn" title="Download a .json save">Save</button>
       <button id="loadBtn" title="Load + merge a .json save (Shift = replace)">Load</button>
       <input id="loadInput" type="file" accept=".json,application/json" style="display:none;" />
+
+      <button id="importRefBtn">Import Reference Model (.glb/.gltf/.obj/.stl)</button>
+      <input id="importRefInput" type="file" accept=".glb,.gltf,.obj,.mtl,.stl" style="display:none;" />
+
+      <button id="importCmdBtn">Import Model From Command</button>
     </div>
   </div>
 
-  <div id="hint">
-    Left click: select<br>
-    Shift+Left click on ground: place<br>
-    W/E/R: translate/rotate/scale<br>
-    Del: delete selected
-  </div>
+  <div id="mainArea">
+    <div id="viewport3d"></div>
 
-  <div id="facing" style="margin-top:8px;font-size:12px;opacity:.95;"></div>
+    <div id="rightSidebar">
+      <button id="sidebarToggle" type="button" aria-label="Toggle sidebar" title="Toggle sidebar">
+        ❮
+      </button>
 
-  <div id="palette" class="palette">
-    <button id="paletteBtn" class="paletteBtn" type="button">
-      <span id="paletteBtnIcon" class="paletteIcon"></span>
-      <span id="paletteBtnLabel" class="paletteLabel">Select a block…</span>
-      <span class="paletteCaret">▾</span>
-    </button>
+      <div id="ui">
+        <div id="topSegment">
+          <div id="modeSect">
+            <div class="modeSwitches">
+              <button id="modeTranslateBtn" type="button">Translate</button>
+              <button id="modeRotateBtn" type="button">Rotate</button>
+              <button id="modeScaleBtn" type="button">Scale</button>
+            </div>
+          </div>
+          <div id="dirSect">
+            <div id="facing" class="compassWidget">
+              <div class="compassFace">
+                <div class="compassRing">
+                  <span class="compassLabel north">N</span>
+                  <span class="compassLabel northeast">NE</span>
+                  <span class="compassLabel east">E</span>
+                  <span class="compassLabel southeast">SE</span>
+                  <span class="compassLabel south">S</span>
+                  <span class="compassLabel southwest">SW</span>
+                  <span class="compassLabel west">W</span>
+                  <span class="compassLabel northwest">NW</span>
+                </div>
 
-    <div id="palettePopup" class="palettePopup" style="display:none;">
-      <input id="paletteSearch" class="paletteSearch" type="text" placeholder="Search blocks…" autocomplete="off" />
-      <div id="paletteList" class="paletteList"></div>
-    </div>
-  </div>
+                <div class="compassNeedle" id="compassNeedle"></div>
+                <div class="compassCenterDot"></div>
+              </div>
 
-  <button id="place">Place Selected Block (Alt+Click also works)</button>
+              <div class="compassFacing">
+                &ltFacing&gt <span id="compassFacingLabel">N</span>
+              </div>
 
-  <button id="importRefBtn">Import Reference Model (.glb/.gltf/.obj/.stl)</button>
-  <input id="importRefInput" type="file" accept=".glb,.gltf,.obj,.mtl,.stl" style="display:none;" />
+              <div class="compassDegrees">
+                &ltYaw&gt <span id="compassDegrees">0°</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <button id="importCmdBtn">Import Model From Command</button>
+        <div id="hint">
+          Alt + Left Click on the grid to place selected block
+        </div>
 
-  <button id="exportMany">Export: one summon per entity</button>
-  <button id="exportOne">Export: single “one-command” (minecart chain)</button>
+        <div id="palette" class="palette">
+          <button id="paletteBtn" class="paletteBtn" type="button">
+            <span id="paletteBtnIcon" class="paletteIcon"></span>
+            <span id="paletteBtnLabel" class="paletteLabel">Select a block…</span>
+            <span class="paletteCaret">▾</span>
+          </button>
 
-  <div id="outList">
-    <div id="importCmdPanel" class="cmdBlock" style="display:none;">
-      <div class="cmdHeaderRow">
-        <div class="cmdTitle">Paste summon command</div>
-        <button id="importCmdClose" type="button" class="miniBtn">Close</button>
+          <div id="palettePopup" class="palettePopup" style="display:none;">
+            <input id="paletteSearch" class="paletteSearch" type="text" placeholder="Search blocks…" autocomplete="off" />
+            <div id="paletteList" class="paletteList"></div>
+          </div>
+        </div>
+
+        <div id="exportSection">
+          <button id="exportMany">Export: one summon per entity</button>
+          <button id="exportOne">Export: single “one-command” (Minecart Chain)</button>
+        </div>
+
+        <div id="outList"></div>
       </div>
-      <textarea
-              id="importCmdInput"
-              placeholder="Paste a summon command, minecart chain, or passenger chain here..."
-      ></textarea>
+    </div>
+  </div>
+</div>
+
+<div id="importCmdModal" class="modalOverlay" style="display:none;">
+  <div class="modalCard">
+    <div class="modalHeader">
+      <div class="modalTitle">Import Model From Command</div>
+      <button id="importCmdClose" type="button" class="modalClose">Close</button>
+    </div>
+
+    <textarea
+            id="importCmdInput"
+            class="modalTextarea"
+            placeholder="Paste a summon command, minecart chain, or passenger chain here..."
+    ></textarea>
+
+    <div class="modalActions">
       <button id="importCmdRun" type="button">Import Command Into Editor</button>
+    </div>
+  </div>
+</div>
+
+<div id="instructionsModal" class="modalOverlay" style="display:none;">
+  <div class="modalCard">
+    <div class="modalHeader">
+      <div class="modalTitle">Instructions</div>
+      <button id="instructionsClose" type="button" class="modalClose">Close</button>
+    </div>
+
+    <div id="instructionsContent" class="instructionsContent">
+      <h3>Editor Controls</h3>
+      <p>Left click: select</p>
+      <p>Alt + Left click on ground: place selected block</p>
+      <p>Ctrl + Click / Ctrl + Drag: multiselect / box select</p>
+      <p>W / E / R: translate / rotate / scale</p>
+      <p>Delete: delete selected</p>
+
+      <h3>Transform Shortcuts</h3>
+      <p>Arrow keys: tiny nudge</p>
+      <p>Shift + Arrow: 0.25 nudge</p>
+      <p>Tab + Arrow: 1.0 nudge</p>
+      <p>` : snap selected to half-block centers</p>
+
+      <h3>Grouping</h3>
+      <p>G: group selected</p>
+      <p>U: ungroup selected group</p>
+
+      <h3>Clipboard</h3>
+      <p>Ctrl/Cmd + C: copy selected</p>
+      <p>Ctrl/Cmd + V: paste selected</p>
+
+      <h3>Exports</h3>
+      <p>Use the sidebar buttons to export one summon per entity or a minecart-chain one-command export.</p>
+    </div>
+  </div>
+</div>
+
+<div id="saveModal" class="modalOverlay" style="display:none;">
+  <div class="modalCard modalCardSmall">
+    <div class="modalHeader">
+      <div class="modalTitle">Name Your Model Save</div>
+      <button id="saveModalClose" type="button" class="modalClose">Close</button>
+    </div>
+
+    <input
+            id="saveNameInput"
+            class="saveNameInput"
+            type="text"
+            placeholder="Enter save name..."
+            maxlength="120"
+    />
+
+    <div class="modalActions">
+      <button id="saveModalConfirm" type="button">Save Model</button>
     </div>
   </div>
 </div>
@@ -76,34 +186,71 @@
   <div class="xHdr">
     <div><b>Transform</b></div>
     <div class="xBtns">
+      <button id="groupBtn" title="Group selected">Group</button>
+      <button id="ungroupBtn" title="Ungroup selection">Ungroup</button>
       <button id="copyBtn" title="Ctrl/Cmd+C">Copy</button>
       <button id="pasteBtn" title="Ctrl/Cmd+V">Paste</button>
     </div>
   </div>
 
-  <div class="xRow"><span>Pos</span>
-    <input id="px" type="number" step="0.25">
-    <input id="py" type="number" step="0.25">
-    <input id="pz" type="number" step="0.25">
+  <div id="posRow" class="xRow">
+    <span class="rowLabel">Pos</span>
+
+    <label class="axisField axisX">
+      <span class="axisBadge">X</span>
+      <input id="px" type="number" step="0.25">
+    </label>
+
+    <label class="axisField axisY">
+      <span class="axisBadge">Y</span>
+      <input id="py" type="number" step="0.25">
+    </label>
+
+    <label class="axisField axisZ">
+      <span class="axisBadge">Z</span>
+      <input id="pz" type="number" step="0.25">
+    </label>
   </div>
 
-  <div class="xRow"><span>Rot°</span>
-    <input id="rx" type="number" step="5">
-    <input id="ry" type="number" step="5">
-    <input id="rz" type="number" step="5">
+  <div id="rotRow" class="xRow">
+    <span class="rowLabel">Rot°</span>
+
+    <label class="axisField axisX">
+      <span class="axisBadge">X</span>
+      <input id="rx" type="number" step="5">
+    </label>
+
+    <label class="axisField axisY">
+      <span class="axisBadge">Y</span>
+      <input id="ry" type="number" step="5">
+    </label>
+
+    <label class="axisField axisZ">
+      <span class="axisBadge">Z</span>
+      <input id="rz" type="number" step="5">
+    </label>
   </div>
 
-  <div class="xRow"><span>Scale</span>
-    <input id="sx" type="number" step="0.01">
-    <input id="sy" type="number" step="0.01">
-    <input id="sz" type="number" step="0.01">
-  </div>
+  <div id="scaleRow" class="xRow">
+    <span class="rowLabel">Scale</span>
 
-  <div class="xSmall">
-    Alt+Click: place<br>
-    Shift: snap rotate/scale/translate<br>
+    <label class="axisField axisX">
+      <span class="axisBadge">X</span>
+      <input id="sx" type="number" step="0.01">
+    </label>
+
+    <label class="axisField axisY">
+      <span class="axisBadge">Y</span>
+      <input id="sy" type="number" step="0.01">
+    </label>
+
+    <label class="axisField axisZ">
+      <span class="axisBadge">Z</span>
+      <input id="sz" type="number" step="0.01">
+    </label>
   </div>
 </div>
+
 <script type="module" src="webScripts/main.js"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {updateFacingCompass} from "../Misc/CompassSetup.js";
 
 export async function loadMcmetaAnimatedTexture(pngUrl, mcmetaUrl) {
     const loader = new THREE.TextureLoader();
@@ -127,4 +128,60 @@ export function setMcmetaAnimatorFlip(st, flipX = false, flipY = false) {
 
     // fallback
     setFrameByIndex(st, st.frames[0].index);
+}
+
+export async function initAnimations(state, clock) {
+
+    let markerAnim = null;
+    let markerMesh = null;
+
+// --- Command block marker (animated) ---
+    markerAnim = await loadMcmetaAnimatedTexture(
+        "/Resources/textures/block/command_block_front.png",
+        "/Resources/textures/block/command_block_front.png.mcmeta"
+    );
+
+    setMcmetaAnimatorFlip(markerAnim, true, true);
+
+    const markerMat = new THREE.MeshBasicMaterial({
+        map: markerAnim.tex,
+        transparent: true
+    });
+
+    markerMat.toneMapped = false;
+
+
+    markerMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), markerMat);
+
+// flat on ground, slightly raised to avoid z-fighting
+    markerMesh.rotation.x = -Math.PI / 2;
+    markerMesh.position.set(0, 0.001, 0);
+
+// optional: fight z-fighting even harder
+    markerMat.polygonOffset = true;
+    markerMat.polygonOffsetFactor = -1;
+    markerMat.polygonOffsetUnits = -1;
+
+    (state.floorOriginRoot || state.scene).add(markerMesh);
+
+    function animate() {
+        const dt = clock.getDelta();
+
+        if (markerAnim) tickMcmetaAnimator(markerAnim, dt);
+
+        state.orbit.update();
+        updateFacingCompass();
+        state.composer.render();
+
+        // render gizmo scene after
+        state.renderer.autoClear = false;
+        state.renderer.clearDepth();
+        state.renderer.render(state.gizmoScene, state.camera);
+        state.renderer.autoClear = true;
+
+
+        requestAnimationFrame(animate);
+    }
+    animate();
+
 }

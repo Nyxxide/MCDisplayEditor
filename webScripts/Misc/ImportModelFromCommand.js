@@ -29,22 +29,51 @@ import { defaultMultipartPropsForBlock } from "../TextureLoading/DefaultPropGen.
 
 export function initImportCommandLogic(state) {
     const importBtn = document.getElementById("importCmdBtn");
-    const importPanel = document.getElementById("importCmdPanel");
+    const importModal = document.getElementById("importCmdModal");
     const importInput = document.getElementById("importCmdInput");
     const importRun = document.getElementById("importCmdRun");
     const importClose = document.getElementById("importCmdClose");
 
-    if (importBtn && importPanel) {
-        importBtn.addEventListener("click", () => {
-            importPanel.style.display = importPanel.style.display === "none" ? "block" : "none";
+    function openModal() {
+        if (!importModal) return;
+        importModal.style.display = "flex";
+        if (state.orbit) state.orbit.enabled = false;
+        requestAnimationFrame(() => {
+            importInput?.focus();
         });
     }
 
-    if (importClose && importPanel) {
-        importClose.addEventListener("click", () => {
-            importPanel.style.display = "none";
+    function closeModal() {
+        if (!importModal) return;
+        importModal.style.display = "none";
+        if (state.orbit) state.orbit.enabled = true;
+    }
+
+    if (importBtn) {
+        importBtn.addEventListener("click", () => {
+            openModal();
         });
     }
+
+    if (importClose) {
+        importClose.addEventListener("click", () => {
+            closeModal();
+        });
+    }
+
+    if (importModal) {
+        importModal.addEventListener("click", (e) => {
+            if (e.target === importModal) {
+                closeModal();
+            }
+        });
+    }
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && importModal?.style.display !== "none") {
+            closeModal();
+        }
+    });
 
     if (importRun && importInput) {
         importRun.addEventListener("click", async () => {
@@ -53,8 +82,9 @@ export function initImportCommandLogic(state) {
 
             try {
                 await importCommandTextMerge(state, text);
+                closeModal();
+                importInput.value = "";
                 alert("Command imported.");
-                importPanel.style.display = "none";
             } catch (err) {
                 console.error(err);
                 alert(`Import failed: ${err?.message || err}`);
