@@ -2,7 +2,7 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Gotta make my favicon
 // TODO: Make Instructions Prettier & Add top bar/xForm stuff into it
-// TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like)
+// TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like) & See if NBT stats on ungrouped multiselects can be fixed to display properly
 
 
 /* TODO Texture Stuff:
