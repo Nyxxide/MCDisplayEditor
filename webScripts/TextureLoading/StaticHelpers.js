@@ -68,7 +68,7 @@ function inferCutout(model, blockId) {
     if (bid.includes("_stem") || bid.includes("attached_") && bid.includes("_stem")) return true;
     if (bid.includes("leaf_litter") || bid.includes("pink_petals") || bid.includes("dripleaf")) return true;
     if (bid.includes("sapling") || bid.includes("flower") || bid.includes("tall_grass") || bid.includes("fern")) return true;
-    if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire") || bid.includes("bars")) return true;
+    if (bid.includes("torch") || bid.includes("fire") || bid.includes("campfire") || bid.includes("bars") || bid.includes("azalea")) return true;
     if (bid.includes("crop") || bid.includes("wheat") || bid.includes("carrots") || bid.includes("potatoes") || bid.includes("beetroot") || bid.includes("wart")) return true;
     if (bid.includes("rail") || bid.includes("redstone_wire") || bid.includes("stonecutter") || bid.includes("pointed_dripstone")) return true;
     if (bid.includes("vine") || bid.includes("cactus") || bid.includes("cocoa") || bid.includes("grass_block")) return true;

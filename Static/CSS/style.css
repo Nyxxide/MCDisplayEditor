@@ -35,7 +35,7 @@ body {
 }
 
 #topBarTitle {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     white-space: nowrap;
     align-self: center;
@@ -54,7 +54,7 @@ body {
     color: #fff;
     aspect-ratio: 1/1;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 16px;
     font-family: "Minecraft";
 }
 
@@ -214,7 +214,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: "Minecraft";
-    font-size: 18px;
+    font-size: 22px;
     color: white;
 }
 
@@ -245,6 +245,7 @@ body {
     background: rgba(255, 255, 255, .08);
     color: #d7faff;
     font-family: "Minecraft";
+    font-size: 17px;
 }
 
 .paletteList {
@@ -279,7 +280,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     color: #fff;
-    font-size: 13px;
+    font-size: 17px;
     font-family: "Minecraft";
 }
 
@@ -294,6 +295,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     font-family: "Minecraft";
+    font-size: 20px;
     color: white;
     text-shadow: #2c2c2c 2px 2px 1px;
     border: black 2px solid;
@@ -326,6 +328,7 @@ body {
     margin-top: 6px;
     padding: 6px;
     font-family: "Minecraft";
+    font-size: 20px;
 }
 
 .cmdHeaderRow {
@@ -348,6 +351,7 @@ body {
     padding: 6px 10px !important;
     flex: 0 0 auto;
     font-family: "Minecraft";
+    font-size: 18px;
     background-image: url("../Images/StoneMenu.webp");
     background-size: 100% 100%;
     background-repeat: no-repeat;
@@ -395,7 +399,7 @@ body {
 }
 
 .modalTitle {
-    font-size: 25px;
+    font-size: 29px;
     font-weight: 700;
     color: #fff;
     font-family: "Minecraft";
@@ -455,12 +459,13 @@ body {
     background: rgba(255,255,255,0.06);
     color: #d7faff;
     outline: none;
-    font-size: 14px;
+    font-size: 18px;
     font-family: "Minecraft";
 }
 
 #saveModalConfirm {
     font-family: "Minecraft";
+    font-size: 20px;
 }
 
 #toggleGridBtn {
@@ -491,7 +496,7 @@ body {
     color: #fff;
     text-shadow: #2c2c2c 2px 2px 1px;
     line-height: 1.45;
-    font-size: 14px;
+    font-size: 18px;
     font-family: "Minecraft";
 }
 
@@ -517,10 +522,12 @@ body {
 
 #importCmdInput {
     font-family: "Minecraft";
+    font-size: 18px;
 }
 
 #importCmdRun {
     font-family: "Minecraft";
+    font-size: 18px;
 }
 
 #importCmdBtn {
@@ -597,7 +604,7 @@ body {
     color: #ff55ff;
     text-shadow: #3f153f 2px 2px 1px;
     font-family: "Minecraft";
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     line-height: 1.2;
 }
@@ -628,7 +635,7 @@ body {
     color: #fff;
     text-shadow: #2c2c2c 2px 2px 1px;
     font-family: "Minecraft";
-    font-size: 15px;
+    font-size: 19px;
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 6px 16px rgba(0,0,0,0.18);
@@ -641,14 +648,14 @@ body {
 .modelLibraryEmpty {
     color: white;
     font-family: "Minecraft";
-    font-size: 18px;
+    font-size: 22px;
     padding: 20px;
 }
 
 .modelLibraryError {
     color: #ff8080;
     font-family: "Minecraft";
-    font-size: 18px;
+    font-size: 22px;
     padding: 20px;
 }
 
@@ -673,7 +680,7 @@ body {
 }
 
 #hint {
-    font-size: 17px;
+    font-size: 21px;
     font-family: "Minecraft";
     opacity: 1;
     line-height: 1.35;
@@ -704,7 +711,7 @@ body {
     color: #ffffff;
     text-shadow: #2c2c2c 2px 2px 1px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
     font-family: "Minecraft";
     box-sizing: border-box;
 }
@@ -755,7 +762,7 @@ body {
 .compassLabel {
     position: absolute;
     transform: translate(-50%, -50%);
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 700;
     font-family: "Minecraft";
     color: #ffffff;
@@ -810,7 +817,7 @@ body {
 
 .compassFacing,
 .compassDegrees {
-    font-size: 12px;
+    font-size: 16px;
     color: #ff55ff;
     text-shadow: #3f153f 2px 2px 1px;
     opacity: 1;

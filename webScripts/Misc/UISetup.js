@@ -120,7 +120,7 @@ function addCommandBlock(text) {
 export function initCommandOutputBtns(state) {
   state.ui.exportManyBtn?.addEventListener("click", () => {
     clearOutList();
-    const lines = state.entities.map((ent) => entityToSummonCmd(ent, "~0.5 ~0.5 ~0.5"));
+    const lines = state.entities.map((ent) => entityToSummonCmd(ent, "~ ~1 ~"));
     lines.forEach(addCommandBlock);
   });
 

@@ -11,6 +11,11 @@ function fmt(n) {
 
 function mat4ToMcArray(m) {
     const e = m.elements;
+
+    e[3] += 0.5;
+    e[7] -= 0.5;
+    e[11] += 0.5
+
     return (
         `[${fmt(e[0])}f,${fmt(e[1])}f,${fmt(e[2])}f,${fmt(e[3])}f,` +
         `${fmt(e[4])}f,${fmt(e[5])}f,${fmt(e[6])}f,${fmt(e[7])}f,` +
@@ -91,7 +96,7 @@ function buildBlockStateNbt(ent) {
     return `{Name:"${ent.blockName}"}`;
 }
 
-export function entityToSummonCmd(ent, origin = "~0.5 ~0.5 ~0.5") {
+export function entityToSummonCmd(ent, origin = "~ ~1 ~") {
     const m = ent.mesh;
     m.updateMatrixWorld(true);
 
@@ -126,7 +131,7 @@ export function exportOneCommand(entities, { maxLen = 32500, safety = 200 } = {}
     const limit = Math.max(1000, maxLen - safety);
 
     const perEntityPassengers = entities.map((ent) => {
-        const c = entityToSummonCmd(ent, "~0.5 ~-0.065 ~0.5");
+        const c = entityToSummonCmd(ent, "~ ~0.435 ~");
         return `{id:"minecraft:command_block_minecart",Command:"${escapeForMinecartCommand(c)}"}`;
     });
 

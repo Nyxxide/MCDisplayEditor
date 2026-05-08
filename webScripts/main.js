@@ -5,12 +5,16 @@
 // TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like)
 // TODO: Fix nbt behavior on grouping (make grouped objects retain previous values unless new ones are set. Tags append changes to existing, everything else overwrite)
 // TODO: Also decide if i want multiselect to prevent nbt modification (probably)
+// TODO: Make grid seemingly infinite? and make rendering distance larger. cuts off after a point.
 
 
 /* TODO Texture Stuff:
 *   - Fucking hanging signs
 *   - Wall Variants of signs/banners
-*   - Some textures are off but dont worry about it too much. Buttons are of note right now but that's all I'm aware of
+*   - Some textures are off but dont worry about it too much. Button texture mapping, regular fire missing outer flat texture, coral fans flip east/west png
+*   - HOLY FUCK END GATEWAY AND PORTAL
+*   - Flower pot with flower in too big (because I scale 2D cross elements. just dont scale the potted ones probably.
+*   - Gamergeeks my fucking GOAT they have an atlas and a corresponding json. run that up and fix the long standing item icon problem.
 */
 
 /*

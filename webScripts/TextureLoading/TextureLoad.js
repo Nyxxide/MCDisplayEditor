@@ -486,27 +486,26 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
     if (!model || !model.elements) {
         const bid = (blockId || "").toLowerCase();
         const isAnyChest =
-            bid === "minecraft:chest" ||
+            bid === "chest" ||
             bid.endsWith(":chest") ||
             bid.endsWith("_chest") ||
             bid.includes("ender_chest") ||
             bid.includes("trapped_chest");
 
         const isAnyHead =
-            bid === "minecraft:creeper_head" ||
-            bid === "minecraft:skeleton_skull" ||
-            bid === "minecraft:wither_skeleton_skull" ||
-            bid === "minecraft:zombie_head" ||
-            bid === "minecraft:player_head" ||
-            bid === "minecraft:piglin_head" ||
-            bid === "minecraft:dragon_head";
+            bid === "creeper_head" ||
+            bid === "skeleton_skull" ||
+            bid === "wither_skeleton_skull" ||
+            bid === "zombie_head" ||
+            bid === "player_head" ||
+            bid === "piglin_head" ||
+            bid === "dragon_head";
 
         const isAnySign = bid.includes("sign");
         const isAnyBed = bid.includes("_bed");
         const isAnyBanner = bid.includes("_banner");
         const isAnyShulker = bid.includes("shulker");
         const isAnyCopperGolem = bid.includes("copper_golem_statue");
-        const isAnyShelf = bid.includes("_shelf");
         const isConduit = bid.includes("conduit");
         const isDecoratedPot = bid.includes("decorated");
 
