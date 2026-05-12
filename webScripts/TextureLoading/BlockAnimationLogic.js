@@ -170,6 +170,15 @@ export async function initAnimations(state, clock) {
 
         if (markerAnim) tickMcmetaAnimator(markerAnim, dt);
 
+        const t = performance.now() / 1000;
+
+        state.scene.traverse((o) => {
+            const mat = o.material;
+            if (mat?.userData?.isEndPortalShader) {
+                mat.uniforms.time.value = t;
+            }
+        });
+
         state.orbit.update();
         updateFacingCompass();
         state.composer.render();

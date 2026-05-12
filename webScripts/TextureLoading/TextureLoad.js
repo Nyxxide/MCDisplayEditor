@@ -10,15 +10,19 @@ import {
     loadExternalTexture,
     makeSingleChestMesh,
     makeSignMesh,
+    makeWallSignMesh,
     makeBedMesh,
     makeBannerMesh,
+    makeWallBannerMesh,
     makeSkullMesh,
     makeShulkerMesh,
     makeCopperGolemMesh,
     makeConduitMesh,
     makeDecoratedPotMesh,
     makeShelfMesh,
-    makeBellMesh
+    makeBellMesh,
+    makeEndGatewayMesh,
+    makeEndPortalMesh
 } from "./EntityBlockHelper.js";
 
 export async function loadAtlas(atlasPngUrl, atlasJsonUrl) {
@@ -501,13 +505,17 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             bid === "piglin_head" ||
             bid === "dragon_head";
 
-        const isAnySign = bid.includes("sign");
+        const isAnySign = bid.includes("sign") && !bid.includes("wall_sign") && !bid.includes("hanging_sign");
+        const isAnyWallSign = bid.includes("wall_sign") && !bid.includes("hanging_wall_sign");
         const isAnyBed = bid.includes("_bed");
-        const isAnyBanner = bid.includes("_banner");
+        const isAnyBanner = bid.includes("_banner") && !bid.includes("wall_banner");
+        const isAnyWallBanner = bid.includes("_wall_banner");
         const isAnyShulker = bid.includes("shulker");
         const isAnyCopperGolem = bid.includes("copper_golem_statue");
         const isConduit = bid.includes("conduit");
         const isDecoratedPot = bid.includes("decorated");
+        const isEndGateway = bid.includes("end_gateway");
+        const isEndPortal = bid.includes("end_portal");
 
         if (isAnyChest) {
             let texPath = "../Resources/textures/blockentity/chest/normal.png";
@@ -538,6 +546,28 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
             const tex = await loadExternalTexture(texPath);
             const mesh = makeSkullMesh(tex, bid, { mirrorSides: false });
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        if(isAnyWallSign) {
+            let texPath = null;
+
+            if (bid.includes("oak")) texPath = "../Resources/textures/blockentity/signs/oak.png";
+            if (bid.includes("birch")) texPath = "../Resources/textures/blockentity/signs/birch.png";
+            if (bid.includes("spruce")) texPath = "../Resources/textures/blockentity/signs/spruce.png";
+            if (bid.includes("jungle")) texPath = "../Resources/textures/blockentity/signs/jungle.png";
+            if (bid.includes("acacia")) texPath = "../Resources/textures/blockentity/signs/acacia.png";
+            if (bid.includes("dark_oak")) texPath = "../Resources/textures/blockentity/signs/dark_oak.png";
+            if (bid.includes("cherry")) texPath = "../Resources/textures/blockentity/signs/cherry.png";
+            if (bid.includes("bamboo")) texPath = "../Resources/textures/blockentity/signs/bamboo.png";
+            if (bid.includes("crimson")) texPath = "../Resources/textures/blockentity/signs/crimson.png";
+            if (bid.includes("warped")) texPath = "../Resources/textures/blockentity/signs/warped.png";
+            if (bid.includes("pale_oak")) texPath = "../Resources/textures/blockentity/signs/pale_oak.png";
+            if (bid.includes("mangrove")) texPath = "../Resources/textures/blockentity/signs/mangrove.png";
+
+            const tex = await loadExternalTexture(texPath);
+            const mesh = makeWallSignMesh(tex, bid);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
@@ -590,12 +620,26 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             return mesh;
         }
 
+        if (isAnyWallBanner) {
+            const texPath = "../Resources/textures/blockentity/banner/banner_base.png";
+            const tex = await loadExternalTexture(texPath);
+
+            const colorIndex = bid.indexOf("_wall_banner");
+            const color = bid.substring(0, colorIndex);
+            console.log(color);
+
+            const mesh = makeWallBannerMesh(tex, bid, color);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
         if (isAnyBanner) {
             const texPath = "../Resources/textures/blockentity/banner/banner_base.png";
             const tex = await loadExternalTexture(texPath);
 
             const colorIndex = bid.indexOf("_banner");
-            const color = bid.substring(10, colorIndex);
+            const color = bid.substring(0, colorIndex);
+            console.log(color);
 
             const mesh = makeBannerMesh(tex, bid, color);
             finalizeMesh(mesh, blockId);
@@ -652,6 +696,20 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             const tex1 = await loadExternalTexture("../Resources/textures/blockentity/decorated_pot/decorated_pot_side.png");
             const tex2 = await loadExternalTexture("../Resources/textures/blockentity/decorated_pot/decorated_pot_base.png");
             const mesh = makeDecoratedPotMesh(tex1, tex2, bid);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        if (isEndGateway) {
+            const tex = await loadExternalTexture("../Resources/textures/blockentity/end_portal/end_portal.png");
+            const mesh = makeEndGatewayMesh(tex, bid);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        if (isEndPortal) {
+            const tex = await loadExternalTexture("../Resources/textures/blockentity/end_portal/end_portal.png");
+            const mesh = makeEndPortalMesh(tex, bid);
             finalizeMesh(mesh, blockId);
             return mesh;
         }

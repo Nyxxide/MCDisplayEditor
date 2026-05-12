@@ -82,6 +82,191 @@ function stripBoxFaces(nonIndexedBoxGeom, facesToRemove /* array of FACE.* */) {
     return out;
 }
 
+function makeEndPortalShaderMaterial(tex, {
+    layers = [],
+    opacity = 0.95,
+    contrast = 1.25,
+    brightness = 1.0,
+} = {}) {
+    tex.wrapS = THREE.RepeatWrapping;
+    tex.wrapT = THREE.RepeatWrapping;
+    tex.magFilter = THREE.NearestFilter;
+    tex.minFilter = THREE.NearestFilter;
+    tex.generateMipmaps = false;
+    tex.needsUpdate = true;
+
+    const layerCount = Math.min(layers.length, 8);
+
+    const uniforms = {
+        map: { value: tex },
+        time: { value: 0 },
+        opacity: { value: opacity },
+        contrast: { value: contrast },
+        brightness: { value: brightness },
+        layerCount: { value: layerCount },
+    };
+
+    for (let i = 0; i < 8; i++) {
+        const l = layers[i] || {
+            tint: new THREE.Color(0x000000),
+            speedX: 0,
+            speedY: 0,
+            scale: 1,
+            alpha: 0,
+        };
+
+        uniforms[`tints${i}`] = { value: l.tint };
+        uniforms[`speeds${i}`] = { value: new THREE.Vector2(l.speedX, l.speedY) };
+        uniforms[`scales${i}`] = { value: l.scale };
+        uniforms[`alphas${i}`] = { value: l.alpha };
+    }
+
+    const mat = new THREE.ShaderMaterial({
+        uniforms,
+        vertexShader: `
+            varying vec4 vScreenPos;
+
+            void main() {
+                vScreenPos = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                gl_Position = vScreenPos;
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D map;
+            uniform float time;
+            uniform float opacity;
+            uniform float contrast;
+            uniform float brightness;
+            uniform int layerCount;
+
+            uniform vec3 tints0;
+            uniform vec3 tints1;
+            uniform vec3 tints2;
+            uniform vec3 tints3;
+            uniform vec3 tints4;
+            uniform vec3 tints5;
+            uniform vec3 tints6;
+            uniform vec3 tints7;
+
+            uniform vec2 speeds0;
+            uniform vec2 speeds1;
+            uniform vec2 speeds2;
+            uniform vec2 speeds3;
+            uniform vec2 speeds4;
+            uniform vec2 speeds5;
+            uniform vec2 speeds6;
+            uniform vec2 speeds7;
+
+            uniform float scales0;
+            uniform float scales1;
+            uniform float scales2;
+            uniform float scales3;
+            uniform float scales4;
+            uniform float scales5;
+            uniform float scales6;
+            uniform float scales7;
+
+            uniform float alphas0;
+            uniform float alphas1;
+            uniform float alphas2;
+            uniform float alphas3;
+            uniform float alphas4;
+            uniform float alphas5;
+            uniform float alphas6;
+            uniform float alphas7;
+
+            varying vec4 vScreenPos;
+
+            vec3 getTint(int i) {
+                if (i == 0) return tints0;
+                if (i == 1) return tints1;
+                if (i == 2) return tints2;
+                if (i == 3) return tints3;
+                if (i == 4) return tints4;
+                if (i == 5) return tints5;
+                if (i == 6) return tints6;
+                return tints7;
+            }
+
+            vec2 getSpeed(int i) {
+                if (i == 0) return speeds0;
+                if (i == 1) return speeds1;
+                if (i == 2) return speeds2;
+                if (i == 3) return speeds3;
+                if (i == 4) return speeds4;
+                if (i == 5) return speeds5;
+                if (i == 6) return speeds6;
+                return speeds7;
+            }
+
+            float getScale(int i) {
+                if (i == 0) return scales0;
+                if (i == 1) return scales1;
+                if (i == 2) return scales2;
+                if (i == 3) return scales3;
+                if (i == 4) return scales4;
+                if (i == 5) return scales5;
+                if (i == 6) return scales6;
+                return scales7;
+            }
+
+            float getAlpha(int i) {
+                if (i == 0) return alphas0;
+                if (i == 1) return alphas1;
+                if (i == 2) return alphas2;
+                if (i == 3) return alphas3;
+                if (i == 4) return alphas4;
+                if (i == 5) return alphas5;
+                if (i == 6) return alphas6;
+                return alphas7;
+            }
+
+            void main() {
+                vec2 screenUV = vScreenPos.xy / vScreenPos.w;
+                screenUV = screenUV * 0.5 + 0.5;
+
+                vec3 col = vec3(0.0);
+
+                for (int i = 0; i < 8; i++) {
+                    if (i >= layerCount) break;
+
+                    float sc = getScale(i);
+                    vec2 spd = getSpeed(i);
+                    float a = getAlpha(i);
+                    vec3 tint = getTint(i);
+
+                    vec2 uv = screenUV * sc / 256.0;
+                    uv += spd * time;
+
+                    vec4 sampleCol = texture2D(map, uv);
+
+                    float star = max(max(sampleCol.r, sampleCol.g), sampleCol.b);
+
+                    // keep dim background texture visible instead of only bright pixels
+                    vec3 layer = mix(sampleCol.rgb * tint * 0.75, tint, star * 0.55);
+                    
+                    col += layer * a;
+                }
+
+                col *= brightness;
+                col = clamp(col, 0.0, 1.0);
+
+                gl_FragColor = vec4(col, opacity);
+            }
+        `,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+        side: THREE.DoubleSide,
+    });
+
+    mat.toneMapped = false;
+    mat.userData.isEndPortalShader = true;
+
+    return mat;
+}
+
+
 //Apply Faces Helpers
 
 function applyModelRendererCubeUVs(geom, texU, texV, w, h, d, texW = 64, texH = 32, mirrorSides = false) {
@@ -383,6 +568,94 @@ function makeSignMesh(signTex, id) {
 
     group.add(post);
     group.add(board);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeWallSignMesh(signTex, id) {
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 32;
+
+    const rect = (x, y, w, h) => ({
+        u0: x / TEX_W,
+        v0: y / TEX_H,
+        u1: (x + w) / TEX_W,
+        v1: (y + h) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        const mat = new THREE.MeshBasicMaterial({
+            map: signTex,
+            transparent: true,
+            side: THREE.DoubleSide,
+            depthWrite: true,
+            depthTest: true,
+        });
+        mat.toneMapped = false;
+
+        return new THREE.Mesh(geom, mat);
+    }
+
+    // Same board UVs as makeSignMesh
+    const boardLeft   = rect(0,  2,  2, 12);
+    const boardFront  = rect(2,  2, 24, 12);
+    const boardRight  = rect(26, 2,  2, 12);
+    const boardBack   = rect(28, 2, 24, 12);
+    const boardTop    = rect(2,  0, 24,  2);
+    const boardBottom = rect(26, 0, 24,  2);
+
+    // Board only, no post.
+    // Full 16 wide, centered vertically around wall-sign height.
+    // Shifted back against the south wall: z 15..16.
+    const board = makeBox(
+        [0, 4.35, 14.75],
+        [16, 12.25, 15.75]
+    );
+
+    const bg = board.geometry;
+
+    remapFace(bg, FACE.LEFT,   boardLeft,   false, true);
+    remapFace(bg, FACE.FRONT,  boardBack,  false, true);
+    remapFace(bg, FACE.RIGHT,  boardRight,  false, true);
+    remapFace(bg, FACE.BACK,   boardFront,   false, true);
+    remapFace(bg, FACE.TOP,    boardTop,    false, true);
+    remapFace(bg, FACE.BOTTOM, boardBottom, false, false);
+
+    inner.add(board);
+
+    // inner.rotation.y = Math.PI;
+
+    group.add(inner);
 
     group.traverse((o) => {
         if (o.isMesh) {
@@ -721,6 +994,158 @@ function makeBannerMesh(bannerTex, id, bannerColor = "white") {
 
     inner.position.set(0.06, -0.125, 0.04);
 
+    inner.rotation.y = Math.PI;
+
+    group.add(inner);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeWallBannerMesh(bannerTex, id, bannerColor = "white") {
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 64;
+
+    const BANNER_COLORS = {
+        "black": "#191919",
+        "gray": "#4C4C4C",
+        "light_gray": "#999999",
+        "white": "#FFFFFF",
+        "pink": "#F27FA5",
+        "magenta": "#B24CD8",
+        "purple": "#7F3FB2",
+        "blue": "#334CB2",
+        "cyan": "#4C7F99",
+        "light_blue": "#6699D8",
+        "green": "#667F33",
+        "lime": "#7FCC19",
+        "yellow": "#E5E533",
+        "orange": "#D87F33",
+        "brown": "#664C33",
+        "red": "#993333",
+    };
+
+    const chosenHex = BANNER_COLORS[String(bannerColor).toLowerCase()] ?? "#FFFFFF";
+
+    const rectInc = (x0, y0, x1, y1) => ({
+        u0: x0 / TEX_W,
+        v0: y0 / TEX_H,
+        u1: (x1 + 1) / TEX_W,
+        v1: (y1 + 1) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    const clothMat = new THREE.MeshBasicMaterial({
+        map: bannerTex,
+        color: new THREE.Color(chosenHex),
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    clothMat.toneMapped = false;
+
+    const postMat = new THREE.MeshBasicMaterial({
+        map: bannerTex,
+        color: new THREE.Color("#FFFFFF"),
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    postMat.toneMapped = false;
+
+    // Cloth UVs
+    const bannerFront  = rectInc(1, 1, 20, 40);
+    const bannerLeft   = rectInc(0, 1, 0, 40);
+    const bannerRight  = rectInc(21, 1, 21, 40);
+    const bannerTop    = rectInc(1, 0, 20, 0);
+    const bannerBottom = rectInc(21, 0, 40, 0);
+    const bannerBack   = rectInc(22, 1, 40, 40);
+
+    // Horizontal post UVs
+    const horizBack   = rectInc(24, 44, 43, 45);
+    const horizFront  = rectInc(2, 44, 21, 45);
+    const horizLeft   = rectInc(0, 44, 1, 45);
+    const horizRight  = rectInc(22, 44, 23, 45);
+    const horizTop    = rectInc(2, 42, 21, 43);
+    const horizBottom = rectInc(22, 42, 41, 43);
+
+    // Against south wall: z 15..16-ish.
+    // Cloth only, no vertical post.
+    const cloth = makeBox(
+        [0, -14, 15],
+        [19, 22.5, 16],
+        clothMat
+    );
+
+    // Keep the horizontal rod, also pushed against south wall.
+    const horizPost = makeBox(
+        [0, 20.5, 13],
+        [19, 22.5, 15],
+        postMat
+    );
+
+    const cg = cloth.geometry;
+    const hg = horizPost.geometry;
+
+    // Cloth
+    remapFace(cg, FACE.FRONT,  bannerFront,  true, true);
+    remapFace(cg, FACE.BACK,   bannerBack,   true, true);
+    remapFace(cg, FACE.LEFT,   bannerLeft,   true, true);
+    remapFace(cg, FACE.RIGHT,  bannerRight,  true, true);
+    remapFace(cg, FACE.TOP,    bannerTop,    false, true);
+    remapFace(cg, FACE.BOTTOM, bannerBottom, false, false);
+
+    // Horizontal post
+    remapFace(hg, FACE.FRONT,  horizFront,  true, true);
+    remapFace(hg, FACE.BACK,   horizBack,   false, true);
+    remapFace(hg, FACE.LEFT,   horizLeft,   true, false);
+    remapFace(hg, FACE.RIGHT,  horizRight,  true, false);
+    remapFace(hg, FACE.TOP,    horizTop,    false, true);
+    remapFace(hg, FACE.BOTTOM, horizBottom, false, false);
+
+    inner.add(cloth, horizPost);
+
+    // Same sizing/rotation convention as makeBannerMesh
+    inner.scale.setScalar(0.75);
+    inner.scale.multiply(new THREE.Vector3(0.925, 1, 0.925));
+
+    inner.position.set(0.06, -0.31, 0.7);
     inner.rotation.y = Math.PI;
 
     group.add(inner);
@@ -1789,5 +2214,144 @@ function makeBellMesh(bellTex, id) {
     return group;
 }
 
-export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeBedMesh, makeBannerMesh, makeSkullMesh,
-    makeShulkerMesh, makeCopperGolemMesh, makeConduitMesh, makeDecoratedPotMesh, makeShelfMesh, makeBellMesh}
+function makeEndGatewayMesh(gatewayTex, id) {
+    const group = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 256;
+    const TEX_H = 256;
+
+    const rect = (x, y, w, h) => ({
+        u0: x / TEX_W,
+        v0: y / TEX_H,
+        u1: (x + w) / TEX_W,
+        v1: (y + h) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    const mat = makeEndPortalShaderMaterial(gatewayTex, {
+        layers: [
+            { tint: new THREE.Color(0x16333d), speedX:  0.002, speedY:  0.003, scale: 125.0, alpha: 0.95 },
+            { tint: new THREE.Color(0x1d4f58), speedX: -0.003, speedY:  0.004, scale: 145.0, alpha: 0.65 },
+            { tint: new THREE.Color(0x216d6c), speedX:  0.0085, speedY: -0.0025, scale: 185.0, alpha: 0.48 },
+            { tint: new THREE.Color(0x2a8980), speedX: -0.006, speedY: -0.005, scale: 230.0, alpha: 0.36 },
+            { tint: new THREE.Color(0x6ca37e), speedX:  0.004, speedY:  0.007, scale: 285.0, alpha: 0.24 },
+
+            // gateway-only blue layer
+            { tint: new THREE.Color(0x2f7fd8), speedX:  0.01, speedY:  0.010, scale: 115.0, alpha: 0.38 },
+            { tint: new THREE.Color(0x4f96ff), speedX:  0.0075, speedY:  0.008, scale: 110.0, alpha: 0.22 },
+        ],
+        opacity: 1,
+        contrast: 1.0,
+        brightness: 2.05,
+    });
+
+    const cube = makeBox([0, 0, 0], [16, 16, 16], mat);
+    group.add(cube);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeEndPortalMesh(portalTex, id) {
+    const group = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 256;
+    const TEX_H = 256;
+
+    const rect = (x, y, w, h) => ({
+        u0: x / TEX_W,
+        v0: y / TEX_H,
+        u1: (x + w) / TEX_W,
+        v1: (y + h) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    const mat = makeEndPortalShaderMaterial(portalTex, {
+        layers: [
+            { tint: new THREE.Color(0x16333d), speedX:  0.002, speedY:  0.003, scale: 115.0, alpha: 0.95 },
+            { tint: new THREE.Color(0x1d4f58), speedX: -0.003, speedY:  0.004, scale: 145.0, alpha: 0.65 },
+            { tint: new THREE.Color(0x216d6c), speedX:  0.00425, speedY: -0.0025, scale: 185.0, alpha: 0.48 },
+            { tint: new THREE.Color(0x2a8980), speedX: -0.006, speedY: -0.005, scale: 230.0, alpha: 0.36 },
+            { tint: new THREE.Color(0x6ca37e), speedX:  0.004, speedY:  0.007, scale: 285.0, alpha: 0.24 },
+            { tint: new THREE.Color(0x52AB8C), speedX: -0.0075, speedY:  0.006, scale: 205.0, alpha: 0.18 },
+        ],
+        opacity: 1,
+        contrast: 1.0,
+        brightness: 1.9,
+    });
+
+    // height = ~12/16 = 0.75
+    const portal = makeBox(
+        [0, 5, 0],
+        [16, 12, 16],
+        mat
+    );
+
+    group.add(portal);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+
+export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeWallSignMesh, makeBedMesh, makeBannerMesh,
+    makeWallBannerMesh, makeSkullMesh, makeShulkerMesh, makeCopperGolemMesh, makeConduitMesh, makeDecoratedPotMesh,
+    makeShelfMesh, makeBellMesh, makeEndGatewayMesh, makeEndPortalMesh}

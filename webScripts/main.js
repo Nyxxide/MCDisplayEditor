@@ -9,10 +9,9 @@
 
 
 /* TODO Texture Stuff:
-*   - Fucking hanging signs
+*   - Fucking hanging signs (Has necessary props. Yikes)
 *   - Wall Variants of signs/banners
 *   - Some textures are off but dont worry about it too much. Button texture mapping, regular fire missing outer flat texture, coral fans flip east/west png
-*   - HOLY FUCK END GATEWAY AND PORTAL
 *   - Flower pot with flower in too big (because I scale 2D cross elements. just dont scale the potted ones probably.
 *   - Gamergeeks my fucking GOAT they have an atlas and a corresponding json. run that up and fix the long standing item icon problem.
 */
