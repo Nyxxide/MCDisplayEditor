@@ -1,8 +1,25 @@
 <!doctype html>
 <html>
 <head>
+  <style>
+    html.preload *,
+    html.preload *::before,
+    html.preload *::after {
+      transition: none !important;
+    }
+
+    html.preload body {
+      opacity: 0;
+      overflow: hidden;
+    }
+  </style>
+
+  <script>
+    document.documentElement.classList.add("preload");
+  </script>
+  <link rel="preload" href="Static/Fonts/Minecraft.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="stylesheet" href="Static/CSS/fonts.css">
-  <link rel="stylesheet" href="Static/CSS/style.css">
+  <link rel="stylesheet" href="Static/CSS/styles.css">
   <script type="importmap">
     {
       "imports": {
@@ -14,6 +31,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>CBT - Display Builder</title>
+  <link rel="icon" type="image/x-icon" href="Static/Images/DisplayEditor.ico">
 </head>
 <body>
 <div id="appShell">
@@ -138,30 +156,72 @@
 
     <div id="instructionsContent" class="instructionsContent">
       <h3>Editor Controls</h3>
-      <p>Left Click: Select Block/Group</p>
-      <p>Alt + Left Click on Grid: Place Selected Block</p>
-      <p>Ctrl + Click / Ctrl + Drag: Multiselect / Box Select</p>
+      <p><span class="instKey">Left Click</span>: Select Block/Group</p>
+      <p><span class="instKey">Alt + Left Click on Grid</span>: Place Selected Block</p>
+      <p><span class="instKey">Ctrl/Cmd + Click</span>: Multiselect</p>
+      <p><span class="instKey">Ctrl/Cmd + Drag</span>: Box Select</p>
 
       <h3>Editor Hotkeys</h3>
-      <p>T: Translate</p>
-      <p>R: Rotate</p>
-      <p>S: Scale</p>
-      <p>H: Change Grid Interval (1.0/0.25)</p>
-      <p>G: Group Selected</p>
-      <p>U: Ungroup Selected</p>
-      <p>Ctrl/Cmd + C: Copy Selected</p>
-      <p>Ctrl/Cmd + V: Paste Selected</p>
-      <p>Delete: Delete Selected</p>
-      <p>Arrow keys: Move Selected 0.001</p>
-      <p>Shift + Arrow: Move Selected 0.25</p>
-      <p>Tab + Arrow: Move Selected 1.0</p>
-      <p>` : Snap Selected to Nearest "Block"</p>
+      <p><span class="instKey">T</span>: Translate</p>
+      <p><span class="instKey">R</span>: Rotate</p>
+      <p><span class="instKey">S</span>: Scale</p>
+      <p><span class="instKey">H</span>: Change Grid Interval (1.0/0.25)</p>
+      <p><span class="instKey">G</span>: Group Selected</p>
+      <p><span class="instKey">U</span>: Ungroup Selected</p>
+      <p><span class="instKey">Ctrl/Cmd + C</span>: Copy Selected</p>
+      <p><span class="instKey">Ctrl/Cmd + V</span>: Paste Selected</p>
+      <p><span class="instKey">Ctrl/Cmd + Z</span>: Undo</p>
+      <p><span class="instKey">Ctrl/Cmd + Y</span>: Redo</p>
+      <p><span class="instKey">Delete</span>: Delete Selected</p>
+      <p><span class="instKey">Arrow keys</span>: Move Selected 0.001</p>
+      <p><span class="instKey">Shift + Arrow</span>: Move Selected 0.25</p>
+      <p><span class="instKey">Tab + Arrow</span>: Move Selected 1.0</p>
+      <p><span class="instKey">`</span>: Snap Selected to Nearest "Block"</p>
 
+      <h3>Top Bar UI</h3>
+      <div class="instructionsImageList">
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/Save.webp" class="instImg"><span class="instValue">: Save the current editor model</span></p>
+        </div>
+
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/Load.gif" class="instImg"><span class="instValue">: Load a saved editor model</span></p>
+        </div>
+
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/InvisGrid.webp" class="instImg"><span class="instValue">: Show or hide the editor grid</span></p>
+        </div>
+
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/Instructions.webp" class="instImg"><span class="instValue">: Open this help menu</span></p>
+        </div>
+
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/Import3DModel.webp" class="instImg"><span class="instValue">: Import an external reference model</span></p>
+        </div>
+
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/ImportViaCommand.gif" class="instImg"><span class="instValue">: Import block_display commands into the editor</span></p>
+        </div>
+
+        <div class="instructionsImageRow">
+          <p><img src="Static/Images/LibraryButton.webp" class="instImg"><span class="instValue">: Open premade saved models</span></p>
+        </div>
+      </div>
+
+      <h3>Selected Block UI</h3>
+      <p><span id="instX">X</span>/<span id="instY">Y</span>/<span id="instZ">Z</span>: Depending on mode. Transforms on that axis</p>
+      <p><span class="instKey">Properties Dropdown</span>: Changes block(s) visually if applicable</p>
+      <p><span class="instKey">Tags</span>: List of tags to reference the entity(s) by in game</p>
+      <p><span class="instKey">View Range</span>: How many blocks away the entity(s) is visible from</p>
+      <p><span class="instKey">Brightness</span>: Light level applied to the entity(s). If empty, world light level applies</p>
+      <p><span class="instKey">Shadow Radius</span>: Size of the shadow of the selected entity(s)</p>
+      <p><span class="instKey">Shadow Strength</span>: Darkness of the shadow of the selected entity(s)</p>
 
       <h3>Exports</h3>
-      <p>Export Many: Gives one summon command per entity for all entities in editor - (One summon per object)</p>
+      <p><span class="instExp">Export Many</span>: Gives one summon command per entity for all entities in editor - (One summon per object)</p>
       </br>
-      <p>Export One: Gives Minecart Chain summon commands that fit as many entity summons as possible
+      <p><span class="instExp">Export One</span>: Gives Minecart Chain summon commands that fit as many entity summons as possible
         into a "One-Command-Block" command - (One command for everything in editor/multiple commands if command block
         character limit exceeded)</p>
     </div>
@@ -266,6 +326,11 @@
       <span class="axisBadge">Z</span>
       <input id="sz" type="number" step="0.01">
     </label>
+  </div>
+
+  <div id="propsSection" class="metaSection" style="display:none;">
+    <div class="metaHdr">Block Properties</div>
+    <div id="propsFields"></div>
   </div>
 
   <div id="metaSection" class="metaSection">

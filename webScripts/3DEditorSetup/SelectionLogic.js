@@ -11,7 +11,7 @@
 import * as THREE from "three";
 import { attachKeepWorldMatrix, setObjectWorldMatrix, setObjectWorldTRS } from "./TransformLogic.js";
 import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
-import { defaultMultipartPropsForBlock } from "../TextureLoading/DefaultPropGen.js";
+import {getDefaultPropertiesForBlock} from "../TextureLoading/BlockPropertyOptions.js";
 
 export function initSelectionLogic(state) {
     // --- Selection box element (DOM overlay) ---
@@ -709,7 +709,7 @@ export function initSelectionLogic(state) {
         const blockName = state.ui.paletteValue;
         if (!blockName) return;
 
-        const properties = defaultMultipartPropsForBlock(blockName)
+        const properties = getDefaultPropertiesForBlock(blockName)
         const mesh = await makeCubeForBlock(state, blockName, properties);
 
         const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;

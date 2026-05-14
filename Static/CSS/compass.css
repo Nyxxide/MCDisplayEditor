@@ -1,0 +1,91 @@
+.compassWidget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 0 14px;
+}
+
+.compassFace {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border-radius: 999px;
+    border: 1px solid rgb(154, 154, 154);
+    background: rgb(4, 4, 4);
+    flex: 0 0 auto;
+}
+
+.compassRing {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+}
+
+.compassLabel {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: "Minecraft";
+    color: #ffffff;
+    user-select: none;
+}
+
+.compassLabel.north      { left: 50%; top: 10%; }
+.compassLabel.northeast  { left: 78%; top: 22%; }
+.compassLabel.east       { left: 90%; top: 50%; }
+.compassLabel.southeast  { left: 78%; top: 78%; }
+.compassLabel.south      { left: 50%; top: 90%; }
+.compassLabel.southwest  { left: 22%; top: 78%; }
+.compassLabel.west       { left: 10%; top: 50%; }
+.compassLabel.northwest  { left: 22%; top: 22%; }
+
+.compassNeedle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 5px;
+    height: 40px;
+    background: #ff0000;
+    transform-origin: center 100%;
+    transform: translate(-50%, -100%) rotate(0deg);
+    box-shadow: 0 0 8px rgba(255,85,85,0.35);
+}
+
+.compassNeedle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    width: 5px;
+    height: 15px;
+    background: #524e4d;
+    transform: translateX(-50%);
+    opacity: 0.9;
+}
+
+.compassCenterDot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    background: #7c7c7c;
+    transform: translate(-50%, -50%);
+}
+
+.compassFacing,
+.compassDegrees {
+    font-size: 16px;
+    color: #ff55ff;
+    text-shadow: #3f153f 2px 2px 1px;
+    opacity: 1;
+    font-family: "Minecraft";
+}
+
+#compassFacingLabel,
+#compassDegrees {
+    color: #ffffff;
+    text-shadow: #545454 2px 2px 1px;
+}

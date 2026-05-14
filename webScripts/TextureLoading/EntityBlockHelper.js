@@ -653,7 +653,190 @@ function makeWallSignMesh(signTex, id) {
 
     inner.add(board);
 
-    // inner.rotation.y = Math.PI;
+    group.add(inner);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeHangingSignMesh(signTex, id, props = {}) {
+    const attached = props?.attached === true || props?.attached === "true";
+
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 32;
+
+    const rect = (x, y, w, h) => ({
+        u0: x / TEX_W,
+        v0: y / TEX_H,
+        u1: (x + w) / TEX_W,
+        v1: (y + h) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    function makePlane(widthPx, heightPx, center, material, uvRect, rotY = 0, flipV = true) {
+        const geom = new THREE.PlaneGeometry(widthPx / 16, heightPx / 16).toNonIndexed();
+
+        let { u0, v0, u1, v1 } = uvRect;
+        if (flipV) [v0, v1] = [v1, v0];
+
+        remapUVsToRect(geom, 0, u0, v0, u1, v1);
+
+        geom.rotateY(rotY);
+        geom.translate(
+            toBlock(center[0]),
+            toBlock(center[1]),
+            toBlock(center[2])
+        );
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    const mat = new THREE.MeshBasicMaterial({
+        map: signTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    mat.toneMapped = false;
+
+    // Main sign board UVs
+    const boardTop    = rect(2,  12, 14, 2);
+    const boardBottom = rect(16, 12, 14, 2);
+    const boardLeft   = rect(0,  14, 2,  10);
+    const boardFront  = rect(2,  14, 14, 10);
+    const boardRight  = rect(16, 14, 2,  10);
+    const boardBack   = rect(18, 14, 14, 10);
+
+    // 2D chain texture regions
+    const hangingChainCross = rect(0, 6, 3, 6);
+    const hangingChainMid = rect(6, 6, 3, 6)
+    const attachedChainFlat = rect(14, 6, 12, 6);
+
+    // Board: 14 wide, 10 tall, 2 thick
+    const board = makeBox(
+        [1, 0, 7],
+        [15, 10, 9],
+        mat
+    );
+
+    const bg = board.geometry;
+
+    remapFace(bg, FACE.TOP,    boardTop,    false, true);
+    remapFace(bg, FACE.BOTTOM, boardBottom, false, false);
+    remapFace(bg, FACE.LEFT,   boardLeft,   false, true);
+    remapFace(bg, FACE.RIGHT,  boardRight,  false, true);
+    remapFace(bg, FACE.FRONT,  boardFront,  false, true);
+    remapFace(bg, FACE.BACK,   boardBack,   false, true);
+
+    inner.add(board);
+
+    if (attached) {
+        // Attached hanging sign: flatter chain strip across the top
+        const flatChain = makePlane(
+            12,
+            6,
+            [8, 13, 8],
+            mat,
+            attachedChainFlat,
+            0
+        );
+
+        inner.add(flatChain);
+    } else {
+        // Normal hanging sign: two crossed chain planes
+        const chainABot = makePlane(
+            2.75,
+            6,
+            [3, 13, 8],
+            mat,
+            hangingChainCross,
+            Math.PI / 4
+        );
+
+        const chainAMid = makePlane(
+            2.75,
+            6,
+            [3, 13, 8],
+            mat,
+            hangingChainMid,
+            -Math.PI / 4
+        );
+
+        const chainATop = makePlane(
+            2.75,
+            6,
+            [3, 13, 8],
+            mat,
+            hangingChainCross,
+            Math.PI / 4
+        );
+
+        const chainBBot = makePlane(
+            2.75,
+            6,
+            [13, 13, 8],
+            mat,
+            hangingChainCross,
+            Math.PI / 4
+        );
+
+        const chainBMid = makePlane(
+            2.75,
+            6,
+            [13, 13, 8],
+            mat,
+            hangingChainMid,
+            -Math.PI / 4
+        );
+
+        const chainBTop = makePlane(
+            2.75,
+            6,
+            [13, 13, 8],
+            mat,
+            hangingChainCross,
+            Math.PI / 4
+        );
+
+        inner.add(chainABot, chainAMid, chainATop, chainBBot, chainBMid, chainBTop);
+    }
+
+    // Match your other entity-block convention
+    inner.rotation.y = Math.PI;
 
     group.add(inner);
 
@@ -668,7 +851,210 @@ function makeWallSignMesh(signTex, id) {
     return group;
 }
 
-function makeBedMesh(bedTex, id) {
+function makeWallHangingSignMesh(signTex, id) {
+    const group = new THREE.Group();
+    const inner = new THREE.Group();
+    const toBlock = (x) => x / 16 - 0.5;
+
+    const TEX_W = 64;
+    const TEX_H = 32;
+
+    const rect = (x, y, w, h) => ({
+        u0: x / TEX_W,
+        v0: y / TEX_H,
+        u1: (x + w) / TEX_W,
+        v1: (y + h) / TEX_H,
+    });
+
+    const remapFace = (geom, face, r, flipU = false, flipV = false) => {
+        let { u0, v0, u1, v1 } = r;
+        if (flipU) [u0, u1] = [u1, u0];
+        if (flipV) [v0, v1] = [v1, v0];
+        remapUVsToRect(geom, face, u0, v0, u1, v1);
+    };
+
+    function makeBox(from, to, material) {
+        const sx = (to[0] - from[0]) / 16;
+        const sy = (to[1] - from[1]) / 16;
+        const sz = (to[2] - from[2]) / 16;
+
+        const cx = toBlock((from[0] + to[0]) * 0.5);
+        const cy = toBlock((from[1] + to[1]) * 0.5);
+        const cz = toBlock((from[2] + to[2]) * 0.5);
+
+        const geom = new THREE.BoxGeometry(sx, sy, sz).toNonIndexed();
+        geom.translate(cx, cy, cz);
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    function makePlane(widthPx, heightPx, center, material, uvRect, rotY = 0, flipV = true) {
+        const geom = new THREE.PlaneGeometry(widthPx / 16, heightPx / 16).toNonIndexed();
+
+        let { u0, v0, u1, v1 } = uvRect;
+        if (flipV) [v0, v1] = [v1, v0];
+
+        remapUVsToRect(geom, 0, u0, v0, u1, v1);
+
+        geom.rotateY(rotY);
+        geom.translate(
+            toBlock(center[0]),
+            toBlock(center[1]),
+            toBlock(center[2])
+        );
+
+        return new THREE.Mesh(geom, material);
+    }
+
+    const mat = new THREE.MeshBasicMaterial({
+        map: signTex,
+        transparent: true,
+        side: THREE.DoubleSide,
+        depthWrite: true,
+        depthTest: true,
+        alphaTest: 0.01,
+    });
+    mat.toneMapped = false;
+
+    // Main sign board UVs — same as base hanging sign
+    const boardTop    = rect(2,  12, 14, 2);
+    const boardBottom = rect(16, 12, 14, 2);
+    const boardLeft   = rect(0,  14, 2,  10);
+    const boardFront  = rect(2,  14, 14, 10);
+    const boardRight  = rect(16, 14, 2,  10);
+    const boardBack   = rect(18, 14, 14, 10);
+
+    // Top wall bar / rod UVs
+    // These are using the upper 3D-wood strip area from the texture.
+    const barTop    = rect(4,  0, 16, 4);
+    const barBottom = rect(20, 0, 16, 4);
+    const barLeft   = rect(0,  4, 4,  2);
+    const barFront  = rect(4,  4, 16, 2);
+    const barRight  = rect(20, 4, 4,  2);
+    const barBack   = rect(24, 4, 16, 2);
+
+    // Chain 2D regions — same regions you tuned in makeHangingSignMesh
+    const hangingChainCross = rect(0, 6, 3, 6);
+    const hangingChainMid   = rect(6, 6, 3, 6);
+
+    // Board: same 14x10x2 sign body, hanging below wall chains
+    const board = makeBox(
+        [1, 0, 7],
+        [15, 10, 9],
+        mat
+    );
+
+    const bg = board.geometry;
+
+    remapFace(bg, FACE.TOP,    boardTop,    false, true);
+    remapFace(bg, FACE.BOTTOM, boardBottom, false, false);
+    remapFace(bg, FACE.LEFT,   boardLeft,   false, true);
+    remapFace(bg, FACE.RIGHT,  boardRight,  false, true);
+    remapFace(bg, FACE.FRONT,  boardFront,  false, true);
+    remapFace(bg, FACE.BACK,   boardBack,   false, true);
+
+    // Wall-mounted horizontal bar.
+    // 16x2x2, pushed toward the south wall side.
+    const wallBar = makeBox(
+        [0, 14, 6],
+        [16, 16, 10],
+        mat
+    );
+
+    const wg = wallBar.geometry;
+
+    remapFace(wg, FACE.TOP,    barTop,    false, true);
+    remapFace(wg, FACE.BOTTOM, barBottom, false, false);
+    remapFace(wg, FACE.LEFT,   barLeft,   false, true);
+    remapFace(wg, FACE.RIGHT,  barRight,  false, true);
+    remapFace(wg, FACE.FRONT,  barFront,  false, true);
+    remapFace(wg, FACE.BACK,   barBack,   false, true);
+
+    // Two hanging chain assemblies connecting bar down to board.
+    // Positioned slightly backward toward the wall compared to base hanging sign.
+    const chainABot = makePlane(
+        2.75,
+        6,
+        [3, 13, 8],
+        mat,
+        hangingChainCross,
+        Math.PI / 4
+    );
+
+    const chainAMid = makePlane(
+        2.75,
+        6,
+        [3, 13, 8],
+        mat,
+        hangingChainMid,
+        -Math.PI / 4
+    );
+
+    const chainATop = makePlane(
+        2.75,
+        6,
+        [3, 13, 8],
+        mat,
+        hangingChainCross,
+        Math.PI / 4
+    );
+
+    const chainBBot = makePlane(
+        2.75,
+        6,
+        [13, 13, 8],
+        mat,
+        hangingChainCross,
+        Math.PI / 4
+    );
+
+    const chainBMid = makePlane(
+        2.75,
+        6,
+        [13, 13, 8],
+        mat,
+        hangingChainMid,
+        -Math.PI / 4
+    );
+
+    const chainBTop = makePlane(
+        2.75,
+        6,
+        [13, 13, 8],
+        mat,
+        hangingChainCross,
+        Math.PI / 4
+    );
+
+    inner.add(
+        wallBar,
+        board,
+        chainABot,
+        chainAMid,
+        chainATop,
+        chainBBot,
+        chainBMid,
+        chainBTop
+    );
+
+    // Same convention as your hanging sign
+    inner.rotation.y = Math.PI;
+
+    group.add(inner);
+
+    group.traverse((o) => {
+        if (o.isMesh) {
+            o.userData.isPlaceable = true;
+            o.userData.kind = "block";
+            o.userData.blockId = id;
+        }
+    });
+
+    return group;
+}
+
+function makeBedMesh(bedTex, id, props = {}) {
+    const part = props?.part;
     const group = new THREE.Group();
     const toBlock = (x) => x / 16 - 0.5;
 
@@ -718,97 +1104,107 @@ function makeBedMesh(bedTex, id) {
     });
     mat.toneMapped = false;
 
-    // head/pillow half (bed block 1)
-    // const bed1Top    = rect(6,  6, 16, 16);
-    // const bed1Left   = rect(0,  6,  6, 16);
-    // const bed1Front   = rect(6,  0, 16,  6);
-    // const bed1Back  = rect(5, 53, 16, 6);
-    // const bed1Right  = rect(22, 6,  6, 16);
-    // const bed1Bottom = rect(28, 6, 16, 16);
+    if (part === "foot") {
+        // foot half (bed block 2)
+        const bed2Top    = rect(6,  28, 16, 16);
+        const bed2Left   = rect(0,  28,  6, 16);
+        const bed2Back  = rect(22, 22, 16,  6);
+        const bed2Front   = rect(5, 53, 16, 6);
+        const bed2Right  = rect(22, 28,  6, 16);
+        const bed2Bottom = rect(28, 28, 16, 16);
 
-    // foot half (bed block 2)
-    const bed2Top    = rect(6,  28, 16, 16);
-    const bed2Left   = rect(0,  28,  6, 16);
-    const bed2Back  = rect(22, 22, 16,  6);
-    const bed2Front   = rect(5, 53, 16, 6);
-    const bed2Right  = rect(22, 28,  6, 16);
-    const bed2Bottom = rect(28, 28, 16, 16);
+        // legs
+        const legTop    = rect(53, 0, 3, 3);
+        const legBottom = rect(56, 0, 3, 3);
 
-    // legs
-    const legTop    = rect(53, 0, 3, 3);
-    const legBottom = rect(56, 0, 3, 3);
+        const legOutside   = rect(53, 3, 3, 3);
+        const legInside  = rect(56, 3, 3, 3);
 
-    const legOutside   = rect(53, 3, 3, 3);
-    const legInside  = rect(56, 3, 3, 3);
+        const bed2 = makeBox([0, 3, 0], [16, 9, 16],  mat);    // foot half one block north
+        const g2 = bed2.geometry;
 
+        // block 2 (foot)
+        remapFace(g2, FACE.TOP,    bed2Top,    false, false);
+        remapFaceRot90(g2, FACE.LEFT,  bed2Left,  3);
+        remapFaceRot90(g2, FACE.RIGHT, bed2Right, 1);
+        remapFace(g2, FACE.FRONT,   bed2Front,  true,  true);
+        remapFace(g2, FACE.BACK,  bed2Back,  true,  false);         // north-facing visible end
+        remapFace(g2, FACE.BOTTOM, bed2Bottom, false, false);
 
-    // const bed1 = makeBox([0, 3, 0],   [16, 9, 16], mat);    // head/pillow half at origin block
-    const bed2 = makeBox([0, 3, 0], [16, 9, 16],  mat);    // foot half one block north
+        // block 2 (left2/right2)
+        const leg2L = makeBox([0, 0, 0],  [3, 3, 3], mat);
+        const leg2R = makeBox([13, 0, 0], [16, 3, 3], mat);
 
-    // const g1 = bed1.geometry;
-    const g2 = bed2.geometry;
+        remapFace(leg2L.geometry, FACE.TOP, legTop, false, true);
+        remapFace(leg2L.geometry, FACE.BOTTOM, legBottom, false, true);
 
-
-    // block 1 (head)
-    // remapFace(g1, FACE.TOP,    bed1Top,    false, false);
-    // remapFaceRot90(g1, FACE.LEFT,  bed1Left,  3);
-    // remapFaceRot90(g1, FACE.RIGHT, bed1Right, 1);
-    // remapFace(g1, FACE.BACK,  bed1Back,   true,  true);
-    // remapFace(g1, FACE.FRONT,   bed1Front,   true,  false);     // south-facing visible end
-    // remapFace(g1, FACE.BOTTOM, bed1Bottom, false, false);
-
-    // block 2 (foot)
-    remapFace(g2, FACE.TOP,    bed2Top,    false, false);
-    remapFaceRot90(g2, FACE.LEFT,  bed2Left,  3);
-    remapFaceRot90(g2, FACE.RIGHT, bed2Right, 1);
-    remapFace(g2, FACE.FRONT,   bed2Front,  true,  true);
-    remapFace(g2, FACE.BACK,  bed2Back,  true,  false);         // north-facing visible end
-    remapFace(g2, FACE.BOTTOM, bed2Bottom, false, false);
-
-    // block 1 (left1/right1)
-    // const leg1L = makeBox([0, 0, 13],  [3, 3, 16], mat);
-    // const leg1R = makeBox([13, 0, 13], [16, 3, 16], mat);
-    //
-    // remapFace(leg1L.geometry, FACE.TOP, legTop, false, true);
-    // remapFace(leg1L.geometry, FACE.BOTTOM, legBottom, false, true);
-    //
-    // remapFace(leg1L.geometry, FACE.LEFT, legOutside, true, true);
-    // remapFace(leg1L.geometry, FACE.RIGHT, legInside, false, true);
-    // remapFace(leg1L.geometry, FACE.FRONT, legOutside, false, true);
-    // remapFace(leg1L.geometry, FACE.BACK, legInside, true, true);
-    //
-    //
-    // remapFace(leg1R.geometry, FACE.TOP, legTop, false, true);
-    // remapFace(leg1R.geometry, FACE.BOTTOM, legBottom, false, true);
-    //
-    // remapFace(leg1R.geometry, FACE.LEFT, legInside, true, true);
-    // remapFace(leg1R.geometry, FACE.RIGHT, legOutside, false, true);
-    // remapFace(leg1R.geometry, FACE.FRONT, legOutside, true, true);
-    // remapFace(leg1R.geometry, FACE.BACK, legInside, false, true);
-
-    // block 2 (left2/right2)
-    const leg2L = makeBox([0, 0, 0],  [3, 3, 3], mat);
-    const leg2R = makeBox([13, 0, 0], [16, 3, 3], mat);
-
-    remapFace(leg2L.geometry, FACE.TOP, legTop, false, true);
-    remapFace(leg2L.geometry, FACE.BOTTOM, legBottom, false, true);
-
-    remapFace(leg2L.geometry, FACE.LEFT, legOutside, false, true);
-    remapFace(leg2L.geometry, FACE.RIGHT, legInside, true, true);
-    remapFace(leg2L.geometry, FACE.FRONT, legInside, false, true);
-    remapFace(leg2L.geometry, FACE.BACK, legOutside, true, true);
+        remapFace(leg2L.geometry, FACE.LEFT, legOutside, false, true);
+        remapFace(leg2L.geometry, FACE.RIGHT, legInside, true, true);
+        remapFace(leg2L.geometry, FACE.FRONT, legInside, false, true);
+        remapFace(leg2L.geometry, FACE.BACK, legOutside, true, true);
 
 
-    remapFace(leg2R.geometry, FACE.TOP, legTop, false, true);
-    remapFace(leg2R.geometry, FACE.BOTTOM, legBottom, false, true);
+        remapFace(leg2R.geometry, FACE.TOP, legTop, false, true);
+        remapFace(leg2R.geometry, FACE.BOTTOM, legBottom, false, true);
 
-    remapFace(leg2R.geometry, FACE.LEFT, legInside, false, true);
-    remapFace(leg2R.geometry, FACE.RIGHT, legOutside, true, true);
-    remapFace(leg2R.geometry, FACE.FRONT, legInside, true, true);
-    remapFace(leg2R.geometry, FACE.BACK, legOutside, false, true);
+        remapFace(leg2R.geometry, FACE.LEFT, legInside, false, true);
+        remapFace(leg2R.geometry, FACE.RIGHT, legOutside, true, true);
+        remapFace(leg2R.geometry, FACE.FRONT, legInside, true, true);
+        remapFace(leg2R.geometry, FACE.BACK, legOutside, false, true);
 
-    // group.add(bed1, bed2, leg1L, leg1R, leg2L, leg2R);
-    group.add(bed2, leg2L, leg2R);
+        group.add(bed2, leg2L, leg2R);
+    }
+    else if (part === "head") {
+        // head/pillow half (bed block 1)
+        const bed1Top    = rect(6,  6, 16, 16);
+        const bed1Left   = rect(0,  6,  6, 16);
+        const bed1Front   = rect(6,  0, 16,  6);
+        const bed1Back  = rect(5, 53, 16, 6);
+        const bed1Right  = rect(22, 6,  6, 16);
+        const bed1Bottom = rect(28, 6, 16, 16);
+
+        // legs
+        const legTop    = rect(53, 0, 3, 3);
+        const legBottom = rect(56, 0, 3, 3);
+
+        const legOutside   = rect(53, 3, 3, 3);
+        const legInside  = rect(56, 3, 3, 3);
+
+        const bed1 = makeBox([0, 3, 0],   [16, 9, 16], mat);    // head/pillow half at origin block
+
+        const g1 = bed1.geometry;
+
+        // block 1 (head)
+        remapFace(g1, FACE.TOP,    bed1Top,    false, false);
+        remapFaceRot90(g1, FACE.LEFT,  bed1Left,  3);
+        remapFaceRot90(g1, FACE.RIGHT, bed1Right, 1);
+        remapFace(g1, FACE.BACK,  bed1Back,   true,  true);
+        remapFace(g1, FACE.FRONT,   bed1Front,   true,  false);     // south-facing visible end
+        remapFace(g1, FACE.BOTTOM, bed1Bottom, false, false);
+
+        // block 1 (left1/right1)
+        const leg1L = makeBox([0, 0, 13],  [3, 3, 16], mat);
+        const leg1R = makeBox([13, 0, 13], [16, 3, 16], mat);
+
+        remapFace(leg1L.geometry, FACE.TOP, legTop, false, true);
+        remapFace(leg1L.geometry, FACE.BOTTOM, legBottom, false, true);
+
+        remapFace(leg1L.geometry, FACE.LEFT, legOutside, true, true);
+        remapFace(leg1L.geometry, FACE.RIGHT, legInside, false, true);
+        remapFace(leg1L.geometry, FACE.FRONT, legOutside, false, true);
+        remapFace(leg1L.geometry, FACE.BACK, legInside, true, true);
+
+
+        remapFace(leg1R.geometry, FACE.TOP, legTop, false, true);
+        remapFace(leg1R.geometry, FACE.BOTTOM, legBottom, false, true);
+
+        remapFace(leg1R.geometry, FACE.LEFT, legInside, true, true);
+        remapFace(leg1R.geometry, FACE.RIGHT, legOutside, false, true);
+        remapFace(leg1R.geometry, FACE.FRONT, legOutside, true, true);
+        remapFace(leg1R.geometry, FACE.BACK, legInside, false, true);
+
+        group.add(bed1, leg1L, leg1R);
+    }
 
     group.traverse((o) => {
         if (o.isMesh) {
@@ -2354,4 +2750,4 @@ function makeEndPortalMesh(portalTex, id) {
 
 export {loadExternalTexture, makeSingleChestMesh, makeSignMesh, makeWallSignMesh, makeBedMesh, makeBannerMesh,
     makeWallBannerMesh, makeSkullMesh, makeShulkerMesh, makeCopperGolemMesh, makeConduitMesh, makeDecoratedPotMesh,
-    makeShelfMesh, makeBellMesh, makeEndGatewayMesh, makeEndPortalMesh}
+    makeShelfMesh, makeBellMesh, makeEndGatewayMesh, makeEndPortalMesh, makeHangingSignMesh, makeWallHangingSignMesh}

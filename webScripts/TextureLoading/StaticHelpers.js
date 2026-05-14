@@ -131,7 +131,8 @@ function pushFaceIf(
     from, to,
     textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
     sourceModelId = "",
-    sourceWhen = {}
+    sourceWhen = {},
+    elementRotation = null
 ) {
     const sourceId = (sourceModelId || "").toLowerCase();
     const when = sourceWhen || {};
@@ -247,9 +248,10 @@ function pushFaceIf(
     const isGlowLichen = (blockId || "").toLowerCase().includes("glow_lichen");
     const isVine = (blockId || "").toLowerCase().includes("vine");
     const isButton = (blockId || "").toLowerCase().includes("button");
+    const isCoralFan = (blockId || "").toLowerCase().includes("coral_fan");
     const isAnythingElse = !isHeavyCore && !isPortal && !isRail && !isLitter && !isGlazedTerracotta && !isCocoa
     && !isRedstoneWire && !isPiston && !isCommandBlock && !isEndPortalFrame && !isBeacon && !isGlowLichen &&!isVine
-    && !isChorusCenter && !isChorusThin && !isChorusThin2 && !isChorusBulge && !isButton;
+    && !isChorusCenter && !isChorusThin && !isChorusThin2 && !isChorusBulge && !isButton && !isCoralFan;
 
     const canonicalQuad = [
         [0, 1],
@@ -375,6 +377,31 @@ function pushFaceIf(
         }
         else{
             quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+    if (
+        isCoralFan &&
+        faceName === "up" &&
+        elementRotation
+    ) {
+        const axis = String(elementRotation.axis || "").toLowerCase();
+        const angle = Number(elementRotation.angle || 0);
+
+        if (axis === "z" && angle === 22.5) {
+            quad = rotateQuadUV(canonicalQuad, 90);
+        }
+
+        else if (axis === "z" && angle === -22.5) {
+            quad = rotateQuadUV(canonicalQuad, 270);
+        }
+
+        else if (axis === "x" && angle === -22.5) {
+            quad = canonicalQuad.map(([u, v]) => [1 - u, v]);
+        }
+
+        else if (axis === "x" && angle === 22.5) {
+            quad = rotateQuadUV(canonicalQuad, 180);
         }
     }
 

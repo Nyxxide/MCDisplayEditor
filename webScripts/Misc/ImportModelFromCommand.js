@@ -1,31 +1,10 @@
 // ImportModelFromCommand.js
 // ---------------------
-// Paste Minecraft summon commands here and rebuild the block_display model in the editor.
-//
-// Supported input shapes:
-// - single summon minecraft:block_display ...
-// - falling_block / minecart passenger chains containing summon commands
-// - nested Passengers chains
-// - legacy transformation object form:
-//     transformation:{translation:[...],left_rotation:[...],scale:[...],right_rotation:[...]}
-// - matrix transformation form:
-//     transformation:[16f,...]
-//
-// Notes / assumptions:
-// - This importer focuses on block_display entities.
-// - Old wrappers like `execute as Nyxxide at @s run` are stripped.
-// - Imported entities are placed directly into state.entities and state.scene.
-// - The imported matrix is converted into the same world-matrix convention used by your exporter.
-// - brightness is preserved on the entity object when present, but is not used by the editor renderer.
 
 import * as THREE from "three";
 import { setObjectWorldMatrix } from "../3DEditorSetup/TransformLogic.js";
 import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js";
-import { defaultMultipartPropsForBlock } from "../TextureLoading/DefaultPropGen.js";
-
-// Optional helper: if you exported your default/fallback props helper, this importer can use it
-// when an imported block_display omits explicit Properties.
-
+import {getDefaultPropertiesForBlock} from "../TextureLoading/BlockPropertyOptions.js";
 
 export function initImportCommandLogic(state) {
     const importBtn = document.getElementById("importCmdBtn");
@@ -324,7 +303,7 @@ function parseSingleBlockDisplaySummon(cmd) {
     if (!blockName) throw new Error("block_state is missing Name.");
 
     const explicitProps = normalizeProps(blockState.Properties || blockState.properties || null);
-    const properties = explicitProps ?? defaultMultipartPropsForBlock(blockName) ?? null;
+    const properties = explicitProps ?? getDefaultPropertiesForBlock(blockName) ?? null;
 
     const mat = normalizeTransformationToSavedWorldMat(nbt.transformation);
     const brightness = normalizeBrightness(nbt.brightness ?? null);

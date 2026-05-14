@@ -9,10 +9,7 @@
 
 
 /* TODO Texture Stuff:
-*   - Fucking hanging signs (Has necessary props. Yikes)
-*   - Wall Variants of signs/banners
 *   - Some textures are off but dont worry about it too much. Button texture mapping, regular fire missing outer flat texture, coral fans flip east/west png
-*   - Flower pot with flower in too big (because I scale 2D cross elements. just dont scale the potted ones probably.
 *   - Gamergeeks my fucking GOAT they have an atlas and a corresponding json. run that up and fix the long standing item icon problem.
 */
 
@@ -25,7 +22,6 @@
 
 /*
 *  TODO Long Term Texture Additions:
-*   - Every different property render for every block (rotations are pointless, only shit that changes look of block. Toggle in NBT xForm)
 *   - Item Displays
 *   - Text Displays with every possible atlas texture
 */
@@ -63,7 +59,7 @@ await initScene(state);
 const BLOCKS = await loadBlockList();
 
 // fill palette
-initPaletteUI(state, BLOCKS);
+await initPaletteUI(state, BLOCKS);
 
 // selection + history + dragging
 initSelectionLogic(state);
@@ -100,6 +96,20 @@ initModelLibraryModal(state);
 
 // start page animations
 await initAnimations(state, clock);
+
+async function revealPage() {
+    try {
+        if (document.fonts?.ready) {
+            await document.fonts.ready;
+        }
+    } catch (err) {
+        console.warn("Font readiness check failed:", err);
+    }
+
+    document.documentElement.classList.remove("preload");
+}
+
+await revealPage();
 
 
 

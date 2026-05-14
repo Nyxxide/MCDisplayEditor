@@ -31,7 +31,22 @@ function pickBestMatchingVariant(vars, props) {
     for (const key of Object.keys(vars)) {
         if (!keyMatchesProps(key, props)) continue;
 
-        const score = key === "" ? 0 : key.split(",").length;
+        const parts = key === "" ? [] : key.split(",");
+
+        // Prefer the variant that matches the most explicit properties.
+        let score = parts.length * 10;
+
+        // Extra preference for exact keys using all supplied props.
+        const keyProps = new Set(
+            parts
+                .map((p) => p.split("=")[0])
+                .filter(Boolean)
+        );
+
+        for (const propName of Object.keys(props || {})) {
+            if (keyProps.has(propName)) score += 1;
+        }
+
         if (score > bestScore) {
             bestScore = score;
             bestKey = key;

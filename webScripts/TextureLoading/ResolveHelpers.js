@@ -92,7 +92,7 @@ async function resolveFullModel(variant, maxDepth = 24) {
 
         if (!m) return null;
 
-        merged.textures = { ...merged.textures, ...(m.textures || {}) };
+        merged.textures = { ...(m.textures || {}), ...merged.textures };
 
         if (!merged.render_type && m.render_type) merged.render_type = m.render_type;
 

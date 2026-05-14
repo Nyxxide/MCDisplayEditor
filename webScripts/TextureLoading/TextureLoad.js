@@ -5,7 +5,7 @@ import { rectToUVs, remapUVsToRect } from "./UVRectHelpers.js";
 import { resolveFullModel, resolveModelIdForBlock } from "./ResolveHelpers.js";
 import { applyElementRotation } from "./RotationHelpers.js";
 import { loadColormapsOnce } from "./ColormapHelper.js";
-import { defaultMultipartPropsForBlock } from "./DefaultPropGen.js";
+import { getEffectivePropertiesForBlock } from "./BlockPropertyOptions.js";
 import {
     loadExternalTexture,
     makeSingleChestMesh,
@@ -22,7 +22,9 @@ import {
     makeShelfMesh,
     makeBellMesh,
     makeEndGatewayMesh,
-    makeEndPortalMesh
+    makeEndPortalMesh,
+    makeHangingSignMesh,
+    makeWallHangingSignMesh
 } from "./EntityBlockHelper.js";
 
 export async function loadAtlas(atlasPngUrl, atlasJsonUrl) {
@@ -73,14 +75,43 @@ function isBeaconGlassElement(el) {
     return faceList.every(f => f && f.texture === "#glass");
 }
 
+function valueMatchesProp(actual, expected) {
+    if (actual === undefined || actual === null) return false;
+
+    const a = String(actual);
+
+    // Minecraft blockstate JSON sometimes allows pipe-separated values.
+    // Example: "2|3|4"
+    if (typeof expected === "string" && expected.includes("|")) {
+        return expected.split("|").some((v) => a === String(v));
+    }
+
+    return a === String(expected);
+}
+
 function matchesWhenClause(when, props = {}) {
     props = props ?? {};
 
     if (!when) return true;
 
-    for (const [k, v] of Object.entries(when)) {
-        if (String(props[k]) !== String(v)) return false;
+    // Multipart supports OR groups.
+    if (Array.isArray(when.OR)) {
+        return when.OR.some((sub) => matchesWhenClause(sub, props));
     }
+
+    // Multipart also supports AND groups.
+    if (Array.isArray(when.AND)) {
+        return when.AND.every((sub) => matchesWhenClause(sub, props));
+    }
+
+    for (const [k, v] of Object.entries(when)) {
+        if (k === "OR" || k === "AND") continue;
+
+        if (!valueMatchesProp(props[k], v)) {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -187,10 +218,27 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
 
         const rot = el.rotation;
 
+        const isPottedBlock = (blockId || "").toLowerCase().includes("potted");
+        const shouldScaleThisPottedCross =
+            isPottedBlock &&
+            isCrossModel &&
+            isFlatCrossElement(el);
+
         const V = (x, y, z) => {
             let p = [x, y, z];
+
             if (isUpperStem) p[0] += 7;
+
+            // Scale only the 2D crossed plant planes inside potted plants.
+            // Do NOT scale the flower pot box elements.
+            if (shouldScaleThisPottedCross) {
+                const s = 1.30;
+                p[0] = 8 + (p[0] - 8) * s;
+                p[2] = 8 + (p[2] - 8) * s;
+            }
+
             p = applyElementRotation(p, rot);
+
             return [p[0] / 16 - 0.5, p[1] / 16 - 0.5, p[2] / 16 - 0.5];
         };
 
@@ -201,7 +249,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             V(X0, Y0, Z0), V(X1, Y0, Z0), V(X1, Y1, Z0), V(X0, Y1, Z0),
             from, to,
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
-            opts.sourceModelId, opts.sourceWhen
+            opts.sourceModelId, opts.sourceWhen, rot
         );
 
         idxBase = pushFaceIf(
@@ -209,7 +257,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             V(X1, Y0, Z1), V(X0, Y0, Z1), V(X0, Y1, Z1), V(X1, Y1, Z1),
             from, to,
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
-            opts.sourceModelId, opts.sourceWhen
+            opts.sourceModelId, opts.sourceWhen, rot
         );
 
         idxBase = pushFaceIf(
@@ -217,7 +265,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             V(X0, Y0, Z1), V(X0, Y0, Z0), V(X0, Y1, Z0), V(X0, Y1, Z1),
             from, to,
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
-            opts.sourceModelId, opts.sourceWhen
+            opts.sourceModelId, opts.sourceWhen, rot
         );
 
         idxBase = pushFaceIf(
@@ -225,7 +273,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             V(X1, Y0, Z0), V(X1, Y0, Z1), V(X1, Y1, Z1), V(X1, Y1, Z0),
             from, to,
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
-            opts.sourceModelId, opts.sourceWhen
+            opts.sourceModelId, opts.sourceWhen, rot
         );
 
         idxBase = pushFaceIf(
@@ -233,7 +281,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             V(X0, Y1, Z0), V(X1, Y1, Z0), V(X1, Y1, Z1), V(X0, Y1, Z1),
             from, to,
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
-            opts.sourceModelId, opts.sourceWhen
+            opts.sourceModelId, opts.sourceWhen, rot
         );
 
         idxBase = pushFaceIf(
@@ -241,7 +289,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             V(X0, Y0, Z1), V(X1, Y0, Z1), V(X1, Y0, Z0), V(X0, Y0, Z0),
             from, to,
             model.textures, atlasMeta, positions, uvs, colors, indices, idxBase, blockId, mirrorPerFace, props, isCrossModel,
-            opts.sourceModelId, opts.sourceWhen
+            opts.sourceModelId, opts.sourceWhen, rot
         );
     }
 
@@ -326,16 +374,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
     const blockName = stripMcPrefix(blockId);
     const bs = await loadBlockstate(blockName);
 
-    let effectiveProps = (() => {
-        const defaults = defaultMultipartPropsForBlock(blockId);
-        if (!defaults) return props ?? null;
-        if (!props) return defaults;
-
-        return {
-            ...defaults,
-            ...props
-        };
-    })();
+    let effectiveProps = getEffectivePropertiesForBlock(blockId, props);
 
     if (bidLower.includes("_shelf")) {
         let texPath = null;
@@ -404,12 +443,27 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
                 mesh.geometry.applyMatrix4(rot);
 
+                const isPotted = bidLower.includes("potted");
+
                 const chain = (model.parentChain || []).join(" ").toLowerCase();
                 const isCross = chain.includes("cross") || chain.includes("tinted_cross");
-                if (isCross) {
+
+                const isStem =
+                    bidLower.includes("melon_stem") ||
+                    bidLower.includes("pumpkin_stem");
+
+                const isAttached =
+                    bidLower.includes("attached_melon_stem") ||
+                    bidLower.includes("attached_pumpkin_stem");
+
+                if (
+                    (isCross && (!isPotted || !isFlowerPotModel(apply.model))) ||
+                    ((isStem && !isAttached) && !isPotted)
+                ) {
                     const s = 1.30;
                     mesh.geometry.applyMatrix4(new THREE.Matrix4().makeScale(s, 1.0, s));
                 }
+
 
                 mesh.position.set(0, 0, 0);
                 mesh.quaternion.identity();
@@ -505,8 +559,8 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             bid === "piglin_head" ||
             bid === "dragon_head";
 
-        const isAnySign = bid.includes("sign") && !bid.includes("wall_sign") && !bid.includes("hanging_sign");
-        const isAnyWallSign = bid.includes("wall_sign") && !bid.includes("hanging_wall_sign");
+        const isAnySign = bid.includes("sign") && !bid.includes("wall_sign") && !bid.includes("hanging_sign") && !bid.includes("wall_hanging_sign");
+        const isAnyWallSign = bid.includes("wall_sign");
         const isAnyBed = bid.includes("_bed");
         const isAnyBanner = bid.includes("_banner") && !bid.includes("wall_banner");
         const isAnyWallBanner = bid.includes("_wall_banner");
@@ -516,6 +570,8 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
         const isDecoratedPot = bid.includes("decorated");
         const isEndGateway = bid.includes("end_gateway");
         const isEndPortal = bid.includes("end_portal");
+        const isAnyHangingSign = bid.includes("hanging_sign") && !bid.includes("wall_hanging_sign");
+        const isAnyWallHangingSign = bid.includes("wall_hanging_sign");
 
         if (isAnyChest) {
             let texPath = "../Resources/textures/blockentity/chest/normal.png";
@@ -575,18 +631,18 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
         if (isAnySign) {
             let texPath = null;
 
-            if (bid.includes("oak_sign")) texPath = "../Resources/textures/blockentity/signs/oak.png";
-            if (bid.includes("birch_sign")) texPath = "../Resources/textures/blockentity/signs/birch.png";
-            if (bid.includes("spruce_sign")) texPath = "../Resources/textures/blockentity/signs/spruce.png";
-            if (bid.includes("jungle_sign")) texPath = "../Resources/textures/blockentity/signs/jungle.png";
-            if (bid.includes("acacia_sign")) texPath = "../Resources/textures/blockentity/signs/acacia.png";
-            if (bid.includes("dark_oak_sign")) texPath = "../Resources/textures/blockentity/signs/dark_oak.png";
-            if (bid.includes("cherry_sign")) texPath = "../Resources/textures/blockentity/signs/cherry.png";
-            if (bid.includes("bamboo_sign")) texPath = "../Resources/textures/blockentity/signs/bamboo.png";
-            if (bid.includes("crimson_sign")) texPath = "../Resources/textures/blockentity/signs/crimson.png";
-            if (bid.includes("warped_sign")) texPath = "../Resources/textures/blockentity/signs/warped.png";
-            if (bid.includes("pale_oak_sign")) texPath = "../Resources/textures/blockentity/signs/pale_oak.png";
-            if (bid.includes("mangrove_sign")) texPath = "../Resources/textures/blockentity/signs/mangrove.png";
+            if (bid.includes("oak")) texPath = "../Resources/textures/blockentity/signs/oak.png";
+            if (bid.includes("birch")) texPath = "../Resources/textures/blockentity/signs/birch.png";
+            if (bid.includes("spruce")) texPath = "../Resources/textures/blockentity/signs/spruce.png";
+            if (bid.includes("jungle")) texPath = "../Resources/textures/blockentity/signs/jungle.png";
+            if (bid.includes("acacia")) texPath = "../Resources/textures/blockentity/signs/acacia.png";
+            if (bid.includes("dark_oak")) texPath = "../Resources/textures/blockentity/signs/dark_oak.png";
+            if (bid.includes("cherry")) texPath = "../Resources/textures/blockentity/signs/cherry.png";
+            if (bid.includes("bamboo")) texPath = "../Resources/textures/blockentity/signs/bamboo.png";
+            if (bid.includes("crimson")) texPath = "../Resources/textures/blockentity/signs/crimson.png";
+            if (bid.includes("warped")) texPath = "../Resources/textures/blockentity/signs/warped.png";
+            if (bid.includes("pale_oak")) texPath = "../Resources/textures/blockentity/signs/pale_oak.png";
+            if (bid.includes("mangrove")) texPath = "../Resources/textures/blockentity/signs/mangrove.png";
 
             const tex = await loadExternalTexture(texPath);
             const mesh = makeSignMesh(tex, bid);
@@ -615,7 +671,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             if (bid.includes("yellow_bed")) texPath = "../Resources/textures/blockentity/bed/yellow.png";
 
             const tex = await loadExternalTexture(texPath);
-            const mesh = makeBedMesh(tex, bid);
+            const mesh = makeBedMesh(tex, bid, effectiveProps);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
@@ -714,6 +770,50 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             return mesh;
         }
 
+        if (isAnyWallHangingSign) {
+            let texPath = null;
+
+            if (bid.includes("oak")) texPath = "../Resources/textures/blockentity/hanging_sign/oak.png";
+            if (bid.includes("birch")) texPath = "../Resources/textures/blockentity/hanging_sign/birch.png";
+            if (bid.includes("spruce")) texPath = "../Resources/textures/blockentity/hanging_sign/spruce.png";
+            if (bid.includes("jungle")) texPath = "../Resources/textures/blockentity/hanging_sign/jungle.png";
+            if (bid.includes("acacia")) texPath = "../Resources/textures/blockentity/hanging_sign/acacia.png";
+            if (bid.includes("dark_oak")) texPath = "../Resources/textures/blockentity/hanging_sign/dark_oak.png";
+            if (bid.includes("cherry")) texPath = "../Resources/textures/blockentity/hanging_sign/cherry.png";
+            if (bid.includes("bamboo")) texPath = "../Resources/textures/blockentity/hanging_sign/bamboo.png";
+            if (bid.includes("crimson")) texPath = "../Resources/textures/blockentity/hanging_sign/crimson.png";
+            if (bid.includes("warped")) texPath = "../Resources/textures/blockentity/hanging_sign/warped.png";
+            if (bid.includes("pale_oak")) texPath = "../Resources/textures/blockentity/hanging_sign/pale_oak.png";
+            if (bid.includes("mangrove")) texPath = "../Resources/textures/blockentity/hanging_sign/mangrove.png";
+
+            const tex = await loadExternalTexture(texPath);
+            const mesh = makeWallHangingSignMesh(tex, bid);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
+        if (isAnyHangingSign) {
+            let texPath = null;
+
+            if (bid.includes("oak")) texPath = "../Resources/textures/blockentity/hanging_sign/oak.png";
+            if (bid.includes("birch")) texPath = "../Resources/textures/blockentity/hanging_sign/birch.png";
+            if (bid.includes("spruce")) texPath = "../Resources/textures/blockentity/hanging_sign/spruce.png";
+            if (bid.includes("jungle")) texPath = "../Resources/textures/blockentity/hanging_sign/jungle.png";
+            if (bid.includes("acacia")) texPath = "../Resources/textures/blockentity/hanging_sign/acacia.png";
+            if (bid.includes("dark_oak")) texPath = "../Resources/textures/blockentity/hanging_sign/dark_oak.png";
+            if (bid.includes("cherry")) texPath = "../Resources/textures/blockentity/hanging_sign/cherry.png";
+            if (bid.includes("bamboo")) texPath = "../Resources/textures/blockentity/hanging_sign/bamboo.png";
+            if (bid.includes("crimson")) texPath = "../Resources/textures/blockentity/hanging_sign/crimson.png";
+            if (bid.includes("warped")) texPath = "../Resources/textures/blockentity/hanging_sign/warped.png";
+            if (bid.includes("pale_oak")) texPath = "../Resources/textures/blockentity/hanging_sign/pale_oak.png";
+            if (bid.includes("mangrove")) texPath = "../Resources/textures/blockentity/hanging_sign/mangrove.png";
+
+            const tex = await loadExternalTexture(texPath);
+            const mesh = makeHangingSignMesh(tex, bid, effectiveProps);
+            finalizeMesh(mesh, blockId);
+            return mesh;
+        }
+
         // Generic fallback for models with no elements (like conduit)
         let texId = blockIdToTexId(blockId);
 
@@ -730,13 +830,6 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
         finalizeMesh(mesh, blockId);
         return mesh;
-    }
-
-    if (blockId.includes("melon_stem") || blockId.includes("pumpkin_stem")) {
-        effectiveProps = { age: "0" };
-    }
-    if (blockId.includes("attached_melon_stem") || blockId.includes("attached_pumpkin_stem")) {
-        effectiveProps = { age: "7" };
     }
 
     const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps);
@@ -767,11 +860,31 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
     mesh.geometry.applyMatrix4(rot);
 
+    const isPotted = bidLower.includes("potted");
+
     const chain = (model.parentChain || []).join(" ").toLowerCase();
     const isCross = chain.includes("cross") || chain.includes("tinted_cross");
-    if (isCross) {
+
+    const isStem =
+        bidLower.includes("melon_stem") ||
+        bidLower.includes("pumpkin_stem");
+
+    const isAttached =
+        bidLower.includes("attached_melon_stem") ||
+        bidLower.includes("attached_pumpkin_stem");
+
+    const isPotModel =
+        (model.variant?.model || "").toLowerCase().includes("flower_pot") ||
+        chain.includes("flower_pot");
+
+    if (
+        (isCross && (!isPotted || !isPotModel)) ||
+        ((isStem && !isAttached) && !isPotted)
+    ) {
         const s = 1.30;
-        mesh.geometry.applyMatrix4(new THREE.Matrix4().makeScale(s, 1.0, s));
+        mesh.geometry.applyMatrix4(
+            new THREE.Matrix4().makeScale(s, 1.0, s)
+        );
     }
 
     mesh.position.set(0, 0, 0);
@@ -789,6 +902,26 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
     finalizeMesh(mesh, blockId);
     return mesh;
+}
+
+function isFlowerPotModel(modelId) {
+    return String(modelId || "").toLowerCase().includes("flower_pot");
+}
+
+function isFlatCrossElement(el) {
+    const from = el?.from;
+    const to = el?.to;
+    if (!from || !to) return false;
+
+    const dx = Math.abs(to[0] - from[0]);
+    const dy = Math.abs(to[1] - from[1]);
+    const dz = Math.abs(to[2] - from[2]);
+
+    // Cross planes are usually very wide/tall but almost flat on one axis.
+    const flatX = dx < 0.05 && dz > 4 && dy > 4;
+    const flatZ = dz < 0.05 && dx > 4 && dy > 4;
+
+    return flatX || flatZ;
 }
 
 function finalizeMesh(mesh, blockId) {

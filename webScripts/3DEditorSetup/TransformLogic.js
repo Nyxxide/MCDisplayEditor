@@ -11,6 +11,8 @@ import * as THREE from "three";
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 import {gridFine, gridCoarse} from "./SceneFunctions.js"
 import { playUiClick } from "../Misc/AudioControl.js";
+import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js";
+import { getBlockPropertyConfig, getDefaultPropertiesForBlock } from "../TextureLoading/BlockPropertyOptions.js";
 
 /** -------------------- Matrix helpers -------------------- */
 
@@ -182,24 +184,233 @@ function fillMetaUI(state) {
     if (state.selectedRefId) {
         clearMetaInputs(state);
         setMetaInputsDisabled(state, true);
+        clearPropertiesUI(state);
         return;
     }
 
     const single = getSelectedEntity(state);
     if (single) {
         fillMetaUIFromEntity(state, single);
+        fillPropertiesUI(state);
         return;
     }
 
     const groupEnts = getExactSelectedGroupEntities(state);
     if (groupEnts?.length) {
-        // Use first entity as displayed value baseline for now.
         fillMetaUIFromEntity(state, groupEnts[0]);
+        fillPropertiesUI(state);
         return;
     }
 
     clearMetaInputs(state);
     setMetaInputsDisabled(state, true);
+    clearPropertiesUI(state);
+}
+
+function getPropertyEditableEntities(state) {
+    if (state.selectedRefId) return null;
+
+    const single = getSelectedEntity(state);
+    if (single) {
+        const cfg = getBlockPropertyConfig(single.blockName);
+        return cfg ? { blockName: single.blockName, entities: [single], config: cfg } : null;
+    }
+
+    const groupEnts = getExactSelectedGroupEntities(state);
+    if (!groupEnts?.length) return null;
+
+    const firstBlock = groupEnts[0].blockName;
+    const sameBlock = groupEnts.every((e) => e.blockName === firstBlock);
+    if (!sameBlock) return null;
+
+    const cfg = getBlockPropertyConfig(firstBlock);
+    return cfg ? { blockName: firstBlock, entities: groupEnts, config: cfg } : null;
+}
+
+function clearPropertiesUI(state) {
+    if (state.ui.propsFields) state.ui.propsFields.innerHTML = "";
+    if (state.ui.propsSection) state.ui.propsSection.style.display = "none";
+}
+
+function fillPropertiesUI(state) {
+    const target = getPropertyEditableEntities(state);
+
+    if (!target) {
+        clearPropertiesUI(state);
+        return;
+    }
+
+    const { blockName, entities, config } = target;
+
+    if (!state.ui.propsSection || !state.ui.propsFields) return;
+
+    state.ui.propsSection.style.display = "block";
+    state.ui.propsFields.innerHTML = "";
+
+    const baseProps = {
+        ...(getDefaultPropertiesForBlock(blockName) || {}),
+        ...(entities[0].properties || {}),
+    };
+
+    for (const [propName, propDef] of Object.entries(config.properties || {})) {
+        const row = document.createElement("div");
+        row.className = "metaRow propDropdownRow";
+
+        const label = document.createElement("label");
+        label.className = "metaLabel";
+        label.textContent = propDef.label || propName;
+
+        const values =
+            typeof propDef.valuesWhen === "function"
+                ? propDef.valuesWhen(baseProps)
+                : propDef.values || [];
+
+        const currentValue = String(
+            baseProps[propName] ?? propDef.default ?? values?.[0] ?? ""
+        );
+
+        const dropdown = makePropertyDropdown(
+            propName,
+            currentValue,
+            values,
+            async () => {
+                await applyBlockPropertyFromUI(state);
+            }
+        );
+
+        row.appendChild(label);
+        row.appendChild(dropdown);
+        state.ui.propsFields.appendChild(row);
+    }
+}
+
+function makePropertyDropdown(propName, currentValue, values, onChange) {
+    const wrap = document.createElement("div");
+    wrap.className = "propDropdown";
+    wrap.dataset.propName = propName;
+    wrap.dataset.value = String(currentValue);
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "propDropdownBtn";
+    btn.textContent = String(currentValue);
+
+    const menu = document.createElement("div");
+    menu.className = "propDropdownMenu";
+
+    for (const value of values) {
+        const v = String(value);
+
+        const opt = document.createElement("button");
+        opt.type = "button";
+        opt.className = "propDropdownOption";
+        opt.textContent = v;
+        opt.dataset.value = v;
+
+        if (v === String(currentValue)) {
+            opt.classList.add("active");
+        }
+
+        opt.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            wrap.dataset.value = v;
+            btn.textContent = v;
+
+            menu.querySelectorAll(".propDropdownOption").forEach((o) => {
+                o.classList.toggle("active", o.dataset.value === v);
+            });
+
+            wrap.classList.remove("open");
+
+            await onChange?.();
+        });
+
+        menu.appendChild(opt);
+    }
+
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        document.querySelectorAll(".propDropdown.open").forEach((d) => {
+            if (d !== wrap) d.classList.remove("open");
+        });
+
+        wrap.classList.toggle("open");
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(menu);
+
+    return wrap;
+}
+
+async function replaceEntityMeshPreserveWorld(state, ent) {
+    if (!ent?.mesh) return;
+
+    ent.mesh.updateMatrixWorld(true);
+    const world = ent.mesh.matrixWorld.clone();
+
+    const old = ent.mesh;
+
+    if (old.parent) old.parent.remove(old);
+    else state.scene.remove(old);
+
+    const newMesh = await makeCubeForBlock(
+        state,
+        ent.blockName,
+        ent.properties ?? null
+    );
+
+    state.scene.add(newMesh);
+    setObjectWorldMatrix(newMesh, world);
+
+    ent.mesh = newMesh;
+}
+
+async function applyBlockPropertyFromUI(state) {
+    const target = getPropertyEditableEntities(state);
+    if (!target || !state.ui.propsFields) return false;
+
+    state.api.emptySelectionRig?.();
+
+    const newProps = {};
+    const dropdowns = state.ui.propsFields.querySelectorAll(".propDropdown[data-prop-name]");
+
+    for (const dropdown of dropdowns) {
+        newProps[dropdown.dataset.propName] = String(dropdown.dataset.value);
+    }
+
+    const cfg = target.config;
+
+    for (const [propName, propDef] of Object.entries(cfg.properties || {})) {
+        if (typeof propDef.valuesWhen !== "function") continue;
+
+        const allowed = propDef.valuesWhen(newProps).map(String);
+
+        if (!allowed.includes(String(newProps[propName]))) {
+            newProps[propName] = allowed[0];
+        }
+    }
+
+    for (const ent of target.entities) {
+        ent.properties = {
+            ...(ent.properties || {}),
+            ...newProps,
+        };
+
+        await replaceEntityMeshPreserveWorld(state, ent);
+    }
+
+    state.api.rebuildSelectionRig?.();
+    state.api.updateHighlight?.();
+    fillPropertiesUI(state);
+
+    state.api.pushHistory?.("property-edit");
+
+    return true;
 }
 
 function parseOptionalNumberInput(el) {
@@ -415,6 +626,12 @@ export function initTransformLogic(state) {
 
         const clickedInsideXform = !!e.target.closest("#xformUI");
         if (clickedInsideXform) return;
+
+        if (e.target.closest(".propDropdown")) return;
+
+        document.querySelectorAll(".propDropdown.open").forEach((d) => {
+            d.classList.remove("open");
+        });
 
         commitFocusedTransformInput(state);
     }, true);

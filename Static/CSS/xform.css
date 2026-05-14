@@ -1,0 +1,290 @@
+#xformUI {
+    position: fixed;
+    top: 56px;
+    left: 12px;
+    z-index: 30;
+    width: 360px;
+    background: rgba(0, 0, 0, .72);
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-family: system-ui, sans-serif;
+    pointer-events: auto;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+#xformUI input {
+    width: 74px;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    background: rgba(255, 255, 255, .08);
+    color: #d7faff;
+    box-sizing: border-box;
+}
+
+#xformUI button {
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.16);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    cursor: pointer;
+}
+
+#xformUI button:hover {
+    background-color: #606060;
+}
+
+#xformUI button:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.xHdr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.xBtns {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.xRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.rowLabel {
+    width: 48px;
+    opacity: .95;
+    font-weight: 600;
+    flex: 0 0 auto;
+}
+
+.axisField {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+}
+
+.axisBadge {
+    width: 18px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.axisX .axisBadge { color: #ff5555; }
+.axisY .axisBadge { color: #55dd55; }
+.axisZ .axisBadge { color: #5aa8ff; }
+
+#propsSection {
+    gap: 10px;
+}
+
+#propsSection .metaRow {
+    align-items: center;
+}
+
+#propsSection select {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 5px 5px;
+    margin: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.06);
+    color: #d7faff;
+    font-size: 15px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+#propsSection select:focus {
+    outline: none;
+    border-color: rgba(215,250,255,0.55);
+}
+
+#propsSection select option {
+    background: #181818;
+    color: #d7faff;
+}
+
+.propDropdownRow {
+    position: relative;
+}
+
+.propDropdown {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+.propDropdownBtn {
+    width: 100%;
+    padding: 5px 5px !important;
+    margin: 3px !important;
+
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
+
+    background: rgba(255,255,255,0.06) !important;
+    color: #d7faff !important;
+
+    font-size: 15px;
+    font-family: inherit;
+
+    box-sizing: border-box;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.propDropdownBtn:focus {
+    outline: none;
+    border-color: rgba(215,250,255,0.55) !important;
+}
+
+.propDropdownBtn::after {
+    content: "▼";
+    float: right;
+    color: #ff55ff;
+    text-shadow: #3f153f 1px 1px 1px;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+.propDropdownMenu {
+    display: none;
+
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 2px);
+
+    z-index: 9999;
+
+    background: rgba(0,0,0,0.96);
+
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.propDropdown.open .propDropdownMenu {
+    display: block;
+}
+
+.propDropdownOption {
+    width: 100%;
+
+    margin: 0 !important;
+    padding: 5px 8px !important;
+
+    border: none !important;
+    border-radius: 0 !important;
+
+    background: transparent !important;
+    color: #d7faff !important;
+
+    text-align: left;
+
+    font-size: 15px;
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+.propDropdownOption:hover {
+    background: rgba(255,255,255,0.10) !important;
+}
+
+.propDropdownOption.active {
+    background: rgba(255,85,255,0.22) !important;
+    color: #ff55ff !important;
+    text-shadow: #3f153f 1px 1px 1px;
+}
+
+.metaSection {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.metaHdr {
+    font-weight: 700;
+    font-size: 13px;
+    opacity: 0.95;
+}
+
+.metaRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.metaRowSplit {
+    align-items: center;
+}
+
+.metaLabel {
+    width: 92px;
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 600;
+    opacity: 0.95;
+}
+
+.metaWideInput {
+    width: 100%;
+    min-width: 0;
+}
+
+#metaSection input {
+    flex: 1 1 auto;
+}
+
+#blockLightInput,
+#skyLightInput,
+#shadowRadiusInput,
+#shadowStrengthInput,
+#viewRangeInput {
+    width: 100%;
+}
+
+#blockBri {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: #55dd55;
+}
+
+#skyBri {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #5aa8ff;
+    flex: 0 0 auto;
+}

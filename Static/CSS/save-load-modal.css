@@ -1,0 +1,29 @@
+.saveNameInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    color: #d7faff;
+    outline: none;
+    font-size: 18px;
+    font-family: "Minecraft";
+}
+
+#saveModalConfirm {
+    width: auto !important;
+    min-width: 70px;
+    margin: 0 !important;
+    padding: 6px 10px !important;
+    flex: 0 0 auto;
+    font-family: "Minecraft";
+    font-size: 20px;
+    background-image: url("../Images/StoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #ffffff;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    border: black 2px solid;
+}

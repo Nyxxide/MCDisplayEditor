@@ -84,7 +84,7 @@ function isGrassTint(blockId) {
 }
 
 function stemTintFromAge(age) {
-    const a = age;
+    const a = Number(age ?? 0);
     const r = (a * 32) / 255;          // 0 .. 224
     const g = (255 - a * 8) / 255;     // 255 .. 199
     const b = (a * 4) / 255;           // 0 .. 28
@@ -100,12 +100,31 @@ function getTintForBlockFace(blockId, props) {
     }
 
     if (id.includes("redstone_wire")) {
-        return { r: 75/255, g: 0/255, b: 0/255 };
+        const p = Math.max(0, Math.min(15, Number(props?.power ?? 0)));
+        const f = p / 15;
+
+        return {
+            r: 0.25 + f * 0.55,
+            g: 0.00,
+            b: 0.00,
+        };
     }
 
-    if (id.includes("melon_stem") || id.includes("pumpkin_stem") ||
-        id.includes("attached_melon_stem") || id.includes("attached_pumpkin_stem")) {
+    const isStem =
+        id.includes("melon_stem") ||
+        id.includes("pumpkin_stem");
+
+    const isAttached =
+        id.includes("attached_melon_stem") ||
+        id.includes("attached_pumpkin_stem");
+
+    if (isStem && !isAttached) {
         return stemTintFromAge(props?.age);
+    }
+
+    if (isAttached) {
+        console.log("we go in here eventually");
+        return stemTintFromAge(7);
     }
 
     if (isFoliageTint(blockId)) {

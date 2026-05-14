@@ -4,6 +4,8 @@
 
 import * as THREE from "three";
 
+import { getNonDefaultPropertiesForBlock } from "../TextureLoading/BlockPropertyOptions.js";
+
 function fmt(n) {
     const s = Number(n.toFixed(4));
     return Object.is(s, -0) ? 0 : s;
@@ -36,11 +38,15 @@ function mcQuoteString(s) {
     return `"${String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 }
 
-function propsToMcNbt(props) {
-    if (!props || typeof props !== "object" || Array.isArray(props)) return null;
+function propsToMcNbt(blockName, props) {
+    const cleanedProps = getNonDefaultPropertiesForBlock(blockName, props);
 
-    const entries = Object.entries(props);
-    if (!entries.length) return `Properties:{}`;
+    if (!cleanedProps || typeof cleanedProps !== "object" || Array.isArray(cleanedProps)) {
+        return null;
+    }
+
+    const entries = Object.entries(cleanedProps);
+    if (!entries.length) return null;
 
     const parts = entries.map(([k, v]) => `${k}:${mcQuoteString(v)}`);
     return `Properties:{${parts.join(",")}}`;
@@ -89,10 +95,12 @@ function numberFieldToMcNbt(key, value) {
 }
 
 function buildBlockStateNbt(ent) {
-    const propsNbt = propsToMcNbt(ent.properties);
+    const propsNbt = propsToMcNbt(ent.blockName, ent.properties);
+
     if (propsNbt) {
         return `{Name:"${ent.blockName}",${propsNbt}}`;
     }
+
     return `{Name:"${ent.blockName}"}`;
 }
 

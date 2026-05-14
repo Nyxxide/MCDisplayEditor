@@ -1,0 +1,112 @@
+.palette {
+    width: 100%;
+    margin: 6px 0 10px;
+    position: relative;
+}
+
+.paletteBtn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border: 3px solid rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 1);
+    color: #fff;
+    cursor: pointer;
+}
+
+#paletteBtnIcon {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paletteRowIconImg,
+.paletteIconImg {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    border-radius: 4px;
+    flex: 0 0 auto;
+}
+
+.paletteLabel {
+    flex: 1 1 auto;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Minecraft";
+    font-size: 22px;
+    color: white;
+}
+
+.paletteCaret {
+    opacity: .85;
+    flex: 0 0 auto;
+}
+
+.palettePopup {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    z-index: 9999;
+    background: rgba(0, 0, 0, .94);
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+}
+
+.paletteSearch {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 0;
+    outline: none;
+    background: rgba(255, 255, 255, .08);
+    color: #d7faff;
+    font-family: "Minecraft";
+    font-size: 17px;
+}
+
+.paletteList {
+    max-height: 320px;
+    overflow: auto;
+}
+
+.paletteRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.paletteRow:hover {
+    background: rgba(255, 255, 255, .08);
+}
+
+.paletteRowIcon {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, .12);
+    flex: 0 0 auto;
+}
+
+.paletteRowLabel {
+    flex: 1 1 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+    font-size: 17px;
+    font-family: "Minecraft";
+}

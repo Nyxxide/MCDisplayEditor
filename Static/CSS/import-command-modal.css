@@ -1,0 +1,34 @@
+.cmdHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.cmdTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+
+#importCmdInput {
+    font-family: "Minecraft";
+    font-size: 18px;
+}
+
+#importCmdRun {
+    width: auto !important;
+    min-width: 70px;
+    margin: 0 !important;
+    padding: 6px 10px !important;
+    flex: 0 0 auto;
+    font-family: "Minecraft";
+    font-size: 18px;
+    background-image: url("../Images/StoneMenu.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: #ffffff;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    border: black 2px solid;
+}

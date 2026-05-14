@@ -1,0 +1,93 @@
+#topBar {
+    font-family: "Minecraft";
+    grid-row: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 16px;
+    padding-left: 14px;
+    background: rgba(0, 0, 0, 0.72);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    box-sizing: border-box;
+}
+
+#topBarTitle {
+    font-size: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+    align-self: center;
+}
+
+#topBarActions {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+#topBarActions button {
+    border: 1px solid rgba(255,255,255,0.18);
+    background-color: #1c1c1c;
+    color: #fff;
+    aspect-ratio: 1/1;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: "Minecraft";
+}
+
+#saveBtn {
+    background-image: url("../Images/Save.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#loadBtn {
+    background-image: url("../Images/Load.gif");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#toggleGridBtn {
+    background-image: url("../Images/InvisGrid.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#toggleGridBtn.active {
+    background-image: url("../Images/VisGrid.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#instructionsBtn {
+    background-image: url("../Images/Instructions.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#importCmdBtn {
+    background-image: url("../Images/ImportViaCommand.gif");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#importRefBtn {
+    background-image: url("../Images/Import3DModel.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#modelLibraryBtn {
+    background-image: url("../Images/LibraryButton.webp");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}

@@ -107,6 +107,8 @@ export function initDom() {
     state.ui.posRow = document.getElementById("posRow");
     state.ui.rotRow = document.getElementById("rotRow");
     state.ui.scaleRow = document.getElementById("scaleRow");
+    state.ui.propsSection = document.getElementById("propsSection");
+    state.ui.propsFields = document.getElementById("propsFields");
     state.ui.metaSection = document.getElementById("metaSection");
     state.ui.tagsInput = document.getElementById("tagsInput");
     state.ui.viewRangeInput = document.getElementById("viewRangeInput");

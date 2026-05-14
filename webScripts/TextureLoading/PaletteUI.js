@@ -2,32 +2,52 @@
 // ------------
 // Searchable block picker UI (keeps minecraft:* under the hood)
 
-const LOCAL_ICON_BASE = "../Resources/icons/";  // adjust to your folder
-const MISSING_ICON_URL = "../Resources/icons/__missing_texture.png"; // add one placeholder png
+const ICON_ATLAS_PNG = "../Data/atlas/icons_atlas.png";
+const ICON_ATLAS_JSON = "../Data/atlas/icons_atlas.json";
 
-function blockIdToIconStem(blockId) {
-    return blockId.startsWith("minecraft:") ? blockId.slice(10) : blockId;
+let iconAtlasMetaPromise = null;
+
+function blockIdToIconKey(blockId) {
+    const raw = blockId.startsWith("minecraft:") ? blockId.slice(10) : blockId;
+    return `minecraft:${raw}`;
 }
 
-function localIconUrl(blockId) {
-    return `${LOCAL_ICON_BASE}${blockIdToIconStem(blockId)}.png`;
+async function loadIconAtlasMeta() {
+    if (!iconAtlasMetaPromise) {
+        iconAtlasMetaPromise = fetch(ICON_ATLAS_JSON, { cache: "no-cache" })
+            .then((r) => {
+                if (!r.ok) throw new Error(`Failed to load icons atlas: ${r.status}`);
+                return r.json();
+            });
+    }
+
+    return iconAtlasMetaPromise;
 }
 
-function makeIconImg(blockId) {
-    const img = document.createElement("img");
-    img.className = "paletteRowIconImg";
-    img.alt = "";
-    img.draggable = false;
-    img.loading = "lazy";
-    img.decoding = "async";
+function applyAtlasIcon(el, blockId, atlasMeta) {
+    const key = blockIdToIconKey(blockId);
+    const entry = atlasMeta.textures?.[key];
 
-    img.src = localIconUrl(blockId);
-    img.onerror = () => {
-        img.onerror = null;
-        img.src = MISSING_ICON_URL;
-    };
+    el.style.backgroundImage = `url("${ICON_ATLAS_PNG}")`;
+    el.style.backgroundRepeat = "no-repeat";
+    el.style.imageRendering = "pixelated";
+    el.style.backgroundSize = `${atlasMeta.atlasW}px ${atlasMeta.atlasH}px`;
 
-    return img;
+    if (!entry) {
+        el.style.backgroundImage = "";
+        el.style.backgroundColor = "magenta";
+        return;
+    }
+
+    el.style.backgroundPosition = `-${entry.x}px -${entry.y}px`;
+}
+
+function makeIconEl(blockId, atlasMeta, cls = "paletteRowIconImg") {
+    const icon = document.createElement("span");
+    icon.className = cls;
+    icon.setAttribute("aria-hidden", "true");
+    applyAtlasIcon(icon, blockId, atlasMeta);
+    return icon;
 }
 
 function prettyBlockName(blockId) {
@@ -42,7 +62,9 @@ function norm(s) {
     return (s || "").toLowerCase().replace(/[_:\s]+/g, "");
 }
 
-export function initPaletteUI(state, blockIds) {
+export async function initPaletteUI(state, blockIds) {
+    const iconAtlasMeta = await loadIconAtlasMeta();
+
     const root = document.getElementById("palette");
     const btn = document.getElementById("paletteBtn");
     const btnLabel = document.getElementById("paletteBtnLabel");
@@ -56,7 +78,6 @@ export function initPaletteUI(state, blockIds) {
         return;
     }
 
-    // store on state (under-the-hood selection)
     state.ui.paletteRoot = root;
     state.ui.paletteBtn = btn;
     state.ui.paletteBtnLabel = btnLabel;
@@ -65,50 +86,34 @@ export function initPaletteUI(state, blockIds) {
     state.ui.paletteSearch = search;
     state.ui.paletteList = list;
 
-    // data: precompute display strings so filtering is fast
     const items = blockIds.map((id) => {
         const label = prettyBlockName(id);
         return { id, label, key: norm(id) + " " + norm(label) };
     });
 
-    let openIndex = 0;      // highlighted row index in the *filtered* list
-    let filtered = items;   // current filtered list
+    let openIndex = 0;
+    let filtered = items;
 
-    // default selection: first item (or keep current if already set)
     if (!state.ui.paletteValue) {
         const first = items[0];
         if (first) setSelected(first.id, first.label);
     }
 
     function setSelected(id, label = null) {
-        state.ui.paletteValue = id;              // ✅ USE THIS EVERYWHERE
+        state.ui.paletteValue = id;
         btnLabel.textContent = label || prettyBlockName(id);
-        const btnIcon = state.ui.paletteBtnIcon;
-        if (btnIcon) {
-            btnIcon.innerHTML = "";
 
-            const img = document.createElement("img");
-            img.className = "paletteIconImg";
-            img.alt = "";
-            img.draggable = false;
-            img.loading = "eager";
-            img.decoding = "async";
-
-            img.src = localIconUrl(id);
-
-            img.onerror = () => {
-                img.onerror = null;
-                img.src = MISSING_ICON_URL;
-            };
-
-            btnIcon.appendChild(img);
+        const selectedIconSlot = state.ui.paletteBtnIcon;
+        if (selectedIconSlot) {
+            selectedIconSlot.innerHTML = "";
+            const icon = makeIconEl(id, iconAtlasMeta, "paletteIconImg");
+            selectedIconSlot.appendChild(icon);
         }
     }
 
     function render(filterText) {
         const q = norm(filterText);
 
-        // build filtered list
         filtered = [];
         for (const it of items) {
             if (q && !it.key.includes(q)) continue;
@@ -116,12 +121,10 @@ export function initPaletteUI(state, blockIds) {
             if (filtered.length >= 250) break;
         }
 
-        // clamp highlight
         if (openIndex < 0) openIndex = 0;
         if (openIndex >= filtered.length) openIndex = filtered.length - 1;
         if (filtered.length === 0) openIndex = 0;
 
-        // draw
         list.innerHTML = "";
 
         if (filtered.length === 0) {
@@ -138,7 +141,7 @@ export function initPaletteUI(state, blockIds) {
             row.className = "paletteRow";
             row.dataset.idx = String(idx);
 
-            const icon = makeIconImg(it.id)
+            const icon = makeIconEl(it.id, iconAtlasMeta, "paletteRowIconImg");
 
             const lab = document.createElement("span");
             lab.className = "paletteRowLabel";
@@ -164,7 +167,6 @@ export function initPaletteUI(state, blockIds) {
             list.appendChild(row);
         });
 
-        // ensure highlighted row is visible
         scrollHighlightedIntoView();
     }
 
@@ -203,17 +205,14 @@ export function initPaletteUI(state, blockIds) {
         else close();
     }
 
-    // open/close
     btn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         toggle();
     });
 
-    // typing filters list
     search.addEventListener("input", () => render(search.value));
 
-    // click outside closes
     search.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
             e.preventDefault();
@@ -243,7 +242,6 @@ export function initPaletteUI(state, blockIds) {
         }
 
         if (e.key === "Enter") {
-            // choose highlighted
             if (filtered.length) {
                 e.preventDefault();
                 const it = filtered[openIndex];
@@ -251,22 +249,14 @@ export function initPaletteUI(state, blockIds) {
                 close();
                 btn.focus();
             }
-            return;
         }
     });
 
     window.addEventListener("pointerdown", (e) => {
-        // only care if open
         if (popup.style.display === "none" || !popup.style.display) return;
-
-        // click inside palette = ignore
         if (root.contains(e.target)) return;
-
-        // otherwise close
         close();
     });
 
-
-    // initial render for first open
     render("");
 }

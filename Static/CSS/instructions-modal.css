@@ -1,0 +1,76 @@
+.instructionsContent {
+    overflow-y: auto;
+    max-height: 60vh;
+    padding-right: 4px;
+    color: #fff;
+    text-shadow: #2c2c2c 2px 2px 1px;
+    line-height: 1.45;
+    font-size: 18px;
+    font-family: "Minecraft";
+}
+
+#instLabel {
+    color: #ffff55;
+    text-shadow: #3f3f15 2px 2px 1px;
+}
+
+.instructionsContent h3 {
+    margin: 14px 0 6px;
+    font-size: 20px;
+    color: #55ffff;
+    text-shadow: #153f3f 2px 2px 1px;
+}
+
+.instKey {
+    color: #99ff92;
+    text-shadow: #3b6238 2px 2px 1px;
+}
+
+#instX {
+    color: #ff5555;
+    text-shadow: #5e2020 2px 2px 1px;
+}
+#instY {
+    color: #55dd55;
+    text-shadow: #266426 2px 2px 1px;
+}
+#instZ {
+    color: #5aa8ff;
+    text-shadow: #1e3854 2px 2px 1px;
+}
+
+.instExp {
+    color: #ff55ff;
+    text-shadow: #3f153f 2px 2px 1px;
+}
+
+.instructionsImageRow {
+    display: flex;
+    align-items: center;
+    height: 32px;
+}
+
+.instructionsImageRow p {
+    display: flex;
+}
+
+.instructionsImageRow p span {
+    align-self: center;
+}
+
+.instImg {
+    width: 32px;
+    height: 32px;
+}
+
+.instValue {
+    font-size: 20px;
+}
+
+.instructionsContent h3:first-child {
+    margin-top: 0;
+}
+
+.instructionsContent p {
+    margin: 4px 0;
+}
