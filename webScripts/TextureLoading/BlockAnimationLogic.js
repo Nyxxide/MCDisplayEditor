@@ -182,6 +182,7 @@ export async function initAnimations(state, clock) {
         state.orbit.update();
         updateFacingCompass();
         state.composer.render();
+        state.api.updateInfiniteGrid?.();
 
         // render gizmo scene after
         state.renderer.autoClear = false;

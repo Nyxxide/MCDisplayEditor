@@ -249,9 +249,10 @@ function pushFaceIf(
     const isVine = (blockId || "").toLowerCase().includes("vine");
     const isButton = (blockId || "").toLowerCase().includes("button");
     const isCoralFan = (blockId || "").toLowerCase().includes("coral_fan");
+    const isDoor = (blockId || "").toLowerCase().includes("_door");
     const isAnythingElse = !isHeavyCore && !isPortal && !isRail && !isLitter && !isGlazedTerracotta && !isCocoa
     && !isRedstoneWire && !isPiston && !isCommandBlock && !isEndPortalFrame && !isBeacon && !isGlowLichen &&!isVine
-    && !isChorusCenter && !isChorusThin && !isChorusThin2 && !isChorusBulge && !isButton && !isCoralFan;
+    && !isChorusCenter && !isChorusThin && !isChorusThin2 && !isChorusBulge && !isButton && !isCoralFan && !isDoor;
 
     const canonicalQuad = [
         [0, 1],
@@ -376,6 +377,12 @@ function pushFaceIf(
             quad = quad.map(([u, v]) => [1 - u, v]);
         }
         else{
+            quad = quad.map(([u, v]) => [1 - u, v]);
+        }
+    }
+
+    if (isDoor) {
+        if(faceName === "east" || faceName === "west") {
             quad = quad.map(([u, v]) => [1 - u, v]);
         }
     }

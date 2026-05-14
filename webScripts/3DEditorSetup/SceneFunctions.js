@@ -11,8 +11,14 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { loadAtlas } from "../TextureLoading/TextureLoad.js";
 
 const GRID_COLOR = 0x8a8a8a;
-const gridFine = new THREE.GridHelper(41, 164, GRID_COLOR, GRID_COLOR);
-const gridCoarse = new THREE.GridHelper(41, 41, GRID_COLOR, GRID_COLOR);
+const gridFine = new THREE.GridHelper(1001, 4004, GRID_COLOR, GRID_COLOR);
+const gridCoarse = new THREE.GridHelper(1001, 1001, GRID_COLOR, GRID_COLOR);
+
+gridFine.material.transparent = true;
+gridFine.material.opacity = 0.28;
+
+gridCoarse.material.transparent = true;
+gridCoarse.material.opacity = 0.45;
 
 export async function initScene(state) {
     const scene = new THREE.Scene();
@@ -22,6 +28,7 @@ export async function initScene(state) {
     state.atlas = atlas;
 
     scene.background = new THREE.Color(0x111111);
+    scene.fog = new THREE.Fog(0x111111, 80, 350);
 
     const viewportEl = document.getElementById("viewport3d");
     if (!viewportEl) throw new Error("Missing #viewport3d container");
@@ -29,8 +36,8 @@ export async function initScene(state) {
     const camera = new THREE.PerspectiveCamera(
         60,
         Math.max(1, viewportEl.clientWidth) / Math.max(1, viewportEl.clientHeight),
-        0.5,
-        200
+        0.25,
+        600
     );
     camera.position.set(6, 6, 10);
 
@@ -62,7 +69,7 @@ export async function initScene(state) {
     composer.addPass(new OutputPass());
 
     // grids
-    gridFine.position.y = 0.002;
+    gridFine.position.y = 0.006;
     gridFine.visible = false;
     floorOriginRoot.add(gridFine);
 
@@ -89,7 +96,7 @@ export async function initScene(state) {
 
     // ground tint plane
     const ground = new THREE.Mesh(
-        new THREE.PlaneGeometry(40, 40),
+        new THREE.PlaneGeometry(10000, 10000),
         new THREE.MeshBasicMaterial({
             color: 0x141414,
             transparent: true,
@@ -120,10 +127,10 @@ export async function initScene(state) {
     S.name = "compass:S";
     W.name = "compass:W";
 
-    N.position.set(0, 0.002, -compassRadius);
-    S.position.set(0, 0.002, compassRadius);
-    E.position.set(compassRadius, 0.002, 0);
-    W.position.set(-compassRadius, 0.002, 0);
+    N.position.set(0, 0.03, -compassRadius);
+    S.position.set(0, 0.03, compassRadius);
+    E.position.set(compassRadius, 0.03, 0);
+    W.position.set(-compassRadius, 0.03, 0);
     floorOriginRoot.add(N, E, S, W);
 
     // store
@@ -137,6 +144,29 @@ export async function initScene(state) {
     state.post.outlinePass = outlinePass;
     state.selectionRig = selectionRig;
     state.debug.floorCompassLabels = [N, E, S, W];
+
+    state.api.updateInfiniteGrid = () => {
+        const target = orbit.target;
+
+        const snapFine = 0.25;
+        const snapCoarse = 1.0;
+
+        gridFine.position.x =
+            Math.floor(target.x / snapFine) * snapFine;
+
+        gridFine.position.z =
+            Math.floor(target.z / snapFine) * snapFine;
+
+        gridCoarse.position.x =
+            Math.floor(target.x / snapCoarse) * snapCoarse;
+
+        gridCoarse.position.z =
+            Math.floor(target.z / snapCoarse) * snapCoarse;
+
+        ground.position.x = target.x;
+        ground.position.y = -0.015;
+        ground.position.z = target.z;
+    };
 
     // resize handler
     function resizeRendererToViewport() {
@@ -184,7 +214,7 @@ function makeLabelPlane(text) {
     const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide });
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
     plane.rotation.x = -Math.PI / 2;
-    plane.position.y = 0.002;
+    plane.position.y = 0;
     return plane;
 }
 

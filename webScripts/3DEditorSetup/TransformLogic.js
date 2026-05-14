@@ -140,6 +140,68 @@ function clearMetaInputs(state) {
     if (state.ui.shadowStrengthInput) state.ui.shadowStrengthInput.value = "";
 }
 
+function getMetaEditableEntities(state) {
+    if (state.selectedRefId) return [];
+
+    return [...state.selectedIds]
+        .map((id) => state.entities.find((e) => e.id === id))
+        .filter(Boolean);
+}
+
+function allSameValue(values) {
+    if (!values.length) return "";
+    const first = values[0] ?? "";
+    return values.every((v) => String(v ?? "") === String(first ?? ""))
+        ? first
+        : "";
+}
+
+function fillMetaUIFromEntities(state, entities) {
+    if (!entities?.length) {
+        clearMetaInputs(state);
+        setMetaInputsDisabled(state, true);
+        return;
+    }
+
+    if (entities.length === 1) {
+        fillMetaUIFromEntity(state, entities[0]);
+        return;
+    }
+
+    setMetaInputsDisabled(state, false);
+
+    // Multi/group tags append, so leave this blank intentionally.
+    if (state.ui.tagsInput) {
+        const sharedTags = sharedTagsForEntities(entities);
+        state.ui.tagsInput.value = sharedTags.join(", ");
+        state.ui.tagsInput.placeholder = "Append comma-separated tags";
+    }
+
+    if (state.ui.viewRangeInput) {
+        state.ui.viewRangeInput.value = allSameValue(entities.map(e => e.viewRange));
+    }
+
+    if (state.ui.blockLightInput) {
+        state.ui.blockLightInput.value = allSameValue(
+            entities.map(e => e.brightness?.block ?? "")
+        );
+    }
+
+    if (state.ui.skyLightInput) {
+        state.ui.skyLightInput.value = allSameValue(
+            entities.map(e => e.brightness?.sky ?? "")
+        );
+    }
+
+    if (state.ui.shadowRadiusInput) {
+        state.ui.shadowRadiusInput.value = allSameValue(entities.map(e => e.shadowRadius));
+    }
+
+    if (state.ui.shadowStrengthInput) {
+        state.ui.shadowStrengthInput.value = allSameValue(entities.map(e => e.shadowStrength));
+    }
+}
+
 function fillMetaUIFromEntity(state, ent) {
     if (!ent) {
         clearMetaInputs(state);
@@ -188,16 +250,10 @@ function fillMetaUI(state) {
         return;
     }
 
-    const single = getSelectedEntity(state);
-    if (single) {
-        fillMetaUIFromEntity(state, single);
-        fillPropertiesUI(state);
-        return;
-    }
+    const entities = getMetaEditableEntities(state);
 
-    const groupEnts = getExactSelectedGroupEntities(state);
-    if (groupEnts?.length) {
-        fillMetaUIFromEntity(state, groupEnts[0]);
+    if (entities.length) {
+        fillMetaUIFromEntities(state, entities);
         fillPropertiesUI(state);
         return;
     }
@@ -207,24 +263,113 @@ function fillMetaUI(state) {
     clearPropertiesUI(state);
 }
 
+function getSelectedBlockEntities(state) {
+    if (state.selectedRefId) return [];
+
+    return [...state.selectedIds]
+        .map((id) => state.entities.find((e) => e.id === id))
+        .filter(Boolean);
+}
+
+function effectivePropsForEntity(ent) {
+    return {
+        ...(getDefaultPropertiesForBlock(ent.blockName) || {}),
+        ...(ent.properties || {}),
+    };
+}
+
+function propValuesForEntity(ent, propName, propDef) {
+    const props = effectivePropsForEntity(ent);
+
+    const values =
+        typeof propDef.valuesWhen === "function"
+            ? propDef.valuesWhen(props)
+            : propDef.values || [];
+
+    return values.map(String);
+}
+
+function intersectStringArrays(arrays) {
+    if (!arrays.length) return [];
+
+    let out = new Set(arrays[0].map(String));
+
+    for (const arr of arrays.slice(1)) {
+        const s = new Set(arr.map(String));
+        out = new Set([...out].filter((v) => s.has(v)));
+    }
+
+    return [...out];
+}
+
 function getPropertyEditableEntities(state) {
     if (state.selectedRefId) return null;
 
-    const single = getSelectedEntity(state);
-    if (single) {
-        const cfg = getBlockPropertyConfig(single.blockName);
-        return cfg ? { blockName: single.blockName, entities: [single], config: cfg } : null;
+    const entities = getSelectedBlockEntities(state);
+    if (!entities.length) return null;
+
+    // Single block: show all properties normally.
+    if (entities.length === 1) {
+        const ent = entities[0];
+        const cfg = getBlockPropertyConfig(ent.blockName);
+        return cfg ? { entities, config: cfg } : null;
     }
 
-    const groupEnts = getExactSelectedGroupEntities(state);
-    if (!groupEnts?.length) return null;
+    const configs = entities.map((ent) => getBlockPropertyConfig(ent.blockName));
 
-    const firstBlock = groupEnts[0].blockName;
-    const sameBlock = groupEnts.every((e) => e.blockName === firstBlock);
-    if (!sameBlock) return null;
+    // If any selected block has no property config, only shared editable props can be none.
+    if (configs.some((cfg) => !cfg)) return null;
 
-    const cfg = getBlockPropertyConfig(firstBlock);
-    return cfg ? { blockName: firstBlock, entities: groupEnts, config: cfg } : null;
+    const firstCfg = configs[0];
+    const sharedProperties = {};
+
+    for (const [propName, firstPropDef] of Object.entries(firstCfg.properties || {})) {
+        const allHaveProp = configs.every((cfg) => cfg.properties?.[propName]);
+        if (!allHaveProp) continue;
+
+        const currentValues = entities.map((ent) => {
+            const props = effectivePropsForEntity(ent);
+            const cfg = getBlockPropertyConfig(ent.blockName);
+            const def = cfg.properties[propName];
+
+            return String(
+                props[propName] ??
+                def.default ??
+                def.values?.[0] ??
+                ""
+            );
+        });
+
+        // Only expose this property if every selected entity currently matches.
+        const sameCurrentValue = currentValues.every((v) => v === currentValues[0]);
+        if (!sameCurrentValue) continue;
+
+        const allowedSets = entities.map((ent) => {
+            const cfg = getBlockPropertyConfig(ent.blockName);
+            const def = cfg.properties[propName];
+            return propValuesForEntity(ent, propName, def);
+        });
+
+        const sharedValues = intersectStringArrays(allowedSets);
+
+        if (!sharedValues.length) continue;
+        if (!sharedValues.includes(currentValues[0])) continue;
+
+        sharedProperties[propName] = {
+            label: firstPropDef.label || propName,
+            values: sharedValues,
+            default: currentValues[0],
+        };
+    }
+
+    if (!Object.keys(sharedProperties).length) return null;
+
+    return {
+        entities,
+        config: {
+            properties: sharedProperties,
+        },
+    };
 }
 
 function clearPropertiesUI(state) {
@@ -370,6 +515,83 @@ async function replaceEntityMeshPreserveWorld(state, ent) {
     ent.mesh = newMesh;
 }
 
+function blockNonNumericTyping(el, { allowNegative = true, allowDecimal = true } = {}) {
+    function isAllowedNextValue(next) {
+        if (next === "") return true;
+
+        const pattern = allowNegative
+            ? (allowDecimal ? /^-?\d*\.?\d*$/ : /^-?\d*$/)
+            : (allowDecimal ? /^\d*\.?\d*$/ : /^\d*$/);
+
+        return pattern.test(next);
+    }
+
+    el.addEventListener("beforeinput", (e) => {
+        if (e.inputType && !e.inputType.startsWith("insert")) return;
+        if (e.data == null) return;
+
+        const start = el.selectionStart ?? el.value.length;
+        const end = el.selectionEnd ?? el.value.length;
+
+        const next =
+            el.value.slice(0, start) +
+            e.data +
+            el.value.slice(end);
+
+        if (!isAllowedNextValue(next)) {
+            e.preventDefault();
+        }
+    });
+
+    el.addEventListener("paste", (e) => {
+        const text = e.clipboardData?.getData("text") ?? "";
+
+        const start = el.selectionStart ?? el.value.length;
+        const end = el.selectionEnd ?? el.value.length;
+
+        const next =
+            el.value.slice(0, start) +
+            text +
+            el.value.slice(end);
+
+        if (!isAllowedNextValue(next)) {
+            e.preventDefault();
+        }
+    });
+}
+
+function sanitizeNumberInput(el, { min = null, max = null, final = false } = {}) {
+    if (!el) return;
+
+    let raw = String(el.value ?? "");
+
+    if (raw.trim() === "") return;
+
+    raw = raw.replace(/[^\d.-]/g, "");
+
+    raw = raw
+        .replace(/(?!^)-/g, "")
+        .replace(/(\..*)\./g, "$1");
+
+    // Allow temporary typing states
+    if (!final && (raw === "-" || raw === "." || raw === "-." || raw.endsWith("."))) {
+        el.value = raw;
+        return;
+    }
+
+    let n = Number(raw);
+
+    if (!Number.isFinite(n)) {
+        el.value = "";
+        return;
+    }
+
+    if (min != null) n = Math.max(min, n);
+    if (max != null) n = Math.min(max, n);
+
+    el.value = String(n);
+}
+
 async function applyBlockPropertyFromUI(state) {
     const target = getPropertyEditableEntities(state);
     if (!target || !state.ui.propsFields) return false;
@@ -433,6 +655,20 @@ function buildBrightnessFromInputs(state) {
     return out;
 }
 
+function sharedTagsForEntities(entities) {
+    if (!entities?.length) return [];
+
+    const tagSets = entities.map((e) => {
+        return new Set(Array.isArray(e.tags) ? e.tags : []);
+    });
+
+    const first = tagSets[0];
+
+    return [...first].filter((tag) => {
+        return tagSets.every((set) => set.has(tag));
+    });
+}
+
 function applyMetaToEntities(state, entities) {
     if (!entities?.length) return false;
 
@@ -453,24 +689,81 @@ function applyMetaToEntities(state, entities) {
     return true;
 }
 
+function applyMetaPatchToEntities(state, entities) {
+    if (!entities?.length) return false;
+
+    const appendTags = normalizeTagsFromInput(state.ui.tagsInput?.value ?? "");
+
+    const viewRangeRaw = String(state.ui.viewRangeInput?.value ?? "").trim();
+    const blockRaw = String(state.ui.blockLightInput?.value ?? "").trim();
+    const skyRaw = String(state.ui.skyLightInput?.value ?? "").trim();
+    const shadowRadiusRaw = String(state.ui.shadowRadiusInput?.value ?? "").trim();
+    const shadowStrengthRaw = String(state.ui.shadowStrengthInput?.value ?? "").trim();
+
+    const hasViewRange = viewRangeRaw !== "";
+    const hasBlock = blockRaw !== "";
+    const hasSky = skyRaw !== "";
+    const hasShadowRadius = shadowRadiusRaw !== "";
+    const hasShadowStrength = shadowStrengthRaw !== "";
+
+    const viewRange = hasViewRange ? Number(viewRangeRaw) : null;
+    const block = hasBlock ? Number(blockRaw) : null;
+    const sky = hasSky ? Number(skyRaw) : null;
+    const shadowRadius = hasShadowRadius ? Number(shadowRadiusRaw) : null;
+    const shadowStrength = hasShadowStrength ? Number(shadowStrengthRaw) : null;
+
+    for (const ent of entities) {
+        if (appendTags.length) {
+            const existing = Array.isArray(ent.tags) ? ent.tags : [];
+            ent.tags = [...new Set([...existing, ...appendTags])];
+        }
+
+        if (hasViewRange && Number.isFinite(viewRange)) {
+            ent.viewRange = viewRange;
+        }
+
+        if (hasBlock || hasSky) {
+            const nextBrightness = {
+                ...(ent.brightness && typeof ent.brightness === "object" ? ent.brightness : {}),
+            };
+
+            if (hasBlock && Number.isFinite(block)) nextBrightness.block = block;
+            if (hasSky && Number.isFinite(sky)) nextBrightness.sky = sky;
+
+            ent.brightness = Object.keys(nextBrightness).length ? nextBrightness : null;
+        }
+
+        if (hasShadowRadius && Number.isFinite(shadowRadius)) {
+            ent.shadowRadius = shadowRadius;
+        }
+
+        if (hasShadowStrength && Number.isFinite(shadowStrength)) {
+            ent.shadowStrength = shadowStrength;
+        }
+    }
+
+    return true;
+}
+
 function applyMetaFromUI(state) {
     if (state.selectedRefId) return false;
 
-    const single = getSelectedEntity(state);
-    if (single) {
-        const changed = applyMetaToEntities(state, [single]);
+    const entities = getMetaEditableEntities(state);
+    if (!entities.length) return false;
+
+    if (entities.length === 1) {
+        const changed = applyMetaToEntities(state, entities);
         if (changed) state.api.pushHistory?.("meta-edit");
         return changed;
     }
 
-    const groupEnts = getExactSelectedGroupEntities(state);
-    if (groupEnts?.length) {
-        const changed = applyMetaToEntities(state, groupEnts);
-        if (changed) state.api.pushHistory?.("meta-edit-group");
-        return changed;
+    const changed = applyMetaPatchToEntities(state, entities);
+    if (changed) {
+        state.api.pushHistory?.("meta-edit-multi");
+        fillMetaUI(state);
     }
 
-    return false;
+    return changed;
 }
 
 function hookMetaUI(state) {
@@ -484,17 +777,49 @@ function hookMetaUI(state) {
     ].filter(Boolean);
 
     for (const el of fields) {
+        if (el !== state.ui.tagsInput) {
+            const isBrightness =
+                el === state.ui.blockLightInput ||
+                el === state.ui.skyLightInput;
+
+            blockNonNumericTyping(el, {
+                allowNegative: !isBrightness,
+                allowDecimal: !isBrightness,
+            });
+        }
+
+        el.addEventListener("input", () => {
+            if (el === state.ui.blockLightInput || el === state.ui.skyLightInput) {
+                sanitizeNumberInput(el, { min: 0, max: 15, final: false });
+            } else if (el !== state.ui.tagsInput) {
+                sanitizeNumberInput(el);
+            }
+        });
+
         el.addEventListener("change", () => {
+            if (el === state.ui.blockLightInput || el === state.ui.skyLightInput) {
+                sanitizeNumberInput(el, { min: 0, max: 15, final: true });
+            }
+
             applyMetaFromUI(state);
         });
 
         el.addEventListener("blur", () => {
+            if (el === state.ui.blockLightInput || el === state.ui.skyLightInput) {
+                sanitizeNumberInput(el, { min: 0, max: 15, final: true });
+            }
+
             applyMetaFromUI(state);
         });
 
         el.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 e.preventDefault();
+
+                if (el === state.ui.blockLightInput || el === state.ui.skyLightInput) {
+                    sanitizeNumberInput(el, { min: 0, max: 15, final: true });
+                }
+
                 applyMetaFromUI(state);
                 el.blur();
             }
@@ -608,7 +933,9 @@ export function initTransformLogic(state) {
         } else if (state.selectionBase && state.activeRig && !state.selectionIsTempRig) {
             fillTransformUIRelative(state, state.activeRig, state.selectionBase);
         }
-        fillMetaUI(state);
+        if (!isMetaInputFocused(state)) {
+            fillMetaUI(state);
+        }
         state.api.updateHighlight?.();
     });
 
@@ -634,6 +961,7 @@ export function initTransformLogic(state) {
         });
 
         commitFocusedTransformInput(state);
+        commitFocusedMetaInput(state);
     }, true);
 
     // hotkeys: Ctrl/Cmd+C/V (ignore when typing in inputs)
@@ -1090,6 +1418,12 @@ function hookNumericUI(state) {
     const inputs = [px, py, pz, rx, ry, rz, sx, sy, sz].filter(Boolean);
 
     for (const el of inputs) {
+        blockNonNumericTyping(el);
+
+        el.addEventListener("input", () => {
+            sanitizeNumberInput(el, {final: false});
+        });
+
         el.addEventListener("change", () => applyTransformFromUI(state));
         el.addEventListener("blur", () => applyTransformFromUI(state));
         el.addEventListener("keydown", (e) => {
@@ -1298,6 +1632,25 @@ function updateVisibleTransformRows(state, transform) {
     }
 }
 
+function commitFocusedMetaInput(state) {
+    const a = document.activeElement;
+    if (!a) return;
+
+    const metaInputs = [
+        state.ui.tagsInput,
+        state.ui.viewRangeInput,
+        state.ui.blockLightInput,
+        state.ui.skyLightInput,
+        state.ui.shadowRadiusInput,
+        state.ui.shadowStrengthInput,
+    ].filter(Boolean);
+
+    if (!metaInputs.includes(a)) return;
+
+    applyMetaFromUI(state);
+    a.blur();
+}
+
 function commitFocusedTransformInput(state) {
     const a = document.activeElement;
     if (!a) return;
@@ -1397,6 +1750,19 @@ function flashBtnText(btn, flashText, revertText, delay = 500) {
     }, delay);
 }
 
+function isMetaInputFocused(state) {
+    const a = document.activeElement;
+    if (!a) return false;
+
+    return [
+        state.ui.tagsInput,
+        state.ui.viewRangeInput,
+        state.ui.blockLightInput,
+        state.ui.skyLightInput,
+        state.ui.shadowRadiusInput,
+        state.ui.shadowStrengthInput,
+    ].filter(Boolean).includes(a);
+}
 
 function isTextInputFocused() {
     const a = document.activeElement;

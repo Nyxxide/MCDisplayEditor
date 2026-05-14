@@ -1,11 +1,7 @@
-// TODO: Fix item icons that appear in the selection menu to match how they appear in editor, fix missing textures
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
-// TODO: Gotta make my favicon
-// TODO: Make Instructions Prettier & Add top bar/xForm stuff into it
 // TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like)
 // TODO: Fix nbt behavior on grouping (make grouped objects retain previous values unless new ones are set. Tags append changes to existing, everything else overwrite)
 // TODO: Also decide if i want multiselect to prevent nbt modification (probably)
-// TODO: Make grid seemingly infinite? and make rendering distance larger. cuts off after a point.
 
 
 /* TODO Texture Stuff:
