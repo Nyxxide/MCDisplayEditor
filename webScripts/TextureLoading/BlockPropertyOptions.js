@@ -256,7 +256,7 @@ export const BLOCK_PROPERTY_OPTIONS = [
     },
 
     {
-        match: (id) => id.includes("test_block") || id.includes("test_instance_block"),
+        match: (id) => id.includes("test_block") || !id.includes("test_instance_block"),
         properties: {
             mode: { label: "Mode", values: ["start", "log", "fail", "accept"], default: "start" },
         },

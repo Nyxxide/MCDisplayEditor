@@ -1,5 +1,6 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Maybe make audio a bit louder or something. kinda quiet.
+// TODO: Scale (maybe exclusive to groups?) in the xform resets to 1. i think when mode switch or something idk double check it.
 
 /* TODO Texture Stuff:
 *   - Add Props to blocks as I find em.
