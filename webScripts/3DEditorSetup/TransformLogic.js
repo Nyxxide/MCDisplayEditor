@@ -1025,6 +1025,12 @@ export function initTransformLogic(state) {
             return;
         }
 
+        if (mod && e.key.toLowerCase() === "s") {
+            e.preventDefault();
+            state.api.saveNow?.();
+            return;
+        }
+
         // W/E/R mode switching (lets SelectionLogic not care)
         if (e.key === "t" || e.key === "T") {
             playUiClick();

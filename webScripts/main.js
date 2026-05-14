@@ -1,19 +1,21 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
-// TODO: Make xForm Prettier (Its mostly fine i think, just those arrows i dont really like)
-// TODO: Fix nbt behavior on grouping (make grouped objects retain previous values unless new ones are set. Tags append changes to existing, everything else overwrite)
-// TODO: Also decide if i want multiselect to prevent nbt modification (probably)
-
+// TODO: Maybe make audio a bit louder or something. kinda quiet.
 
 /* TODO Texture Stuff:
-*   - Some textures are off but dont worry about it too much. Button texture mapping, regular fire missing outer flat texture, coral fans flip east/west png
-*   - Gamergeeks my fucking GOAT they have an atlas and a corresponding json. run that up and fix the long standing item icon problem.
+*   - Add Props to blocks as I find em.
+*       -- Fences
+*       -- Upward Rails come too high off ground?
+*       -- Respawn Anchor
+*       -- Farmland
+*       -- Stairs
+*       -- Furnaces (Blast/Reg/Smoker)
+*       -- Bone Block axis because why not
 */
 
 /*
 *  TODO Housekeeping:
-*   - Reogranize Resources to split into Icons/Blocks/Items/Atlases (move everything currently in there for blocks into Blocks folder
-*   - For the love of God split the CSS file into multiple it's a mess
-*   - Maybe go through all the large webScript files again and see about cutting them down?
+*   - Reogranize Resources to split into Blocks/Items/Atlases (move everything currently in there for blocks into Blocks folder)
+*   - Maybe go through all the large webScript files again and see about cutting them down? Anything around 2k lines see if I can split
 */
 
 /*

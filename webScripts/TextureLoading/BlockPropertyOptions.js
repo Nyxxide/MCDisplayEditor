@@ -526,7 +526,7 @@ export const BLOCK_PROPERTY_OPTIONS = [
     },
 
     {
-        match: (id) => id.includes("_gate"),
+        match: (id) => id.includes("_gate") && !id.includes("_gateway"),
         properties: {
             in_wall:{
                 label: "In Wall",
