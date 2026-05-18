@@ -13,6 +13,7 @@ import {gridFine, gridCoarse} from "./SceneFunctions.js"
 import { playUiClick } from "../Misc/AudioControl.js";
 import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js";
 import { getBlockPropertyConfig, getDefaultPropertiesForBlock } from "../TextureLoading/BlockPropertyOptions.js";
+import { resolveSelectionMoveDelta, selectionWouldCollideAtDelta } from "./CollisionLogic.js";
 
 /** -------------------- Matrix helpers -------------------- */
 
@@ -835,6 +836,7 @@ export function initTransformLogic(state) {
     const transform = new TransformControls(camera, renderer.domElement);
     transform.setMode("translate");
     transform.setSpace("world"); // important for shear behavior
+    transform.setSize(0.5)
     gizmoScene.add(transform);
 
     if (state.ui.modeTranslateBtn) {
@@ -869,6 +871,19 @@ export function initTransformLogic(state) {
         updateOrbitEnabled(state, transform);
 
         if (e.value) {
+            if (
+                state.collisionHeld &&
+                transform.object &&
+                (
+                    transform.getMode() === "rotate" ||
+                    transform.getMode() === "scale"
+                )
+            ) {
+                state.lastValidTransformState =
+                    captureTransformState(transform.object);
+            } else {
+                state.lastValidTransformState = null;
+            }
             state.api.stopMeshDrag?.();
             state.api.stopRefDrag?.();
 
@@ -924,6 +939,16 @@ export function initTransformLogic(state) {
             );
         }
 
+        if (
+            state.collisionHeld &&
+            (
+                transform.getMode() === "rotate" ||
+                transform.getMode() === "scale"
+            )
+        ) {
+            resolveRotateScaleCollision(state, transform.object, transform.getMode());
+        }
+
         // numeric UI sync
         if (state.selectedRefId && state.activeRig) {
             fillTransformUI(state, state.activeRig);
@@ -967,6 +992,11 @@ export function initTransformLogic(state) {
     // hotkeys: Ctrl/Cmd+C/V (ignore when typing in inputs)
     window.addEventListener("keydown", (e) => {
         if (modalOpen()) return;
+
+        if (isCollisionKey(e) && !e.ctrlKey && !e.metaKey && !isTextInputFocused()) {
+            state.collisionHeld = true;
+        }
+
         const isMac = navigator.platform.toLowerCase().includes("mac");
         const mod = isMac ? e.metaKey : e.ctrlKey;
 
@@ -1056,6 +1086,9 @@ export function initTransformLogic(state) {
     });
 
     window.addEventListener("keyup", (e) => {
+        if (isCollisionKey(e)) {
+            state.collisionHeld = false;
+        }
         if (modalOpen()) return;
         if (e.key === "Shift") {
             state.shiftHeld = false;
@@ -1141,6 +1174,10 @@ function isArrowKey(k) {
     return k === "ArrowUp" || k === "ArrowDown" || k === "ArrowLeft" || k === "ArrowRight";
 }
 
+function isCollisionKey(e) {
+    return e.key === "c" || e.key === "C";
+}
+
 function isNumericOrTextareaFocused() {
     const a = document.activeElement;
     if (!a) return false;
@@ -1195,6 +1232,119 @@ function updateTransformSpace(state, transform) {
     transform.setSpace("world");
 }
 
+function captureTransformState(obj) {
+    return {
+        position: obj.position.clone(),
+        quaternion: obj.quaternion.clone(),
+        scale: obj.scale.clone(),
+    };
+}
+
+function restoreTransformState(obj, saved) {
+    if (!obj || !saved) return;
+
+    obj.position.copy(saved.position);
+    obj.quaternion.copy(saved.quaternion);
+    obj.scale.copy(saved.scale);
+
+    obj.updateMatrixWorld(true);
+}
+
+function currentSelectionCollides(state) {
+    if (state.selectedRefId) return false;
+    return selectionWouldCollideAtDelta(state, new THREE.Vector3());
+}
+
+function lerpTransformState(a, b, t) {
+    return {
+        position: a.position.clone().lerp(b.position, t),
+        quaternion: a.quaternion.clone().slerp(b.quaternion, t),
+        scale: a.scale.clone().lerp(b.scale, t),
+    };
+}
+
+function applyTransformState(obj, stateObj) {
+    obj.position.copy(stateObj.position);
+    obj.quaternion.copy(stateObj.quaternion);
+    obj.scale.copy(stateObj.scale);
+    obj.updateMatrixWorld(true);
+}
+
+function transformPathCollides(state, valid, attempted, obj, steps = 32) {
+    const original = captureTransformState(obj);
+
+    for (let i = 1; i <= steps; i++) {
+        const t = i / steps;
+        const test = lerpTransformState(valid, attempted, t);
+
+        applyTransformState(obj, test);
+
+        if (currentSelectionCollides(state)) {
+            applyTransformState(obj, original);
+            return true;
+        }
+    }
+
+    applyTransformState(obj, original);
+    return false;
+}
+
+function resolveRotateScaleCollision(state, obj, mode) {
+    if (state.selectedRefId) return;
+
+    if (!state.lastValidTransformState) {
+        state.lastValidTransformState = captureTransformState(obj);
+        return;
+    }
+
+    const valid = state.lastValidTransformState;
+    const attempted = captureTransformState(obj);
+
+    if (mode === "rotate") {
+        if (transformPathCollides(state, valid, attempted, obj, 48)) {
+            applyTransformState(obj, valid);
+            return;
+        }
+
+        applyTransformState(obj, attempted);
+        state.lastValidTransformState = captureTransformState(obj);
+        return;
+    }
+
+    // Scale can still use boundary search because it does not wrap through
+    // alternate valid states the way rotation can.
+    if (!transformPathCollides(state, valid, attempted, obj, 24)) {
+        applyTransformState(obj, attempted);
+        state.lastValidTransformState = captureTransformState(obj);
+        return;
+    }
+
+    let lo = 0;
+    let hi = 1;
+
+    for (let i = 0; i < 14; i++) {
+        const mid = (lo + hi) * 0.5;
+        const test = lerpTransformState(valid, attempted, mid);
+
+        applyTransformState(obj, test);
+
+        if (currentSelectionCollides(state)) {
+            hi = mid;
+        } else {
+            lo = mid;
+        }
+    }
+
+    const finalState = lerpTransformState(valid, attempted, Math.max(0, lo - 0.002));
+    applyTransformState(obj, finalState);
+
+    if (!currentSelectionCollides(state)) {
+        state.lastValidTransformState = captureTransformState(obj);
+    } else {
+        applyTransformState(obj, valid);
+    }
+}
+
 function getWorldPositionOf(obj) {
     const v = new THREE.Vector3();
     obj.updateMatrixWorld(true);
@@ -1228,6 +1378,7 @@ function beginTranslateSession(state, obj) {
 
     state.translateSession = {
         startWorld,
+        lastAllowedWorld: startWorld.clone(),
         basisX,
         basisY,
         basisZ,
@@ -1242,6 +1393,33 @@ function applyTranslateConstraints(state, obj) {
     if (state.shiftHeld) {
         applyIncrementalTranslateSnap(state, obj, 0.25);
     }
+
+    if (state.collisionHeld) {
+        applyCollisionTranslateConstraint(state, obj);
+    } else {
+        state.translateSession.lastAllowedWorld = getWorldPositionOf(obj);
+    }
+}
+
+function applyCollisionTranslateConstraint(state, obj) {
+    const session = state.translateSession;
+    if (!session) return;
+    if (state.selectedRefId) return;
+
+    const attemptedWorld = getWorldPositionOf(obj);
+    const desiredDelta = attemptedWorld.clone().sub(session.lastAllowedWorld);
+
+    if (desiredDelta.lengthSq() < 1e-12) return;
+
+    // Reset to the last legal position before running collision checks.
+    // The collision resolver expects the scene to represent the current valid state.
+    setWorldPositionOf(obj, session.lastAllowedWorld);
+
+    const allowedDelta = resolveSelectionMoveDelta(state, desiredDelta);
+    const nextWorld = session.lastAllowedWorld.clone().add(allowedDelta);
+
+    setWorldPositionOf(obj, nextWorld);
+    session.lastAllowedWorld.copy(nextWorld);
 }
 
 function applyIncrementalTranslateSnap(state, obj, step) {
@@ -1387,10 +1565,23 @@ function updateOrbitEnabled(state, transform) {
 
 function killGizmoWiresHard(transform) {
     transform.traverse((o) => {
+        const name = (o.name || "").toUpperCase();
+
+        if (!o.userData.originalGizmoScale) {
+            o.userData.originalGizmoScale = o.scale.clone();
+        }
+
+        if (
+            name.includes("PICKER") ||
+            name.includes("PLANE")
+        ) {
+            o.scale.copy(o.userData.originalGizmoScale).multiplyScalar(0.65);
+        }
+
         if (o.type === "Line" || o.type === "LineSegments") o.visible = false;
+
         if (o.type === "Mesh") {
-            const nn = (o.name || "").toUpperCase();
-            if (nn.includes("HELPER") || nn.includes("START") || nn.includes("END") || nn.includes("DELTA")) {
+            if (name.includes("HELPER") || name.includes("START") || name.includes("END") || name.includes("DELTA")) {
                 o.visible = false;
             }
         }
@@ -1425,6 +1616,11 @@ function hookNumericUI(state) {
 
     for (const el of inputs) {
         blockNonNumericTyping(el);
+
+        el.addEventListener("dblclick", (e) => {
+            e.preventDefault();
+            el.select();
+        });
 
         el.addEventListener("input", () => {
             sanitizeNumberInput(el, {final: false});

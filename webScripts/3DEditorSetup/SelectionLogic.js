@@ -12,6 +12,7 @@ import * as THREE from "three";
 import { attachKeepWorldMatrix, setObjectWorldMatrix, setObjectWorldTRS } from "./TransformLogic.js";
 import { makeCubeForBlock } from "../TextureLoading/TextureLoad.js"
 import {getDefaultPropertiesForBlock} from "../TextureLoading/BlockPropertyOptions.js";
+import { resolveSelectionMoveDelta } from "./CollisionLogic.js"
 
 export function initSelectionLogic(state) {
     // --- Selection box element (DOM overlay) ---
@@ -34,6 +35,9 @@ export function initSelectionLogic(state) {
 
     // --- Raycast + ground plane ---
     const xzPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const dragPlane = new THREE.Plane();
+    const dragPlanePoint = new THREE.Vector3();
+    const dragPlaneNormal = new THREE.Vector3();
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -76,6 +80,48 @@ export function initSelectionLogic(state) {
         const point = new THREE.Vector3();
         raycaster.ray.intersectPlane(xzPlane, point);
         return point;
+    }
+
+    function chooseCameraRelativeDragPlaneNormal() {
+        const dir = new THREE.Vector3();
+        state.camera.getWorldDirection(dir);
+
+        const ax = Math.abs(dir.x);
+        const ay = Math.abs(dir.y);
+        const az = Math.abs(dir.z);
+
+        // Pick the world axis the camera is looking along most.
+        // Movement happens on the other two axes.
+        if (ay >= ax && ay >= az) return new THREE.Vector3(0, 1, 0); // XZ plane
+        if (ax >= ay && ax >= az) return new THREE.Vector3(1, 0, 0); // YZ plane
+        return new THREE.Vector3(0, 0, 1);                           // XY plane
+    }
+
+    function beginCameraRelativeDragPlane(e, objectWorldPos) {
+        dragPlanePoint.copy(objectWorldPos);
+        dragPlaneNormal.copy(chooseCameraRelativeDragPlaneNormal());
+
+        dragPlane.setFromNormalAndCoplanarPoint(dragPlaneNormal, dragPlanePoint);
+
+        screenToRay(e);
+
+        const p = new THREE.Vector3();
+        if (!raycaster.ray.intersectPlane(dragPlane, p)) {
+            p.copy(objectWorldPos);
+        }
+
+        return p;
+    }
+
+    function getCameraRelativeDragPoint(e) {
+        screenToRay(e);
+
+        const p = new THREE.Vector3();
+        if (!raycaster.ray.intersectPlane(dragPlane, p)) {
+            p.copy(dragPlanePoint);
+        }
+
+        return p;
     }
 
     function worldToScreen(v3) {
@@ -310,7 +356,7 @@ export function initSelectionLogic(state) {
             state.selectionIsTempRig = false;
 
             // baseline for relative UI
-            state.selectionBase = (() => {
+            if (!node.userData.selectionBase) {
                 const p = new THREE.Vector3();
                 const q = new THREE.Quaternion();
                 const s = new THREE.Vector3();
@@ -323,8 +369,10 @@ export function initSelectionLogic(state) {
                 sn.updateMatrixWorld(true);
                 sn.getWorldScale(s);
 
-                return { pos: p, quat: q, scale: s };
-            })();
+                node.userData.selectionBase = { pos: p, quat: q, scale: s };
+            }
+
+            state.selectionBase = node.userData.selectionBase;
 
             state.api.attachTransformToActiveRig?.();
             state.api.fillTransformUIRelative?.(node, state.selectionBase);
@@ -705,19 +753,14 @@ export function initSelectionLogic(state) {
 
 
     // ---- placement ----
-    async function placeAt(point) {
+    async function placeAt(point, { selectAfter = true } = {}) {
         const blockName = state.ui.paletteValue;
         if (!blockName) return;
 
         const properties = getDefaultPropertiesForBlock(blockName)
         const mesh = await makeCubeForBlock(state, blockName, properties);
 
-        const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
-        const pos = new THREE.Vector3(snap(point.x), snap(point.y + 0.5), snap(point.z));
-        const quat = new THREE.Quaternion();
-        const sca = new THREE.Vector3(1, 1, 1);
-
-        const world = new THREE.Matrix4().compose(pos, quat, sca);
+        const world = computeGroundPlacementWorld(point);
 
         state.scene.add(mesh);
         setObjectWorldMatrix(mesh, world);
@@ -737,14 +780,319 @@ export function initSelectionLogic(state) {
             mesh
         });
 
-        console.log(state.entities);
-
-        state.selectedRefId = null;
-        state.selectedIds.clear();
-        state.selectedIds.add(id);
-        rebuildSelectionRig();
+        if (selectAfter) {
+            state.selectedRefId = null;
+            state.selectedIds.clear();
+            state.selectedIds.add(id);
+            rebuildSelectionRig();
+        } else {
+            state.api.updateHighlight?.();
+        }
 
         state.api.pushHistory?.("place");
+    }
+
+    function snapToStep(v, step = state.const.TRANS_SNAP) {
+        return Math.round(v / step) * step;
+    }
+
+    function getWorldFaceNormal(hit) {
+        const n = hit.face?.normal?.clone() || new THREE.Vector3(0, 1, 0);
+
+        const normalMatrix = new THREE.Matrix3().getNormalMatrix(hit.object.matrixWorld);
+        n.applyMatrix3(normalMatrix).normalize();
+
+        // Snap near-cardinal normals to exact axes.
+        const ax = Math.abs(n.x);
+        const ay = Math.abs(n.y);
+        const az = Math.abs(n.z);
+
+        if (ax >= ay && ax >= az) return new THREE.Vector3(Math.sign(n.x) || 1, 0, 0);
+        if (ay >= ax && ay >= az) return new THREE.Vector3(0, Math.sign(n.y) || 1, 0);
+        return new THREE.Vector3(0, 0, Math.sign(n.z) || 1);
+    }
+
+    function getColliderProjectionRange(root, normal) {
+        root.updateMatrixWorld(true);
+
+        const boxes = root.userData?.colliderBoxes;
+        const points = [];
+
+        if (Array.isArray(boxes) && boxes.length) {
+            for (const box of boxes) {
+                const min = new THREE.Vector3().fromArray(box.min);
+                const max = new THREE.Vector3().fromArray(box.max);
+
+                for (const x of [min.x, max.x]) {
+                    for (const y of [min.y, max.y]) {
+                        for (const z of [min.z, max.z]) {
+                            points.push(
+                                new THREE.Vector3(x, y, z).applyMatrix4(root.matrixWorld)
+                            );
+                        }
+                    }
+                }
+            }
+        } else {
+            const bb = new THREE.Box3().setFromObject(root);
+            for (const x of [bb.min.x, bb.max.x]) {
+                for (const y of [bb.min.y, bb.max.y]) {
+                    for (const z of [bb.min.z, bb.max.z]) {
+                        points.push(new THREE.Vector3(x, y, z));
+                    }
+                }
+            }
+        }
+
+        let minProj = Infinity;
+        let maxProj = -Infinity;
+
+        for (const p of points) {
+            const d = p.dot(normal);
+            minProj = Math.min(minProj, d);
+            maxProj = Math.max(maxProj, d);
+        }
+
+        return { min: minProj, max: maxProj };
+    }
+
+    function getPlacementRootFromHit(hit) {
+        const ent = entityByObject(hit.object);
+        if (ent) return ent.mesh;
+
+        const ref = refByObject(hit.object);
+        if (ref) return ref.root;
+
+        return hit.object;
+    }
+
+    async function placeFlushAtHit(hit, { selectAfter = false } = {}) {
+        const blockName = state.ui.paletteValue;
+        if (!blockName || !hit) return;
+
+        const properties = getDefaultPropertiesForBlock(blockName);
+        const mesh = await makeCubeForBlock(state, blockName, properties);
+
+        state.scene.add(mesh);
+
+        const world = computeFlushPlacementWorld(hit, mesh);
+        setObjectWorldMatrix(mesh, world);
+
+        const id = crypto.randomUUID();
+        state.entities.push({
+            id,
+            blockName,
+            properties,
+
+            tags: [],
+            viewRange: null,
+            brightness: null,
+            shadowRadius: null,
+            shadowStrength: null,
+
+            mesh
+        });
+
+        if (selectAfter) {
+            state.selectedRefId = null;
+            state.selectedIds.clear();
+            state.selectedIds.add(id);
+            rebuildSelectionRig();
+        } else {
+            state.api.updateHighlight?.();
+        }
+
+        state.api.pushHistory?.("flush-place");
+    }
+
+    function makePreviewMaterial(mat) {
+        const clone = mat.clone();
+
+        clone.transparent = true;
+        clone.opacity = 0.35;
+
+        clone.depthWrite = false;
+        clone.depthTest = true;
+        clone.side = THREE.DoubleSide;
+
+        clone.alphaTest = 0.01;
+        clone.blending = THREE.NormalBlending;
+        clone.forceSinglePass = true;
+
+        // Shader/special materials like end_gateway/end_portal may use uniforms.
+        // Preserve the shader, but try to lower any opacity-like uniform.
+        if (clone.uniforms) {
+            for (const key of ["opacity", "alpha", "uOpacity", "uAlpha"]) {
+                if (clone.uniforms[key]) {
+                    clone.uniforms[key].value = 0.35;
+                }
+            }
+        }
+
+        clone.needsUpdate = true;
+        return clone;
+    }
+
+    function makeGhostObject(root) {
+        root.traverse((o) => {
+            if (o.isMesh) {
+                o.visible = true;
+                o.frustumCulled = false;
+
+                if (Array.isArray(o.material)) {
+                    o.material = o.material.map(makePreviewMaterial);
+                } else if (o.material) {
+                    o.material = makePreviewMaterial(o.material);
+                }
+
+                o.renderOrder = 999;
+                o.userData.isPlacementPreview = true;
+            }
+        });
+
+        root.userData.isPlacementPreview = true;
+        root.visible = false;
+
+        return root;
+    }
+
+    async function ensurePlacementPreview(blockName) {
+        if (!blockName) return null;
+
+        if (placementPreviewMesh && placementPreviewBlockName === blockName) {
+            return placementPreviewMesh;
+        }
+
+        if (
+            placementPreviewPromise &&
+            placementPreviewPromiseBlockName === blockName
+        ) {
+            return await placementPreviewPromise;
+        }
+
+        hidePlacementPreview();
+
+        const token = ++placementPreviewBuildToken;
+        placementPreviewPromiseBlockName = blockName;
+
+        placementPreviewPromise = (async () => {
+            const properties = getDefaultPropertiesForBlock(blockName);
+            const mesh = await makeCubeForBlock(state, blockName, properties);
+
+            if (token !== placementPreviewBuildToken) {
+                return null;
+            }
+
+            placementPreviewMesh = makeGhostObject(mesh);
+            placementPreviewBlockName = blockName;
+
+            state.scene.add(placementPreviewMesh);
+
+            return placementPreviewMesh;
+        })();
+
+        const result = await placementPreviewPromise;
+
+        if (placementPreviewPromiseBlockName === blockName) {
+            placementPreviewPromise = null;
+            placementPreviewPromiseBlockName = null;
+        }
+
+        return result;
+    }
+
+    function hidePlacementPreview() {
+        placementPreviewBuildToken++;
+
+        placementPreviewPromise = null;
+        placementPreviewPromiseBlockName = null;
+
+        if (placementPreviewMesh) {
+            if (placementPreviewMesh.parent) {
+                placementPreviewMesh.parent.remove(placementPreviewMesh);
+            }
+
+            placementPreviewMesh = null;
+            placementPreviewBlockName = null;
+        }
+    }
+
+    function computeGroundPlacementWorld(point) {
+        const snap = (v) => Math.round(v / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+
+        const pos = new THREE.Vector3(
+            snap(point.x),
+            snap(point.y + 0.5),
+            snap(point.z)
+        );
+
+        const quat = new THREE.Quaternion();
+        const sca = new THREE.Vector3(1, 1, 1);
+
+        return new THREE.Matrix4().compose(pos, quat, sca);
+    }
+
+    function computeFlushPlacementWorld(hit, mesh) {
+        const targetRoot = getPlacementRootFromHit(hit);
+        const normal = getWorldFaceNormal(hit);
+
+        const quat = new THREE.Quaternion();
+        const scale = new THREE.Vector3(1, 1, 1);
+
+        const startPos = new THREE.Vector3(
+            snapToStep(hit.point.x),
+            snapToStep(hit.point.y),
+            snapToStep(hit.point.z)
+        );
+
+        let world = new THREE.Matrix4().compose(startPos, quat, scale);
+        setObjectWorldMatrix(mesh, world);
+
+        targetRoot.updateMatrixWorld(true);
+        mesh.updateMatrixWorld(true);
+
+        const targetRange = getColliderProjectionRange(targetRoot, normal);
+        const newRange = getColliderProjectionRange(mesh, normal);
+
+        const shift = targetRange.max - newRange.min;
+        const finalPos = startPos.clone().addScaledVector(normal, shift);
+
+        return new THREE.Matrix4().compose(finalPos, quat, scale);
+    }
+
+    async function updatePlacementPreview(e) {
+        const blockName = state.ui.paletteValue;
+
+        if (!blockName || state.api.transform?.dragging || state.isTransforming) {
+            hidePlacementPreview();
+            return;
+        }
+
+        const shouldPreview = placementAltHeld || collPlacementKeyHeld;
+
+        if (!shouldPreview) {
+            hidePlacementPreview();
+            return;
+        }
+
+        const preview = await ensurePlacementPreview(blockName);
+        if (!preview) return;
+
+        // Temporarily hide preview so it cannot affect picking/fallbacks.
+        preview.visible = false;
+
+        const hit = pickAnyHit(e);
+
+        let world = null;
+
+        if (collPlacementKeyHeld && hit) {
+            world = computeFlushPlacementWorld(hit, preview);
+        } else {
+            world = computeGroundPlacementWorld(getGroundPoint(e));
+        }
+
+        setObjectWorldMatrix(preview, world);
+        preview.visible = true;
     }
 
     // ---- picking refs ----
@@ -778,17 +1126,52 @@ export function initSelectionLogic(state) {
     const refDragOffset = new THREE.Vector3();
     const dragStartRigPos = new THREE.Vector3();
     const dragStartRefPos = new THREE.Vector3();
+    const dragLastRigPos = new THREE.Vector3();
+    const dragStartPointerPoint = new THREE.Vector3();
+    const refDragStartPointerPoint = new THREE.Vector3();
+    let placementPreviewMesh = null;
+    let placementPreviewBlockName = null;
+    let placementPreviewBuildToken = 0;
+    let placementPreviewPromise = null;
+    let placementPreviewPromiseBlockName = null;
+    let lastPointerEvent = null;
+    let placementAltHeld = false;
+    let collPlacementKeyHeld = false;
+
+    function isCollisionKey(e) {
+        return e.key === "c" || e.key === "C";
+    }
+
+    function isCollPlacementKey(e) {
+        return e.key === "x" || e.key === "X";
+    }
+
+    function applyRigPlaneDragPosition(rig, targetPos) {
+        const desiredDelta = targetPos.clone().sub(rig.position);
+
+        if (state.collisionHeld) {
+            const allowedDelta = resolveSelectionMoveDelta(state, desiredDelta);
+            rig.position.add(allowedDelta);
+        } else {
+            rig.position.copy(targetPos);
+        }
+
+        rig.updateMatrixWorld(true);
+        dragLastRigPos.copy(rig.position);
+    }
 
     // ---- pointer handlers ----
-    window.addEventListener("pointerdown", (e) => {
+    window.addEventListener("pointerdown", async (e) => {
         if (modalOpen()) return;
         if (state.isRestoringHistory) return;
         if (e.target.closest("#ui")) return;
         if (e.target.closest("#xformUI")) return;
+        lastPointerEvent = e;
 
         // Alt+Click place
-        if (e.altKey && e.button === 0 && !state.api.transform?.dragging && !state.isTransforming) {
-            placeAt(getGroundPoint(e));
+        if ((e.altKey || placementAltHeld) && e.button === 0 && !state.api.transform?.dragging && !state.isTransforming) {
+            hidePlacementPreview();
+            await placeAt(getGroundPoint(e));
             return;
         }
 
@@ -796,6 +1179,26 @@ export function initSelectionLogic(state) {
         if (e.button !== 0) return;
 
         const hit = pickAnyHit(e);
+        // X+Click placement:
+        // - if clicking an object face: place flush against that face
+        // - if clicking empty/grid floor: place on the floor
+        // - do NOT auto-select the newly placed block
+        if (
+            collPlacementKeyHeld &&
+            e.button === 0 &&
+            state.ui.paletteValue &&
+            !state.api.transform?.dragging &&
+            !state.isTransforming
+        ) {
+            hidePlacementPreview();
+
+            if (hit) {
+                await placeFlushAtHit(hit, { selectAfter: false });
+            } else {
+                await placeAt(getGroundPoint(e), { selectAfter: false });
+            }
+            return;
+        }
 
         // --- clicked a ref? ---
         if (hit) {
@@ -805,10 +1208,10 @@ export function initSelectionLogic(state) {
                     clearSelection({ keepUI: true });
                     selectReference(ref);
                 } else {
-                    // plane drag ref
-                    const gp = getGroundPoint(e);
-                    refDragOffset.copy(ref.root.position).sub(gp);
+                    // camera-relative plane drag ref
                     dragStartRefPos.copy(ref.root.position);
+                    refDragStartPointerPoint.copy(beginCameraRelativeDragPlane(e, dragStartRefPos));
+
                     state.isDraggingRef = true;
                     updateOrbitEnabled();
                 }
@@ -863,11 +1266,14 @@ export function initSelectionLogic(state) {
             }
             rebuildSelectionRig();
         } else {
-            // start plane drag
-            const gp = getGroundPoint(e);
+            // start camera-relative plane drag
             const rig = state.activeRig || state.selectionRig;
-            dragOffset.copy(rig.position).sub(gp);
+
             dragStartRigPos.copy(rig.position);
+            dragLastRigPos.copy(rig.position);
+            dragStartPointerPoint.copy(beginCameraRelativeDragPlane(e, hit.point));
+            dragOffset.copy(rig.position).sub(dragStartPointerPoint);
+
             state.isDraggingMesh = true;
             updateOrbitEnabled();
         }
@@ -876,6 +1282,8 @@ export function initSelectionLogic(state) {
     window.addEventListener("pointermove", (e) => {
         if (modalOpen()) return;
         if (state.isRestoringHistory) return;
+        lastPointerEvent = e;
+        void updatePlacementPreview(e);
         if (state.boxSelecting) {
             const x1 = Math.min(state.boxStart.x, e.clientX);
             const y1 = Math.min(state.boxStart.y, e.clientY);
@@ -893,21 +1301,21 @@ export function initSelectionLogic(state) {
 
         // drag ref on plane
         if (state.isDraggingRef && state.selectedRefId) {
-            const gp = getGroundPoint(e).add(refDragOffset);
+            const gp = dragStartRefPos.clone().add(
+                getCameraRelativeDragPoint(e).sub(refDragStartPointerPoint)
+            );
 
             const r = state.refs.find((x) => x.id === state.selectedRefId);
             if (r) {
+                const targetPos = gp.clone();
+
                 if (e.shiftKey) {
-                    const dx = gp.x - dragStartRefPos.x;
-                    const dz = gp.z - dragStartRefPos.z;
-
-                    const steppedX = dragStartRefPos.x + Math.round(dx / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
-                    const steppedZ = dragStartRefPos.z + Math.round(dz / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
-
-                    r.root.position.set(steppedX, r.root.position.y, steppedZ);
-                } else {
-                    r.root.position.set(gp.x, r.root.position.y, gp.z);
+                    targetPos.x = dragStartRefPos.x + Math.round((targetPos.x - dragStartRefPos.x) / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+                    targetPos.y = dragStartRefPos.y + Math.round((targetPos.y - dragStartRefPos.y) / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+                    targetPos.z = dragStartRefPos.z + Math.round((targetPos.z - dragStartRefPos.z) / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
                 }
+
+                r.root.position.copy(targetPos);
 
                 state.api.fillTransformUI?.(r.root);
                 shadow.visible = true;
@@ -915,24 +1323,26 @@ export function initSelectionLogic(state) {
             }
         }
 
-        // drag blocks on plane
-        // drag blocks on plane
+        // drag blocks on camera-relative plane
         if (!state.isDraggingMesh) return;
         if (state.selectedIds.size === 0) return;
 
-        const p = getGroundPoint(e).add(dragOffset);
+        const p = getCameraRelativeDragPoint(e);
         const rig = state.activeRig || state.selectionRig;
 
+        const targetPos = p.clone().add(dragOffset);
+
         if (e.shiftKey) {
-            const dx = p.x - dragStartRigPos.x;
-            const dz = p.z - dragStartRigPos.z;
+            targetPos.x = dragStartRigPos.x + Math.round((targetPos.x - dragStartRigPos.x) / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+            targetPos.y = dragStartRigPos.y + Math.round((targetPos.y - dragStartRigPos.y) / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+            targetPos.z = dragStartRigPos.z + Math.round((targetPos.z - dragStartRigPos.z) / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
+        }
 
-            const steppedX = dragStartRigPos.x + Math.round(dx / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
-            const steppedZ = dragStartRigPos.z + Math.round(dz / state.const.TRANS_SNAP) * state.const.TRANS_SNAP;
-
-            rig.position.set(steppedX, rig.position.y, steppedZ);
+        if (typeof applyRigPlaneDragPosition === "function") {
+            applyRigPlaneDragPosition(rig, targetPos);
         } else {
-            rig.position.set(p.x, rig.position.y, p.z);
+            rig.position.copy(targetPos);
+            rig.updateMatrixWorld(true);
         }
 
         if (state.selectedIds.size === 1) {
@@ -944,6 +1354,9 @@ export function initSelectionLogic(state) {
     window.addEventListener("pointerup", () => {
         if (modalOpen()) return;
         if (state.isRestoringHistory) return;
+        if (!state.collisionHeld) {
+            hidePlacementPreview();
+        }
         if (state.boxSelecting) {
             state.boxSelecting = false;
             selBox.style.display = "none";
@@ -1001,6 +1414,7 @@ export function initSelectionLogic(state) {
     window.addEventListener("pointercancel", () => {
         if (modalOpen()) return;
         if (state.isRestoringHistory) return;
+        hidePlacementPreview();
         state.isDraggingMesh = false;
         state.isDraggingRef = false;
         updateOrbitEnabled();
@@ -1010,13 +1424,29 @@ export function initSelectionLogic(state) {
     window.addEventListener("keydown", (e) => {
         if (modalOpen()) return;
         if (state.isRestoringHistory) return;
+        if (isTextInputFocused()) return;
+        if (isCollisionKey(e)) {
+            if (!state.collisionHeld) {
+                state.collisionHeld = true;
+                if (lastPointerEvent) void updatePlacementPreview(lastPointerEvent);
+            }
+        }
+        if (isCollPlacementKey(e)) {
+            if (!collPlacementKeyHeld) {
+                collPlacementKeyHeld = true;
+                if (lastPointerEvent) void updatePlacementPreview(lastPointerEvent);
+            }
+        }
         const isMac = navigator.platform.toLowerCase().includes("mac");
         const mod = isMac ? e.metaKey : e.ctrlKey;
 
-        if (isTextInputFocused()) return;
-
         if (e.key === "Alt") {
             e.preventDefault();
+
+            if (!placementAltHeld) {
+                placementAltHeld = true;
+                if (lastPointerEvent) void updatePlacementPreview(lastPointerEvent);
+            }
         }
 
         if (e.altKey) {
@@ -1115,8 +1545,19 @@ export function initSelectionLogic(state) {
     });
 
     window.addEventListener("keyup", (e) => {
+        if (isCollisionKey(e)) {
+            state.collisionHeld = false;
+        }
+        if (isCollPlacementKey(e)) {
+            collPlacementKeyHeld = false;
+        }
         if (e.key === "Alt") {
             e.preventDefault();
+            placementAltHeld = false;
+        }
+
+        if (!collPlacementKeyHeld && !placementAltHeld) {
+            hidePlacementPreview();
         }
     })
 

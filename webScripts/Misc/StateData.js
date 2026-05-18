@@ -42,6 +42,8 @@ export const state = {
     isTransforming: false,
     shiftHeld: false,
     scaleDragStart: null,
+    collisionHeld: false,
+    lastValidTransformState: null,
 
     // box select ui state (SelectionLogic uses these)
     boxSelecting: false,

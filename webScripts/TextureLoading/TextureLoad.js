@@ -6,6 +6,7 @@ import { resolveFullModel, resolveModelIdForBlock } from "./ResolveHelpers.js";
 import { applyElementRotation } from "./RotationHelpers.js";
 import { loadColormapsOnce } from "./ColormapHelper.js";
 import { getEffectivePropertiesForBlock } from "./BlockPropertyOptions.js";
+import { attachColliderBoxes, attachCollidersFromChildMeshes, makeColliderBoxFromMcElement } from "./ColliderMetadata.js"
 import {
     loadExternalTexture,
     makeSingleChestMesh,
@@ -185,6 +186,88 @@ function normalizeMultipartApplies(bs, props = {}, blockId = "") {
     return out;
 }
 
+function applyAscendingRailCorrection(geom, blockId, props = {}) {
+    const id = String(blockId || "").toLowerCase();
+    if (!id.includes("rail")) return;
+
+    const shape = String(props?.shape || "").toLowerCase();
+    if (!shape.startsWith("ascending_")) return;
+
+    const pos = geom.attributes.position;
+    if (!pos) return;
+
+    // First stretch along slope axis so the rail spans the diagonal distance.
+    const stretch = Math.SQRT2;
+
+    const stretchX =
+        shape === "ascending_east" ||
+        shape === "ascending_west";
+
+    const stretchZ =
+        shape === "ascending_north" ||
+        shape === "ascending_south";
+
+    for (let i = 0; i < pos.count; i++) {
+        let x = pos.getX(i);
+        let y = pos.getY(i);
+        let z = pos.getZ(i);
+
+        if (stretchX) x *= stretch;
+        if (stretchZ) z *= stretch;
+
+        pos.setXYZ(i, x, y, z);
+    }
+
+    pos.needsUpdate = true;
+    geom.computeBoundingBox();
+
+    const box = geom.boundingBox;
+    if (!box) return;
+
+    const minX = box.min.x;
+    const maxX = box.max.x;
+    const minZ = box.min.z;
+    const maxZ = box.max.z;
+    const minY = box.min.y;
+
+    const railHover = 1 / 16;
+
+    // Low end sits where flat rails sit.
+    const lowY = -0.5 + railHover;
+
+    // High end sits one full block higher.
+    const highY = -0.15;
+
+    for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i);
+        const y = pos.getY(i);
+        const z = pos.getZ(i);
+
+        let t = 0;
+
+        if (shape === "ascending_east") {
+            t = (x - minX) / (maxX - minX);
+        } else if (shape === "ascending_west") {
+            t = 1 - ((x - minX) / (maxX - minX));
+        } else if (shape === "ascending_south") {
+            t = (z - minZ) / (maxZ - minZ);
+        } else if (shape === "ascending_north") {
+            t = 1 - ((z - minZ) / (maxZ - minZ));
+        }
+
+        // Preserve tiny original rail thickness/offset.
+        const localY = y - minY;
+
+        const newY = lowY + (highY - lowY) * t + localY;
+
+        pos.setY(i, newY);
+    }
+
+    pos.needsUpdate = true;
+    geom.computeBoundingBox();
+    geom.computeVertexNormals();
+}
+
 function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
     if (!model || !model.elements) return null;
 
@@ -195,6 +278,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
     const colors = [];
     const indices = [];
     let idxBase = 0;
+    const colliderBoxes = [];
 
     const mirrorPerFace = shouldMirrorPerFaceCubes(model);
     const chain = (model.parentChain || []).join(" ").toLowerCase();
@@ -241,6 +325,8 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
 
             return [p[0] / 16 - 0.5, p[1] / 16 - 0.5, p[2] / 16 - 0.5];
         };
+
+        colliderBoxes.push(makeColliderBoxFromMcElement(from, to, V));
 
         const faces = el.faces || {};
 
@@ -299,6 +385,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
     geom.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
     geom.setIndex(indices);
     geom.computeVertexNormals();
+    applyAscendingRailCorrection(geom, blockId, props)
 
     const rt = (model.render_type || "").toLowerCase();
     let isCutout = rt.includes("cutout");
@@ -362,6 +449,7 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
 
     const mesh = new THREE.Mesh(geom, mat);
     mesh.userData.blockId = blockId;
+    attachColliderBoxes(mesh, colliderBoxes, "minecraft-model-elements");
     return mesh;
 }
 
@@ -948,8 +1036,16 @@ export async function loadBlockList() {
 
 export async function makeCubeForBlock(state, blockId, props = null) {
     const atlas = state.atlas;
-    if(blockId.includes("beacon")) {
+
+    if (blockId.includes("beacon")) {
         blockId = blockId.replace("beacon", "bcn");
     }
-    return await makeMeshForBlockId(atlas, blockId, props);
+
+    const mesh = await makeMeshForBlockId(atlas, blockId, props);
+
+    if (mesh && !mesh.userData.colliderBoxes?.length) {
+        attachCollidersFromChildMeshes(mesh, "fallback-child-meshes");
+    }
+
+    return mesh;
 }

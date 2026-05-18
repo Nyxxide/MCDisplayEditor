@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { remapUVsToRect } from "./UVRectHelpers.js";
-
+import { attachCollidersFromChildMeshes } from "./ColliderMetadata.js";
 
 
 //Constants
@@ -475,7 +475,8 @@ function makeSingleChestMesh(chestTex) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeSignMesh(signTex, id) {
@@ -577,7 +578,8 @@ function makeSignMesh(signTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeWallSignMesh(signTex, id) {
@@ -663,7 +665,8 @@ function makeWallSignMesh(signTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeHangingSignMesh(signTex, id, props = {}) {
@@ -848,7 +851,8 @@ function makeHangingSignMesh(signTex, id, props = {}) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeWallHangingSignMesh(signTex, id) {
@@ -1050,7 +1054,8 @@ function makeWallHangingSignMesh(signTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeBedMesh(bedTex, id, props = {}) {
@@ -1214,7 +1219,8 @@ function makeBedMesh(bedTex, id, props = {}) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeBannerMesh(bannerTex, id, bannerColor = "white") {
@@ -1402,7 +1408,8 @@ function makeBannerMesh(bannerTex, id, bannerColor = "white") {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeWallBannerMesh(bannerTex, id, bannerColor = "white") {
@@ -1554,7 +1561,8 @@ function makeWallBannerMesh(bannerTex, id, bannerColor = "white") {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeSkullMesh(headTex, id, { mirrorSides = false } = {}) {
@@ -1680,7 +1688,8 @@ function makePiglinHeadMesh(headTex) {
         makeBox([10,0,12],[11,2,13],2,4,1,2,1)
     );
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeDragonHeadMesh(headTex) {
@@ -1765,7 +1774,8 @@ function makeDragonHeadMesh(headTex) {
 
     offset.add(inner);
     group.add(offset);
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeShulkerMesh(shulkerTex, id) {
@@ -1881,7 +1891,8 @@ function makeShulkerMesh(shulkerTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeCopperGolemMesh(tex, id) {
@@ -2095,7 +2106,8 @@ function makeCopperGolemMesh(tex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeConduitMesh(conduitTex, id) {
@@ -2177,7 +2189,8 @@ function makeConduitMesh(conduitTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeDecoratedPotMesh(sideTex, baseTex, id) {
@@ -2327,7 +2340,8 @@ function makeDecoratedPotMesh(sideTex, baseTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeShelfMesh(shelfTex, id, { facing = "north", front = "center" } = {}) {
@@ -2495,7 +2509,8 @@ function makeShelfMesh(shelfTex, id, { facing = "north", front = "center" } = {}
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeBellMesh(bellTex, id) {
@@ -2607,7 +2622,8 @@ function makeBellMesh(bellTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeEndGatewayMesh(gatewayTex, id) {
@@ -2674,7 +2690,8 @@ function makeEndGatewayMesh(gatewayTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 function makeEndPortalMesh(portalTex, id) {
@@ -2744,7 +2761,8 @@ function makeEndPortalMesh(portalTex, id) {
         }
     });
 
-    return group;
+    attachCollidersFromChildMeshes(group, "special-child-meshes");
+    return group;;
 }
 
 

@@ -256,7 +256,7 @@ export const BLOCK_PROPERTY_OPTIONS = [
     },
 
     {
-        match: (id) => id.includes("test_block") || !id.includes("test_instance_block"),
+        match: (id) => id.includes("test_block") && !id.includes("test_instance_block"),
         properties: {
             mode: { label: "Mode", values: ["start", "log", "fail", "accept"], default: "start" },
         },
@@ -597,6 +597,112 @@ export const BLOCK_PROPERTY_OPTIONS = [
                 label: "West",
                 values: ["none", "side", "up"],
                 default: "none",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("_fence") && !id.includes("_gate"),
+        properties: {
+            north: {
+                label: "North",
+                values: ["true", "false"],
+                default: "false",
+            },
+            south: {
+                label: "South",
+                values: ["true", "false"],
+                default: "false",
+            },
+            east: {
+                label: "East",
+                values: ["true", "false"],
+                default: "false",
+            },
+            west: {
+                label: "West",
+                values: ["true", "false"],
+                default: "false",
+            },
+            waterlogged: {
+                label: "Waterlogged",
+                values: ["true", "false"],
+                default: "false",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("respawn_anchor"),
+        properties: {
+            charges: {
+                label: "Charges",
+                values: ["0", "1", "2", "3", "4"],
+                default: "0",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("farmland"),
+        properties: {
+            moisture: {
+                label: "Moisture",
+                values: ["0", "1", "2", "3", "4", "5", "6", "7"],
+                default: "0",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("_stairs"),
+        properties: {
+            waterlogged: {
+                label: "Waterlogged",
+                values: ["true", "false"],
+                default: "false",
+            },
+            half: {
+                label: "Half",
+                values: ["top", "bottom"],
+                default: "bottom",
+            },
+            shape: {
+                label: "Shape",
+                values: ["straight", "inner_left", "inner_right", "outer_left", "outer_right"],
+                default: "straight",
+            },
+            facing: {
+                label: "Facing",
+                values: ["north", "south", "east", "west"],
+                default: "north",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("furnace") || id.includes("smoker"),
+        properties: {
+            lit: {
+                label: "Lit",
+                values: ["true", "false"],
+                default: "false",
+            },
+            facing: {
+                label: "Facing",
+                values: ["north", "south", "east", "west"],
+                default: "north",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("bone_block"),
+        properties: {
+            axis: {
+                label: "axis",
+                values: ["x", "y", "z"],
+                default: "y",
             },
         },
     },

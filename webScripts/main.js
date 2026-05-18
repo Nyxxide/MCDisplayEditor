@@ -4,13 +4,6 @@
 
 /* TODO Texture Stuff:
 *   - Add Props to blocks as I find em.
-*       -- Fences
-*       -- Upward Rails come too high off ground?
-*       -- Respawn Anchor
-*       -- Farmland
-*       -- Stairs
-*       -- Furnaces (Blast/Reg/Smoker)
-*       -- Bone Block axis because why not
 */
 
 /*
