@@ -6,5 +6,9 @@ node_modules
 node_modules/
 node_modules/*
 
-Data/*
+Data/json/*
+Data/atlas/blocks_atlas.json
+Data/atlas/blocks_atlas.png
+Data/atlas/icons_atlas.json
+
 Debug/*
