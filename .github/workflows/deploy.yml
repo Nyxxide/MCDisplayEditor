@@ -35,5 +35,5 @@ jobs:
             node genBlockList.mjs
             node buildBlockAtlas.mjs
             node generateIconsAtlas.mjs
-            cd ..
+            cd ../..
             ./rebuild-docker.sh
