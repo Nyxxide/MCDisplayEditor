@@ -37,25 +37,28 @@ function parseCssPositions(cssText) {
         const selector = rule[1].trim();
         const body = rule[2];
 
-        // Skip chained small icon rules:
-        // .icon-minecraft-sm.icon-minecraft-acacia-boat
-        if (selector.includes(".icon-minecraft-sm")) continue;
+        const classMatches = [...selector.matchAll(/\.([a-zA-Z0-9_-]+)/g)];
+        const classes = classMatches.map((m) => m[1]);
 
-        const classMatch = selector.match(/\.((?:icon-minecraft-)[a-zA-Z0-9_-]+)/);
-        if (!classMatch) continue;
-
-        const cssClass = classMatch[1];
+        // skip ONLY actual small mode rules like:
+        // .icon-minecraft-sm.icon-minecraft-smithing-table
+        if (classes.includes("icon-minecraft-sm")) continue;
 
         const posMatch = body.match(
             /background-position\s*:\s*(-?\d+)(?:px)?\s+(-?\d+)(?:px)?\s*;?/i
         );
-
         if (!posMatch) continue;
 
         const x = Math.abs(Number(posMatch[1]));
         const y = Math.abs(Number(posMatch[2]));
 
-        positions.set(cssClass, { x, y });
+        for (const cssClass of classes) {
+            if (!cssClass.startsWith("icon-minecraft-")) continue;
+            if (cssClass === "icon-minecraft") continue;
+            if (cssClass === "icon-minecraft-sm") continue;
+
+            positions.set(cssClass, { x, y });
+        }
     }
 
     return positions;
@@ -91,7 +94,15 @@ async function main() {
 
         if (!name || !css) continue;
 
-        const pos = cssPositions.get(css);
+        let pos = cssPositions.get(css);
+
+        if (!pos) {
+            const alt = css
+                .replace(/^icon-minecraft-/, "")
+                .replace(/_/g, "-");
+
+            pos = cssPositions.get(`icon-minecraft-${alt}`);
+        }
 
         if (!pos) {
             console.warn(`Missing CSS position: ${name} / ${css}`);

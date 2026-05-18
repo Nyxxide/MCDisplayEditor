@@ -31,5 +31,9 @@ jobs:
             set -e
             cd MCDisplayEditorDocker/MCDisplayEditor
             git pull
+            cd serverScripts
+            node genBlockList.mjs
+            node buildBlockAtlas.mjs
+            node generateIconsAtlas.mjs
             cd ..
             ./rebuild-docker.sh
