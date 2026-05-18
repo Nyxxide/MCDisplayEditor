@@ -2,10 +2,9 @@
 .idea/
 .idea/*
 
-workingVer
-
 node_modules
 node_modules/
 node_modules/*
 
 Data/*
+Debug/*
