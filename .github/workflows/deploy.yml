@@ -1,0 +1,35 @@
+name: Deploy MCDisplayEditor (Tailnet)
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to Tailscale (OIDC)
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          audience: ${{ secrets.TS_AUDIENCE }}
+          tags: tag:ci
+
+      - name: SSH and git pull on VM
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOSTIP }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            set -e
+            cd MCDisplayEditorDocker/MCDisplayEditor
+            git pull
+#            cd ..
+#            ./rebuild-docker.sh
