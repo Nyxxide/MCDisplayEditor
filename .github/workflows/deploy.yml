@@ -31,5 +31,5 @@ jobs:
             set -e
             cd MCDisplayEditorDocker/MCDisplayEditor
             git pull
-#            cd ..
-#            ./rebuild-docker.sh
+            cd ..
+            ./rebuild-docker.sh
