@@ -149,30 +149,50 @@ export function exportOneCommand(entities, { maxLen = 32500, safety = 200 } = {}
     const waves = [];
     let cur = [];
 
-    for (const p of perEntityPassengers) {
-        if (cur.length === 0) {
-            cur.push(p);
-            continue;
+    function buildWaveWithKill(passengers) {
+        return buildFallingBlockCmd([...passengers, killPassenger]);
+    }
+
+    function flushWave() {
+        if (!cur.length) return;
+
+        const cmd = buildWaveWithKill(cur);
+
+        if (cmd.length > limit) {
+            throw new Error(
+                `A generated minecart chain exceeds the command limit even before adding more entities. Length: ${cmd.length}, limit: ${limit}`
+            );
         }
 
-        const testCmd = buildFallingBlockCmd([...cur, p]);
+        waves.push(cmd);
+        cur = [];
+    }
+
+    for (const p of perEntityPassengers) {
+        const testCmd = buildWaveWithKill([...cur, p]);
+
         if (testCmd.length <= limit) {
             cur.push(p);
         } else {
-            waves.push(buildFallingBlockCmd(cur));
-            cur = [p];
+            flushWave();
+
+            const singleWithKill = buildWaveWithKill([p]);
+            if (singleWithKill.length > limit) {
+                throw new Error(
+                    `Single entity command exceeds the command limit with cleanup minecart. Length: ${singleWithKill.length}, limit: ${limit}`
+                );
+            }
+
+            cur.push(p);
         }
     }
 
-    if (cur.length === 0) {
-        waves.push(buildFallingBlockCmd([killPassenger]));
-    } else {
-        const lastWithKill = buildFallingBlockCmd([...cur, killPassenger]);
-        if (lastWithKill.length <= limit) {
-            waves.push(lastWithKill);
-        } else {
-            waves.push(buildFallingBlockCmd(cur));
-            waves.push(buildFallingBlockCmd([killPassenger]));
+    flushWave();
+
+    if (!waves.length) {
+        const emptyCleanup = buildFallingBlockCmd([killPassenger]);
+        if (emptyCleanup.length <= limit) {
+            waves.push(emptyCleanup);
         }
     }
 

@@ -1,9 +1,14 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Maybe make audio a bit louder or something. kinda quiet.
-// TODO: Scale (maybe exclusive to groups?) in the xform resets to 1. i think when mode switch or something idk double check it.
+// TODO: Some light stuff. fix naming convention (MC Display Builder or smthn), Add way back to CBT. Maybe see if theres a way to remove those squares around the NSEW markers
 
 /* TODO Texture Stuff:
 *   - Add Props to blocks as I find em.
+*       -- Rails East/West Ascending trip the fuck out in the editor.
+*       -- Log rotation
+*       -- Ochre Rotation
+*       -- Button Rotation
+*       -- Trapdoor Rotation
 */
 
 /*
