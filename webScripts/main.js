@@ -1,6 +1,5 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
 // TODO: Maybe make audio a bit louder or something. kinda quiet.
-// TODO: Some light stuff. fix naming convention (MC Display Builder or smthn), Add way back to CBT. Maybe see if theres a way to remove those squares around the NSEW markers
 
 /* TODO Texture Stuff:
 *   - Add Props to blocks as I find em.

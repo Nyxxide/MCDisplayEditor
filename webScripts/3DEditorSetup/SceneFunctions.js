@@ -127,10 +127,10 @@ export async function initScene(state) {
     S.name = "compass:S";
     W.name = "compass:W";
 
-    N.position.set(0, 0.03, -compassRadius);
-    S.position.set(0, 0.03, compassRadius);
-    E.position.set(compassRadius, 0.03, 0);
-    W.position.set(-compassRadius, 0.03, 0);
+    N.position.set(0, 0.08, -compassRadius);
+    S.position.set(0, 0.08, compassRadius);
+    E.position.set(compassRadius, 0.08, 0);
+    W.position.set(-compassRadius, 0.08, 0);
     floorOriginRoot.add(N, E, S, W);
 
     // store
@@ -211,10 +211,16 @@ function makeLabelPlane(text) {
     tex.minFilter = THREE.LinearFilter;
     tex.magFilter = THREE.LinearFilter;
 
-    const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide });
+    const mat = new THREE.MeshBasicMaterial({
+        map: tex,
+        transparent: true,
+        depthWrite: false,
+        depthTest: true,
+    });
     const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
     plane.rotation.x = -Math.PI / 2;
-    plane.position.y = 0;
+    plane.position.y = 0.08;
+    plane.renderOrder = 50;
     return plane;
 }
 
