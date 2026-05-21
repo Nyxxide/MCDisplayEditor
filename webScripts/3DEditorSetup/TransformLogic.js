@@ -955,6 +955,8 @@ export function initTransformLogic(state) {
         } else if (state.selectedIds.size === 1 && !state.selectedRefId) {
             const m = state.api.getOnlySelectedMesh?.();
             if (m) fillTransformUI(state, m);
+        } else if (state.selectionIsTempRig && state.activeRig === state.selectionRig) {
+            fillTransformUI(state, state.activeRig);
         } else if (state.selectionBase && state.activeRig && !state.selectionIsTempRig) {
             fillTransformUIRelative(state, state.activeRig, state.selectionBase);
         }
@@ -1629,6 +1631,31 @@ function hookNumericUI(state) {
         el.addEventListener("change", () => applyTransformFromUI(state));
         el.addEventListener("blur", () => applyTransformFromUI(state));
         el.addEventListener("keydown", (e) => {
+            const isMac = navigator.platform.toLowerCase().includes("mac");
+            const mod = isMac ? e.metaKey : e.ctrlKey;
+
+            if (mod && e.key.toLowerCase() === "z") {
+                e.preventDefault();
+                e.stopPropagation();
+
+                el.blur();
+
+                if (e.shiftKey) state.api.redo?.();
+                else state.api.undo?.();
+
+                return;
+            }
+
+            if (mod && e.key.toLowerCase() === "y") {
+                e.preventDefault();
+                e.stopPropagation();
+
+                el.blur();
+
+                state.api.redo?.();
+                return;
+            }
+
             if (e.key === "Enter") {
                 e.preventDefault();
                 applyTransformFromUI(state);
@@ -1640,6 +1667,20 @@ function hookNumericUI(state) {
 
 function degToRad(d) {
     return (d * Math.PI) / 180;
+}
+
+function nearlyEqual(a, b, eps = 1e-6) {
+    return Math.abs(a - b) <= eps;
+}
+
+function vecNearlyEqual(a, b, eps = 1e-6) {
+    return nearlyEqual(a.x, b.x, eps) &&
+        nearlyEqual(a.y, b.y, eps) &&
+        nearlyEqual(a.z, b.z, eps);
+}
+
+function quatNearlyEqual(a, b, eps = 1e-6) {
+    return nearlyEqual(Math.abs(a.dot(b)), 1, eps);
 }
 
 function setEulerDegQuaternion(ex, ey, ez) {
@@ -1728,30 +1769,61 @@ function applyTransformFromUI(state) {
     const exactGroup = state.api.exactGroupForSelection?.();
     const groupEdit = !!exactGroup;
 
-    if (!single && !groupEdit && !refEdit) return;
+    const tempMultiEdit =
+        !refEdit &&
+        !single &&
+        !groupEdit &&
+        state.selectionIsTempRig &&
+        state.activeRig === state.selectionRig &&
+        state.selectedIds.size > 1;
 
-    if (refEdit) {
-        state.activeRig.position.set(
-            parseFloat(px.value) || 0,
-            parseFloat(py.value) || 0,
-            parseFloat(pz.value) || 0
+    if (!single && !groupEdit && !refEdit && !tempMultiEdit) return;
+
+    if (refEdit || tempMultiEdit) {
+        const obj = state.activeRig;
+        if (!obj) return;
+
+        const ax = parseFloat(px.value);
+        const ay = parseFloat(py.value);
+        const az = parseFloat(pz.value);
+
+        const drx = degToRad(parseFloat(rx.value) || 0);
+        const dry = degToRad(parseFloat(ry.value) || 0);
+        const drz = degToRad(parseFloat(rz.value) || 0);
+
+        const nsx = parseFloat(sx.value) || 1;
+        const nsy = parseFloat(sy.value) || 1;
+        const nsz = parseFloat(sz.value) || 1;
+
+        const nextPos = obj.position.clone();
+        if (Number.isFinite(ax) && Number.isFinite(ay) && Number.isFinite(az)) {
+            nextPos.set(ax, ay, az);
+        }
+
+        const nextQuat = new THREE.Quaternion().setFromEuler(
+            new THREE.Euler(drx, dry, drz, "XYZ")
         );
 
-        const q = setEulerDegQuaternion(
-            parseFloat(rx.value) || 0,
-            parseFloat(ry.value) || 0,
-            parseFloat(rz.value) || 0
-        );
-        state.activeRig.quaternion.copy(q);
+        const nextScale = new THREE.Vector3(nsx, nsy, nsz);
 
-        state.activeRig.scale.set(
-            parseFloat(sx.value) || 1,
-            parseFloat(sy.value) || 1,
-            parseFloat(sz.value) || 1
-        );
+        const changed =
+            !vecNearlyEqual(obj.position, nextPos) ||
+            !quatNearlyEqual(obj.quaternion, nextQuat) ||
+            !vecNearlyEqual(obj.scale, nextScale);
 
-        state.activeRig.updateMatrixWorld(true);
-        state.api.pushHistory?.("numeric-ref");
+        if (!changed) return;
+
+        obj.position.copy(nextPos);
+        obj.quaternion.copy(nextQuat);
+        obj.scale.copy(nextScale);
+        obj.updateMatrixWorld(true);
+
+        if (tempMultiEdit) {
+            state.api.bakeRigToMeshes?.();
+            state.api.rebuildSelectionRig?.();
+        }
+
+        state.api.pushHistory?.("numeric");
         return;
     }
 
@@ -1778,6 +1850,13 @@ function applyTransformFromUI(state) {
         );
 
         const world = new THREE.Matrix4().compose(wpos, wquat, wscale);
+        mesh.updateMatrixWorld(true);
+
+        const changed = !mesh.matrixWorld.elements.every((v, i) =>
+            nearlyEqual(v, world.elements[i])
+        );
+
+        if (!changed) return;
         setObjectWorldMatrix(mesh, world);
 
         state.api.rebuildSelectionRig?.();
@@ -1800,19 +1879,31 @@ function applyTransformFromUI(state) {
     const rsy = parseFloat(sy.value) || 1;
     const rsz = parseFloat(sz.value) || 1;
 
+    const nextPos = state.activeRig.position.clone();
     if (Number.isFinite(ax) && Number.isFinite(ay) && Number.isFinite(az)) {
-        state.activeRig.position.set(ax, ay, az);
+        nextPos.set(ax, ay, az);
     }
 
     const dq = new THREE.Quaternion().setFromEuler(new THREE.Euler(drx, dry, drz, "XYZ"));
-    state.activeRig.quaternion.copy(state.selectionBase.quat).multiply(dq);
+    const nextQuat = state.selectionBase.quat.clone().multiply(dq);
 
     const sn = state.activeRig.userData?.scaleNode || state.activeRig;
-    sn.scale.set(
+    const nextScale = new THREE.Vector3(
         state.selectionBase.scale.x * rsx,
         state.selectionBase.scale.y * rsy,
         state.selectionBase.scale.z * rsz
     );
+
+    const changed =
+        !vecNearlyEqual(state.activeRig.position, nextPos) ||
+        !quatNearlyEqual(state.activeRig.quaternion, nextQuat) ||
+        !vecNearlyEqual(sn.scale, nextScale);
+
+    if (!changed) return;
+
+    state.activeRig.position.copy(nextPos);
+    state.activeRig.quaternion.copy(nextQuat);
+    sn.scale.copy(nextScale);
 
     state.activeRig.updateMatrixWorld(true);
     state.api.pushHistory?.("numeric");

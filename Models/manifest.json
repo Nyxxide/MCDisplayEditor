@@ -5,6 +5,12 @@
       "folder": "T-Rex Skeleton",
       "json": "model.json",
       "image": "preview.png"
+    },
+    {
+      "name": "Portal Sword",
+      "folder": "Portal Sword",
+      "json": "model.json",
+      "image": "preview.png"
     }
   ]
 }

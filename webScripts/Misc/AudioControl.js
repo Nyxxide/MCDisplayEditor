@@ -21,9 +21,6 @@ modalImportClickSound.preload = "auto";
 
 export function playUiClick(audio = uiGenericClickSound) {
     const s = audio.cloneNode()
-    if (audio === uiGenericClickSound){
-        s.currentTime = 0.1; // optional skip
-    }
     s.play().catch(() => {});
 }
 

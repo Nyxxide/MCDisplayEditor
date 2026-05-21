@@ -385,7 +385,10 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
     geom.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
     geom.setIndex(indices);
     geom.computeVertexNormals();
-    applyAscendingRailCorrection(geom, blockId, props)
+
+    if (opts.applyRailCorrection !== false) {
+        applyAscendingRailCorrection(geom, blockId, props);
+    }
 
     const rt = (model.render_type || "").toLowerCase();
     let isCutout = rt.includes("cutout");
@@ -504,7 +507,11 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
                 const model = await resolveFullModel(apply);
                 if (!model || !model.elements) continue;
 
-                const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps, {sourceModelId: apply.model, sourceWhen: when});
+                const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps, {
+                    sourceModelId: apply.model,
+                    sourceWhen: when,
+                    applyRailCorrection: false,
+                });
                 if (!mesh) continue;
 
                 const vx = apply.x ?? 0;
@@ -530,6 +537,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
                 }
 
                 mesh.geometry.applyMatrix4(rot);
+                applyAscendingRailCorrection(mesh.geometry, blockId, effectiveProps);
 
                 const isPotted = bidLower.includes("potted");
 
@@ -711,7 +719,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             if (bid.includes("mangrove")) texPath = "../Resources/textures/blockentity/signs/mangrove.png";
 
             const tex = await loadExternalTexture(texPath);
-            const mesh = makeWallSignMesh(tex, bid);
+            const mesh = makeWallSignMesh(tex, bid, effectiveProps);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
@@ -772,7 +780,7 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
             const color = bid.substring(0, colorIndex);
             console.log(color);
 
-            const mesh = makeWallBannerMesh(tex, bid, color);
+            const mesh = makeWallBannerMesh(tex, bid, color, effectiveProps);
             finalizeMesh(mesh, blockId);
             return mesh;
         }
@@ -920,7 +928,9 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
         return mesh;
     }
 
-    const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps);
+    const mesh = buildMeshFromModel(atlas, model, blockId, effectiveProps, {
+        applyRailCorrection: false,
+    });
     mesh.name = `BLOCKMESH:${blockId}:${crypto.randomUUID().slice(0, 8)}`;
 
     const vx = model.variant?.x ?? 0;
@@ -947,6 +957,8 @@ async function makeMeshForBlockId(atlas, blockId, props = null) {
 
 
     mesh.geometry.applyMatrix4(rot);
+
+    applyAscendingRailCorrection(mesh.geometry, blockId, effectiveProps);
 
     const isPotted = bidLower.includes("potted");
 

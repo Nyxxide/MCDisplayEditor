@@ -1,0 +1,50 @@
+@media (max-width: 1500px), (max-height: 850px) {
+    #mainArea {
+        grid-template-columns: minmax(0, 1fr) 300px;
+    }
+
+    #rightSidebar {
+        height: calc(100vh - 48px);
+        max-height: calc(100vh - 48px);
+    }
+
+    #appShell {
+        grid-template-rows: 48px 1fr;
+    }
+
+    #topBarTitle {
+        font-size: 17px;
+    }
+
+    #ui {
+        padding: 8px 10px;
+    }
+
+    .modeSwitches button {
+        font-size: 19px;
+        padding: 7px 6px !important;
+    }
+
+    #hint {
+        font-size: 17px;
+        padding-top: 10px;
+    }
+
+    .paletteLabel {
+        font-size: 18px;
+    }
+
+    .compassFace {
+        width: 86px;
+        height: 86px;
+    }
+
+    .compassLabel {
+        font-size: 12px;
+    }
+
+    #exportOne,
+    #exportMany {
+        font-size: 17px;
+    }
+}

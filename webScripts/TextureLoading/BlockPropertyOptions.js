@@ -7,6 +7,20 @@ export const BLOCK_PROPERTY_OPTIONS = [
     },
 
     {
+        match: (id) => id.includes("wall_sign"),
+        properties: {
+            facing: { label: "Facing", values: ["north", "south", "east", "west"], default: "north" },
+        },
+    },
+
+    {
+        match: (id) => id.includes("wall_banner"),
+        properties: {
+            facing: { label: "Facing", values: ["north", "south", "east", "west"], default: "north" },
+        },
+    },
+
+    {
         match: (id) =>
             id.includes("mushroom_stem") ||
             id.includes("red_mushroom_block") ||
@@ -697,15 +711,110 @@ export const BLOCK_PROPERTY_OPTIONS = [
     },
 
     {
-        match: (id) => id.includes("bone_block"),
+        match: (id) => id.includes("bone_block") || id.includes("_log") || id.includes("_froglight"),
         properties: {
             axis: {
-                label: "axis",
+                label: "Axis",
                 values: ["x", "y", "z"],
                 default: "y",
             },
         },
     },
+
+    {
+        match: (id) => id.includes("_trapdoor"),
+        properties: {
+            waterlogged: {
+                label: "Waterlogged",
+                values: ["true", "false"],
+                default: "false",
+            },
+            half: {
+                label: "Half",
+                values: ["bottom", "top"],
+                default: "bottom",
+            },
+            powered: {
+                label: "Powered",
+                values: ["true", "false"],
+                default: "false",
+            },
+            facing: {
+                label: "Facing",
+                values: ["north", "south", "east", "west"],
+                default: "north",
+            },
+            open: {
+                label: "Open",
+                values: ["true", "false"],
+                default: "false",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("_candle") && !id.includes("_cake"),
+        properties: {
+            waterlogged: {
+                label: "Waterlogged",
+                values: ["true", "false"],
+                default: "false",
+            },
+            lit: {
+                label: "Lit",
+                values: ["true", "false"],
+                default: "false",
+            },
+            candles: {
+                label: "Candles",
+                values: ["1", "2", "3", "4"],
+                default: "1",
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("candle_cake"),
+        properties: {
+            lit: {
+                label: "Lit",
+                values: ["true", "false"],
+                default: "false"
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("_button"),
+        properties: {
+            face: {
+                label: "Face",
+                values: ["wall", "floor", "ceiling"],
+                default: "wall"
+            },
+            facing: {
+                label: "Facing",
+                values: ["north", "south", "east", "west"],
+                default: "north"
+            },
+            powered: {
+                label: "Powered",
+                values: ["true", "false"],
+                default: "false"
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("grass_block"),
+        properties: {
+            snowy: {
+                label: "Snowy",
+                values: ["true", "false"],
+                default: "false" },
+        },
+    },
+
 ];
 
 

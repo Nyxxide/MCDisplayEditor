@@ -236,6 +236,9 @@ export function initSelectionLogic(state) {
         scaleNode.quaternion.identity();
         scaleNode.scale.set(1, 1, 1);
 
+        rig.updateMatrix();
+        scaleNode.updateMatrix();
+
         rig.updateMatrixWorld(true);
     }
 
@@ -393,12 +396,20 @@ export function initSelectionLogic(state) {
         const center = box.getCenter(new THREE.Vector3());
 
         const rig = state.selectionRig;
+        rig.matrixAutoUpdate = true;
         rig.position.copy(center);
         rig.quaternion.identity();
         rig.scale.set(1, 1, 1);
-        rig.updateMatrixWorld(true);
 
         const scaleNode = rig.userData.scaleNode;
+        scaleNode.matrixAutoUpdate = true;
+        scaleNode.position.set(0, 0, 0);
+        scaleNode.quaternion.identity();
+        scaleNode.scale.set(1, 1, 1);
+
+        rig.updateMatrix();
+        scaleNode.updateMatrix();
+        rig.updateMatrixWorld(true);
         for (const id of state.selectedIds) {
             const m = meshById(id);
             if (!m) continue;
@@ -450,7 +461,13 @@ export function initSelectionLogic(state) {
         const groupEdit = !!exactGroup;
         const refEdit = !!state.selectedRefId;
 
-        const editable = singleBlock || groupEdit || refEdit;
+        const tempMultiEdit =
+            !refEdit &&
+            state.selectionIsTempRig &&
+            state.activeRig === state.selectionRig &&
+            state.selectedIds.size > 1;
+
+        const editable = singleBlock || groupEdit || refEdit || tempMultiEdit;
         for (const el of [state.ui.px, state.ui.py, state.ui.pz, state.ui.rx, state.ui.ry, state.ui.rz, state.ui.sx, state.ui.sy, state.ui.sz]) {
             if (!el) continue;
             el.disabled = !editable;
@@ -458,11 +475,16 @@ export function initSelectionLogic(state) {
 
         if (refEdit && state.activeRig) {
             state.api.fillTransformUI?.(state.activeRig);
-        } else if (singleBlock) {
+        }
+        else if (singleBlock) {
             const m = getOnlySelectedMesh();
             if (m) state.api.fillTransformUI?.(m);
-        } else if (groupEdit && state.activeRig && state.selectionBase) {
+        }
+        else if (groupEdit && state.activeRig && state.selectionBase) {
             state.api.fillTransformUIRelative?.(state.activeRig, state.selectionBase);
+        }
+        else if (tempMultiEdit && state.activeRig) {
+            state.api.fillTransformUI?.(state.activeRig);
         }
         state.api.fillMetaUI?.();
 

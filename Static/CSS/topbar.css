@@ -12,6 +12,37 @@
     box-sizing: border-box;
 }
 
+#homeBtn {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 4px;
+    box-sizing: border-box;
+
+    text-decoration: none;
+}
+
+#homeBtnImg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+
+    image-rendering: auto;
+}
+
+#topBarLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
 #topBarTitle {
     font-size: 20px;
     font-weight: 600;

@@ -582,7 +582,9 @@ function makeSignMesh(signTex, id) {
     return group;;
 }
 
-function makeWallSignMesh(signTex, id) {
+function makeWallSignMesh(signTex, id, props = {}) {
+    const facing = props?.facing;
+
     const group = new THREE.Group();
     const inner = new THREE.Group();
     const toBlock = (x) => x / 16 - 0.5;
@@ -654,6 +656,16 @@ function makeWallSignMesh(signTex, id) {
     remapFace(bg, FACE.BOTTOM, boardBottom, false, false);
 
     inner.add(board);
+
+    if(facing === "west") {
+        inner.rotation.y = Math.PI / 2;
+    }
+    else if(facing === "east"){
+        inner.rotation.y = -Math.PI / 2;
+    }
+    else if(facing === "south") {
+        inner.rotation.y = Math.PI;
+    }
 
     group.add(inner);
 
@@ -1412,7 +1424,9 @@ function makeBannerMesh(bannerTex, id, bannerColor = "white") {
     return group;;
 }
 
-function makeWallBannerMesh(bannerTex, id, bannerColor = "white") {
+function makeWallBannerMesh(bannerTex, id, bannerColor = "white", props = {}) {
+    const facing = props?.facing;
+
     const group = new THREE.Group();
     const inner = new THREE.Group();
     const toBlock = (x) => x / 16 - 0.5;
@@ -1511,15 +1525,15 @@ function makeWallBannerMesh(bannerTex, id, bannerColor = "white") {
     // Against south wall: z 15..16-ish.
     // Cloth only, no vertical post.
     const cloth = makeBox(
-        [0, -14, 15],
-        [19, 22.5, 16],
+        [0, -14, 0],
+        [19, 22.5, 1],
         clothMat
     );
 
     // Keep the horizontal rod, also pushed against south wall.
     const horizPost = makeBox(
-        [0, 20.5, 13],
-        [19, 22.5, 15],
+        [0, 20.5, -2],
+        [19, 22.5, 0],
         postMat
     );
 
@@ -1544,12 +1558,28 @@ function makeWallBannerMesh(bannerTex, id, bannerColor = "white") {
 
     inner.add(cloth, horizPost);
 
+    inner.rotation.y = Math.PI;
+
+    if(facing === "west") {
+        inner.rotation.y = Math.PI / 2;
+        inner.position.set(-0.06, -0.31, 0.065);
+    }
+    else if(facing === "east"){
+        inner.rotation.y = -Math.PI / 2;
+        inner.position.set(0.06, -0.31, -0.065);
+    }
+    else if(facing === "south") {
+        inner.rotation.y = 0;
+        inner.position.set(-0.065, -0.31, -0.06);
+    }
+    else{
+        inner.position.set(0.065, -0.31, 0.05);
+    }
+
     // Same sizing/rotation convention as makeBannerMesh
     inner.scale.setScalar(0.75);
     inner.scale.multiply(new THREE.Vector3(0.925, 1, 0.925));
 
-    inner.position.set(0.06, -0.31, 0.7);
-    inner.rotation.y = Math.PI;
 
     group.add(inner);
 

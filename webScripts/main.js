@@ -4,11 +4,6 @@
 
 /* TODO Texture Stuff:
 *   - Add Props to blocks as I find em.
-*       -- Rails East/West Ascending trip the fuck out in the editor.
-*       -- Log rotation
-*       -- Ochre Rotation
-*       -- Button Rotation
-*       -- Trapdoor Rotation
 */
 
 /*
