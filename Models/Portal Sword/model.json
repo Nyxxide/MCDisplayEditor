@@ -2,10 +2,12 @@
   "version": 1,
   "entities": [
     {
-      "id": "916b4607-1e7d-4946-a068-646859fa6842",
+      "id": "2ffeb969-f195-4db3-9525-2dc0c74f59bf",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -30,10 +32,12 @@
       ]
     },
     {
-      "id": "e1aeef7b-5715-4f15-b1e4-a8e0def02f3b",
+      "id": "b30deeea-ad63-40c4-a3f6-e18744db361a",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -58,10 +62,12 @@
       ]
     },
     {
-      "id": "97a44a87-f968-4b48-a0f3-e8b94a614f3b",
+      "id": "f3f80b24-6b1e-4e00-aaba-cbed2b07bb25",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -86,10 +92,12 @@
       ]
     },
     {
-      "id": "35d12dda-7c5c-4e21-ba6d-9b4671a5630c",
+      "id": "39a9ea18-9965-4cd5-9ba0-535b97d66d11",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -114,10 +122,12 @@
       ]
     },
     {
-      "id": "8c2305da-ea09-4426-9779-8fe06ac54ce5",
+      "id": "d862e8e6-1b4a-4ae7-9a5c-863e48fedd81",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -142,10 +152,12 @@
       ]
     },
     {
-      "id": "0399127f-5a43-4d9b-a190-6c4de8a9fa5a",
+      "id": "bdfaf2c2-e4d2-4d63-a769-0dd225de8ab0",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -170,10 +182,12 @@
       ]
     },
     {
-      "id": "56e59ff5-305f-4716-ba31-ec1793809c82",
+      "id": "ac279b94-3575-4a00-ae72-c36f20c34e94",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -198,10 +212,12 @@
       ]
     },
     {
-      "id": "38e43f3c-7bec-4e78-bb36-26e019f004e3",
+      "id": "8879fd6d-3cef-4f39-8b52-5c5312040398",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -226,10 +242,12 @@
       ]
     },
     {
-      "id": "442be049-c4e1-4b61-a422-c87c48d7d118",
+      "id": "3a94cdbd-111a-4aaf-a177-8059e5ee26f0",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -254,10 +272,12 @@
       ]
     },
     {
-      "id": "99a364e0-ff68-48e7-bc5f-d0f1a9a3b6f4",
+      "id": "ec55822a-51b7-41f8-987a-48a730719cf2",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -282,10 +302,12 @@
       ]
     },
     {
-      "id": "a789ff8a-4538-49bf-93ef-3f00728cfc08",
+      "id": "a4297ca8-173f-4e1a-9148-9c4f15a612cb",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -310,10 +332,12 @@
       ]
     },
     {
-      "id": "6a56483b-12e2-4217-bf16-803aaec3bfea",
+      "id": "379fd218-f912-480d-aa61-6a10dc14c5d7",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -338,10 +362,12 @@
       ]
     },
     {
-      "id": "e1f48879-fa83-4695-836f-5194d8a902ea",
+      "id": "257fb3c6-b80e-4c8a-868b-19b723842cfc",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -366,10 +392,12 @@
       ]
     },
     {
-      "id": "aade6258-db76-4d9b-b638-eeb8577cf23b",
+      "id": "2ec3903d-74e9-41ca-8a16-aeb9965941b9",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -394,10 +422,12 @@
       ]
     },
     {
-      "id": "6dd7deb7-b394-4636-8687-a19ac896b98c",
+      "id": "61668555-c6e3-473d-a271-e78475e99a04",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -422,10 +452,12 @@
       ]
     },
     {
-      "id": "d534f87e-ecb2-4a6f-8fa4-3629acb54ca2",
+      "id": "f0ff2ad1-c947-4dbb-9daa-5aae31582195",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -450,10 +482,12 @@
       ]
     },
     {
-      "id": "f4b638f5-737c-4c3b-8111-4aa85dbf9da4",
+      "id": "568f4dc3-c361-42ca-b05f-f04cc6ed2186",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -478,10 +512,12 @@
       ]
     },
     {
-      "id": "7764cc9b-6847-48ae-98b0-ac726a17d17e",
+      "id": "b00e2939-6075-40a2-a5d3-597b3c7545e8",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -506,10 +542,12 @@
       ]
     },
     {
-      "id": "7759d697-313e-491f-8b0d-1c2b66a94496",
+      "id": "8681f64c-c870-42e7-b1e3-283f952eab67",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -534,10 +572,12 @@
       ]
     },
     {
-      "id": "938496f9-fb41-4b59-9c3d-61345fda42e8",
+      "id": "677b81ca-b647-487f-aee8-053ec3e2bd96",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -562,10 +602,12 @@
       ]
     },
     {
-      "id": "c45723ed-caae-405e-8f47-81c312d47785",
+      "id": "47ed69a1-ca7a-4151-97fa-58acaefe0d9a",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -590,10 +632,12 @@
       ]
     },
     {
-      "id": "e03d9bc0-cc6e-48ec-88ae-559c84d29475",
+      "id": "41c28e2d-c59d-4ddb-b468-cad4dc0c596a",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -618,10 +662,12 @@
       ]
     },
     {
-      "id": "ec7e3b89-cb14-4400-b027-48af9cd9abbc",
+      "id": "50a122dd-6632-4361-8b5c-183a85cf3b7e",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -646,10 +692,12 @@
       ]
     },
     {
-      "id": "deb87b27-1dc0-4bf0-89cd-572f79cfa232",
+      "id": "7414525b-ea95-46c9-8c82-5105314f4509",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -674,10 +722,12 @@
       ]
     },
     {
-      "id": "4e4eda4c-1ba7-4606-aa02-75f5f9dae7a1",
+      "id": "545ea32f-4ee2-45a3-956f-36c642c61b7e",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -702,10 +752,12 @@
       ]
     },
     {
-      "id": "b9dd8482-2a90-4ca8-a18f-56d9a8e66b0a",
+      "id": "c212604a-b625-48a7-9742-a87fda91c9d5",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -730,10 +782,12 @@
       ]
     },
     {
-      "id": "1946cc87-1b62-4d59-9f14-7999b03251dc",
+      "id": "1bbf38af-d71c-4745-a228-fa7d6d4ecac5",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -758,10 +812,12 @@
       ]
     },
     {
-      "id": "d48eff52-e4b2-4b06-a401-d4296f6ce143",
+      "id": "13485769-7d38-407c-8fc9-616a86508db6",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -786,10 +842,12 @@
       ]
     },
     {
-      "id": "3bbddedb-ad8b-4fb4-ba29-783ee0e1f4d4",
+      "id": "80032a6b-a241-4192-99a6-0dbf07e880cf",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -814,10 +872,12 @@
       ]
     },
     {
-      "id": "cc8b8260-fa54-481a-a72b-7e934a6e26a8",
+      "id": "0b34d6ab-9f3c-4156-adcc-c7e173d9cc91",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -842,10 +902,12 @@
       ]
     },
     {
-      "id": "cec4b434-67d6-4cdd-a621-a15d8e1da74e",
+      "id": "84679613-7698-4632-a58b-47e7a4bca937",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -870,10 +932,12 @@
       ]
     },
     {
-      "id": "22e2f61e-e7b5-49d0-8583-2783effe55f2",
+      "id": "634000e1-647e-4674-8e98-cbd2356b7814",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -898,10 +962,12 @@
       ]
     },
     {
-      "id": "75af28a0-e1a2-4e49-a29b-23c8817223ab",
+      "id": "7e177912-bef4-4cf8-8bd3-3a931dd3c0dc",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -926,10 +992,12 @@
       ]
     },
     {
-      "id": "9907ca86-b54d-48d2-addd-cf1733a14dad",
+      "id": "cd706c0f-0449-45b6-88c9-3b3e67f436f5",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -954,10 +1022,12 @@
       ]
     },
     {
-      "id": "e2f9c5fd-10e7-456e-a8d3-3dc34f77dcf5",
+      "id": "a96279fb-7ad7-4926-9faa-9515920c9451",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -982,10 +1052,12 @@
       ]
     },
     {
-      "id": "c5e1a1c6-1982-487b-8402-f8c22aed604d",
+      "id": "02574208-8f68-4a51-a5ef-8bd186e16979",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1010,10 +1082,12 @@
       ]
     },
     {
-      "id": "cc80a4e0-9341-44d2-b72f-f04a717628db",
+      "id": "028becc3-ff6e-4d17-b99e-964b086d6125",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1038,10 +1112,12 @@
       ]
     },
     {
-      "id": "e48f5777-bc27-4cc4-b580-5c8ce1357bcf",
+      "id": "e107d819-ec2e-4f68-90ab-39ac4accc6b1",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1066,10 +1142,12 @@
       ]
     },
     {
-      "id": "e939a9e8-6a87-4e28-b6a8-bcd7398587f3",
+      "id": "0d33101d-690e-4d08-a799-f3c1c03692fe",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1094,10 +1172,12 @@
       ]
     },
     {
-      "id": "ef710584-9874-46b7-a1eb-13998774865d",
+      "id": "7c1d14d7-bac4-431b-901e-479ad54e0b83",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1122,10 +1202,12 @@
       ]
     },
     {
-      "id": "26fa565b-8f5e-4bfb-9d94-8d654a9738bb",
+      "id": "c169b3d4-6b29-47b7-a56a-f349b1efd9cd",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1150,10 +1232,12 @@
       ]
     },
     {
-      "id": "96f3b213-7491-422e-8777-a30a2beb5e6e",
+      "id": "383f4f1d-f461-4226-8e66-6ed7ecaf7166",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1178,10 +1262,12 @@
       ]
     },
     {
-      "id": "4f5f40ba-135a-4fdc-aab8-0baab2715715",
+      "id": "a6157433-4325-479d-a32c-3417ab53769c",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1206,10 +1292,12 @@
       ]
     },
     {
-      "id": "ece8077c-a95f-45d5-8575-11f43e70aeca",
+      "id": "153035a9-66b7-43d2-a483-0d4b2d19fed6",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1234,10 +1322,12 @@
       ]
     },
     {
-      "id": "7b08e57f-7241-43d7-8889-83047e0f6dcf",
+      "id": "d2cd7cd3-779d-4f5d-9b80-eaad7129af00",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1262,10 +1352,12 @@
       ]
     },
     {
-      "id": "bfd654b2-6a6d-4320-819e-7c13b4807dc7",
+      "id": "837c1a8b-9646-42b4-8690-6d4387a3b462",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1290,10 +1382,12 @@
       ]
     },
     {
-      "id": "18e1e976-45d7-44b3-a8c5-52775cd170e0",
+      "id": "8354088d-fb3b-4fc0-8d9a-5d02dfa5d8cf",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1318,10 +1412,12 @@
       ]
     },
     {
-      "id": "53e0ed7e-3920-425c-a115-ec4b61712e66",
+      "id": "0bd87920-d7f6-464b-a5c7-5941511531af",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1346,10 +1442,12 @@
       ]
     },
     {
-      "id": "005d6194-91a1-4e58-baa8-e4777eba5bdb",
+      "id": "fd99eb9a-251f-4179-a0f0-31d6ec5f6db9",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1374,10 +1472,12 @@
       ]
     },
     {
-      "id": "aca5ec4a-c0e3-4004-b784-176f99eb1c46",
+      "id": "0b7bf68e-bff2-439e-a0d7-0dd68dd44a29",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1402,10 +1502,12 @@
       ]
     },
     {
-      "id": "cc2dbfa4-0aff-4963-a7a0-f6e857edcb07",
+      "id": "8806c4c4-b0a3-432a-8b48-98c33e47370f",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1430,10 +1532,12 @@
       ]
     },
     {
-      "id": "26fc2c65-f29c-43ac-9389-3d179449bfb3",
+      "id": "57c6d271-7203-4ad3-aa83-9d6d4f1564a7",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1458,10 +1562,12 @@
       ]
     },
     {
-      "id": "5d55444c-6e53-40c5-adc6-32d7041d4afb",
+      "id": "16a0feac-f0bc-4adf-99f2-bc4ee58989ee",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1486,10 +1592,12 @@
       ]
     },
     {
-      "id": "5cca166f-86c6-470f-aa5c-89392820c67b",
+      "id": "538d91a9-171a-4bb9-99d6-8d4cad93e6f0",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1514,10 +1622,12 @@
       ]
     },
     {
-      "id": "6dce93cd-5743-4b8b-96e8-b17217291864",
+      "id": "846f774a-b806-44f5-bcc1-747447681aaf",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1542,10 +1652,12 @@
       ]
     },
     {
-      "id": "4eb61d87-670f-4dfd-9c79-6ea42089afc5",
+      "id": "379b48de-cd58-453c-b9de-3cc772ab9e03",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1570,10 +1682,12 @@
       ]
     },
     {
-      "id": "b4f9d391-3bff-4b1a-8064-a2635905d276",
+      "id": "31e1e67a-cb38-4379-8715-752dd505b537",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1598,10 +1712,12 @@
       ]
     },
     {
-      "id": "53ddae52-6b58-4fd9-a13d-8107445a4bea",
+      "id": "15d66912-c296-4553-9117-5b27e21f6c7a",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1626,10 +1742,12 @@
       ]
     },
     {
-      "id": "1379ba47-0900-486d-a1f1-f09389e2462f",
+      "id": "c344bfb9-7ebe-46bc-a65d-f3d6d3528d8a",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1654,10 +1772,12 @@
       ]
     },
     {
-      "id": "b8d03307-7be6-4fec-a47f-878d1d93d18f",
+      "id": "f7de9233-f175-4e89-8104-419645cc8e8d",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1682,10 +1802,12 @@
       ]
     },
     {
-      "id": "e218354a-e754-45f8-ad84-de1b380be5bb",
+      "id": "4448f54f-d6ab-420a-98f8-1ef6aa326d46",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1710,10 +1832,12 @@
       ]
     },
     {
-      "id": "e967e22e-9bd6-4c58-bf91-4f1a3091440f",
+      "id": "71107d3a-2e14-4023-bb3f-1fd642ca6776",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1738,10 +1862,12 @@
       ]
     },
     {
-      "id": "85570ffd-4d0d-4318-8a69-c6ee340a14df",
+      "id": "f492987f-43c5-42e1-9f2a-b39c4182f9f6",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1766,10 +1892,12 @@
       ]
     },
     {
-      "id": "a57fe315-e193-4626-8f7d-81f8b15b3e50",
+      "id": "540a5758-9fec-4984-94d4-e8b293a98929",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1794,10 +1922,12 @@
       ]
     },
     {
-      "id": "fff4e117-9ba5-4ea7-bc29-8fc3ef789e77",
+      "id": "6c658f25-06e1-47a2-894d-0cfdefb668af",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1822,10 +1952,12 @@
       ]
     },
     {
-      "id": "1772496d-8b56-4935-b0aa-e65ef9671bc2",
+      "id": "d5042102-3504-48b1-a852-dd93e0ea3772",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1850,10 +1982,12 @@
       ]
     },
     {
-      "id": "29b8a0c9-bc16-4138-aa6c-9db30e923c8f",
+      "id": "6b813261-80c6-436a-aeaf-e1ffb652317a",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1878,10 +2012,12 @@
       ]
     },
     {
-      "id": "8534aeaa-d892-4553-9c47-61488ba2e002",
+      "id": "615c2eee-d59a-4223-b694-f50a68c96549",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1906,10 +2042,12 @@
       ]
     },
     {
-      "id": "9c72490f-f6a7-4fcf-9bc5-547d7cccf09e",
+      "id": "6c4e9ba3-ea91-463d-84bb-23e5e77acf94",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1934,10 +2072,12 @@
       ]
     },
     {
-      "id": "6c0df7e0-5bc2-4586-8a0a-42b85306a463",
+      "id": "1d24f52e-ddc4-4155-afc1-9c9358f108bf",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1962,10 +2102,12 @@
       ]
     },
     {
-      "id": "edf68036-b474-43cf-a1f0-e683437e19f7",
+      "id": "678e8bc4-0384-4978-bd64-47c737fefdcf",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -1990,10 +2132,12 @@
       ]
     },
     {
-      "id": "fa0ec27d-e6b9-4be3-9d37-91e5f3135f5e",
+      "id": "edb73683-5844-42a5-bde7-4776baba9187",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2018,10 +2162,12 @@
       ]
     },
     {
-      "id": "49bcf989-5e14-430a-a21a-5da66f2ee3e0",
+      "id": "cfc8c8db-69d9-4e55-baf1-9f2fee43ae58",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2046,10 +2192,12 @@
       ]
     },
     {
-      "id": "1eed46f4-6c29-4034-b8cc-5813bdecd383",
+      "id": "4b60024e-c753-4321-b257-56df6bcf0274",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2074,10 +2222,12 @@
       ]
     },
     {
-      "id": "0b357d66-1fa2-4fc0-9eb2-2dcbd0a8d2dc",
+      "id": "0039588a-e7cd-4cd0-bea6-494fd9913ce9",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2102,7 +2252,7 @@
       ]
     },
     {
-      "id": "66cb9067-c797-4b6f-a019-40aa82171c9d",
+      "id": "63b6ca10-01e5-4fb8-ae5d-5c92f7191b44",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2111,7 +2261,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2136,7 +2288,7 @@
       ]
     },
     {
-      "id": "7debf3a6-292e-4edc-9c7a-ff1b6c3aa13a",
+      "id": "53f277fc-d225-4add-a323-8bfa87046c68",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2145,7 +2297,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2170,7 +2324,7 @@
       ]
     },
     {
-      "id": "ceeffb57-b1ff-406e-ab81-e01789d1cf43",
+      "id": "b00d9a73-dc57-4dce-bbcf-d8fe77fd639d",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2179,7 +2333,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2204,7 +2360,7 @@
       ]
     },
     {
-      "id": "ebb5b44c-8b64-4962-b866-bf8aec1eea81",
+      "id": "89c01d43-0d85-448c-b882-eb90e69e7318",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2213,7 +2369,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2238,7 +2396,7 @@
       ]
     },
     {
-      "id": "5c553b26-fa1a-4816-b0c7-b8b3c03f192d",
+      "id": "941c007a-0667-44c2-b1db-a0009338b390",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2247,7 +2405,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2272,7 +2432,7 @@
       ]
     },
     {
-      "id": "e17cf717-f6b7-454d-9191-9327bb9b6252",
+      "id": "3ce05df5-f204-4a79-854a-95e5a05a67cd",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2281,7 +2441,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2306,7 +2468,7 @@
       ]
     },
     {
-      "id": "8da0bd91-ff82-4dbe-9ef1-3d42789f8b7e",
+      "id": "d1c12c2d-8eef-4d6b-bfad-ff8a9f93c6a4",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2315,7 +2477,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2340,7 +2504,7 @@
       ]
     },
     {
-      "id": "1a6d182d-0e55-4939-ace3-bd115239ef02",
+      "id": "2737312f-1afd-4246-a326-c4b5255ecb16",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2349,7 +2513,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2374,7 +2540,7 @@
       ]
     },
     {
-      "id": "52c0c174-89e7-4c08-ac91-3026620753c7",
+      "id": "fc3ada39-6935-4a4e-952a-fcf39b60b9bd",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2383,7 +2549,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2408,7 +2576,7 @@
       ]
     },
     {
-      "id": "af05dd2d-1cfc-45b1-a678-a6f92b4d4ebe",
+      "id": "7064e901-409e-4445-9ab4-2a2abac9e137",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2417,7 +2585,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2442,7 +2612,7 @@
       ]
     },
     {
-      "id": "d8cf6214-7c25-4996-9fa7-27c90d25f2aa",
+      "id": "d76ebf2c-0e79-4b97-a3c0-9ea13200ee66",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2451,7 +2621,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2476,7 +2648,7 @@
       ]
     },
     {
-      "id": "53289c64-5b19-4a99-8f26-17c263a84761",
+      "id": "d22b1dea-f2bd-4739-b4dc-d1251c75f77e",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2485,7 +2657,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2510,7 +2684,7 @@
       ]
     },
     {
-      "id": "7de24c8b-ebcf-49bf-96bc-db880b88aec1",
+      "id": "215e9572-b8cf-4b5e-b04d-3bc7cb60b818",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2519,7 +2693,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2544,7 +2720,7 @@
       ]
     },
     {
-      "id": "974f647d-a82b-48a5-b01d-d2f028ccf163",
+      "id": "84030dd5-3812-403f-af90-8bd72a00c8cc",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2553,7 +2729,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2578,7 +2756,7 @@
       ]
     },
     {
-      "id": "2ca79330-8a44-41bf-bfef-0ae6a89b37bf",
+      "id": "6a77a1e9-bc04-436f-9032-7c1d40acceee",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2587,7 +2765,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2612,7 +2792,7 @@
       ]
     },
     {
-      "id": "2c64e505-f678-4a4c-9170-88332f2ef0fa",
+      "id": "7c1d9367-2ce1-4321-8e81-e8d93dad823b",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2621,7 +2801,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2646,7 +2828,7 @@
       ]
     },
     {
-      "id": "06df73ac-5aa0-447f-9ae2-ab450761dd3c",
+      "id": "89820b79-1da7-4560-bc5d-9c0b1a23a0ea",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2655,7 +2837,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2680,7 +2864,7 @@
       ]
     },
     {
-      "id": "68b3e491-d1c9-46b9-a9bc-a4a3482d3d63",
+      "id": "c97ef4a3-cc31-45e3-8910-d2adc8b8e242",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2689,7 +2873,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2714,7 +2900,7 @@
       ]
     },
     {
-      "id": "29d3bed1-0896-4b99-82eb-2d97256af17f",
+      "id": "667279fb-5c26-4359-a1ab-7edcb0b14be1",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2723,7 +2909,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2748,7 +2936,7 @@
       ]
     },
     {
-      "id": "00ce164e-123d-4ade-920e-8dd1c4a56376",
+      "id": "8c7d8c08-e106-44e8-a69d-e06542d45b74",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2757,7 +2945,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2782,7 +2972,7 @@
       ]
     },
     {
-      "id": "76501d18-077b-47d3-8091-1d12ea913494",
+      "id": "56ea0904-9f21-4bed-97e9-ae5760385101",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2791,7 +2981,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2816,7 +3008,7 @@
       ]
     },
     {
-      "id": "1634dca2-dc6c-40f1-b456-2ba0fcec5f94",
+      "id": "6bd14c8a-e262-4ef9-bb1d-700588ec3cd3",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2825,7 +3017,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2850,7 +3044,7 @@
       ]
     },
     {
-      "id": "e66cd151-0499-4b42-a562-ee6d1409e42b",
+      "id": "e68dec86-f7c9-4808-9d9d-b552d502beaf",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2859,7 +3053,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2884,7 +3080,7 @@
       ]
     },
     {
-      "id": "239ccce6-2a47-45f4-aa59-ce8538224574",
+      "id": "3ce4c073-06df-4cf2-bca6-19d49a7ce1a7",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2893,7 +3089,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2918,7 +3116,7 @@
       ]
     },
     {
-      "id": "01fdefd2-5c78-4dee-b442-46320be25a72",
+      "id": "d413e85e-4902-498c-ba1b-2bdd0652d368",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2927,7 +3125,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2952,7 +3152,7 @@
       ]
     },
     {
-      "id": "50e347e2-35c1-4f6f-9266-752d83502985",
+      "id": "55043b2c-5806-44fe-80df-95c589c1a8d2",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -2961,7 +3161,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -2986,7 +3188,7 @@
       ]
     },
     {
-      "id": "c11e623c-4794-48a8-bd69-b7953b594df3",
+      "id": "22a71476-f6e6-4fdc-8742-e45833a2773f",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -2995,7 +3197,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3020,7 +3224,7 @@
       ]
     },
     {
-      "id": "a610d92f-9cc0-4a27-bf8a-aee3aed99f8d",
+      "id": "873f24a0-3ac1-403a-906b-3a92eb2f4f5b",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -3029,7 +3233,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3054,7 +3260,7 @@
       ]
     },
     {
-      "id": "d0818f48-2858-44d6-bd5a-42a31fe83aa7",
+      "id": "4b094e36-4301-4d62-901c-b0534b097edb",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -3063,7 +3269,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3088,7 +3296,7 @@
       ]
     },
     {
-      "id": "039868f1-a6ca-4c96-8224-e0b70f764d7a",
+      "id": "e65174b1-8d48-428f-b0f8-79e355e37eaf",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -3097,7 +3305,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3122,7 +3332,7 @@
       ]
     },
     {
-      "id": "1278da79-6171-48fb-b8d8-9782b7381d92",
+      "id": "f3d8800e-43d3-4393-9bc9-7d1c50d00b80",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3131,7 +3341,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3156,7 +3368,7 @@
       ]
     },
     {
-      "id": "49d5b345-61bf-4d9f-a5bd-d8b10af4bd48",
+      "id": "69768bb2-4c7d-427b-bf86-8a8d59b2df74",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3165,7 +3377,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3190,7 +3404,7 @@
       ]
     },
     {
-      "id": "e521dd10-e46e-4ae8-9b97-9b4130bbcaa0",
+      "id": "46c8bbc7-8b35-4471-8b74-874c133d7516",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3199,7 +3413,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3224,7 +3440,7 @@
       ]
     },
     {
-      "id": "ef6f805d-2f68-4936-ab95-5448fd75b4c1",
+      "id": "001c941d-db46-4613-9da5-bb6be0f8aa6b",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3233,7 +3449,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3258,7 +3476,7 @@
       ]
     },
     {
-      "id": "9a361966-003c-49ef-adbb-2a27ba6f5760",
+      "id": "0f579f27-bfe6-4d8b-a6c6-a61d3ea14fae",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3267,7 +3485,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3292,7 +3512,7 @@
       ]
     },
     {
-      "id": "5fe67bc8-a187-4f80-baa1-004ef483fed6",
+      "id": "3ce78a66-1989-46a5-ab3b-4c54c029fa98",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3301,7 +3521,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3326,7 +3548,7 @@
       ]
     },
     {
-      "id": "6316f64d-c8f5-46ec-a5f0-7ca08b42c1b0",
+      "id": "f1b828f1-dd27-4a70-9019-c848170c629f",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3335,7 +3557,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3360,7 +3584,7 @@
       ]
     },
     {
-      "id": "cbf14e0c-c8f0-4892-952f-f310fe0adfba",
+      "id": "dbed976e-1b30-4d30-8478-6957a5d018d3",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3369,7 +3593,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3394,7 +3620,7 @@
       ]
     },
     {
-      "id": "d5080630-e138-449a-998b-b5f2cbc5ed07",
+      "id": "c40f5c63-af1e-4f35-9b85-8f4e7334eaa5",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3403,7 +3629,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3428,7 +3656,7 @@
       ]
     },
     {
-      "id": "ec4aa030-11cf-466c-bd29-29a1716dcba4",
+      "id": "4f3628b8-f0b2-4a2d-9823-ee0253e2e0c8",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3437,7 +3665,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3462,7 +3692,7 @@
       ]
     },
     {
-      "id": "40aca5a1-a403-484e-9158-1219bdb2b34e",
+      "id": "5b4416bc-a089-4e83-bbba-74e722da9a66",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3471,7 +3701,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3496,7 +3728,7 @@
       ]
     },
     {
-      "id": "300ea06b-684b-4d72-8eb9-c32f354328dc",
+      "id": "5b571e75-a6b7-499f-b5e7-c404dee87d1b",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3505,7 +3737,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3530,7 +3764,7 @@
       ]
     },
     {
-      "id": "bf577cfa-c21c-475c-9ba5-c48d92304607",
+      "id": "d06f1596-8319-4f77-8c4c-973e17e2ebef",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3539,7 +3773,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3564,7 +3800,7 @@
       ]
     },
     {
-      "id": "f7422ca1-5a95-44d5-8379-c60606bfdb5d",
+      "id": "e6791b1b-cca8-4942-b43c-542983cacf30",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3573,7 +3809,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3598,7 +3836,7 @@
       ]
     },
     {
-      "id": "0bcb0aea-4650-46f1-be77-7cd0a6e8c357",
+      "id": "92eef7cf-7af0-4a25-ba69-3e3b3d2938f5",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3607,7 +3845,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3632,7 +3872,7 @@
       ]
     },
     {
-      "id": "8fb0eea1-f091-4784-8e00-f96d6e099d0e",
+      "id": "e7d3aad0-fdd7-497d-b3d9-cdb8f897c9fb",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3641,7 +3881,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3666,7 +3908,7 @@
       ]
     },
     {
-      "id": "668e0ac9-e283-4126-86a4-406e731808ba",
+      "id": "4c7aae43-4d0f-4253-ad45-96da0fa066a3",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3675,7 +3917,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3700,7 +3944,7 @@
       ]
     },
     {
-      "id": "6233c9c2-c2dd-461a-9a70-573d113e3022",
+      "id": "235c54de-9f52-4f48-b08c-f9c866ee32a3",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3709,7 +3953,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3734,7 +3980,7 @@
       ]
     },
     {
-      "id": "da3608fd-95a2-47bd-8743-ad8b51d72387",
+      "id": "86b480ae-890c-4607-b2be-89934767855b",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3743,7 +3989,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3768,7 +4016,7 @@
       ]
     },
     {
-      "id": "c24ce07f-89b4-4e7c-bae0-1bd8ee5c4af1",
+      "id": "6d55ce42-ebee-4bff-8aab-626128c7b81c",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3777,7 +4025,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3802,7 +4052,7 @@
       ]
     },
     {
-      "id": "a4ccc827-2094-46ae-bfb0-9fe65d9c2ef1",
+      "id": "7fc219a3-973d-4b3f-8f1e-9a4d6fee014e",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3811,7 +4061,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3836,7 +4088,7 @@
       ]
     },
     {
-      "id": "9272a468-a1ad-4db1-b99f-f8dff63adc4d",
+      "id": "4cff621f-4aad-40bf-b65b-d5a82f0a85d2",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3845,7 +4097,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3870,7 +4124,7 @@
       ]
     },
     {
-      "id": "a62053b6-c149-48e3-a6d9-bfb7ce11d0ba",
+      "id": "7d44a6b6-043e-4e75-904d-5b363378ee46",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3879,7 +4133,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3904,7 +4160,7 @@
       ]
     },
     {
-      "id": "0ea79ee4-1a25-42d2-ae7b-824ac3beae8b",
+      "id": "97ec05ed-908a-4fa6-9590-fe2d70dd121d",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3913,7 +4169,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3938,7 +4196,7 @@
       ]
     },
     {
-      "id": "0632edd2-9133-4b06-af37-d1c88ad96ec1",
+      "id": "751bbbb0-b9a3-4c50-a0b5-6d3be76ebc11",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -3947,7 +4205,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -3972,7 +4232,7 @@
       ]
     },
     {
-      "id": "3f1ca341-c7e0-47b6-a168-0c3984bc9c99",
+      "id": "ae439b7a-4aae-40b1-aeca-139286c22957",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -3981,7 +4241,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4006,7 +4268,7 @@
       ]
     },
     {
-      "id": "11bd8ff8-62bd-4425-a88b-db671229c6eb",
+      "id": "f25047a2-59a7-4733-aaab-eead810b60dd",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -4015,7 +4277,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4040,7 +4304,7 @@
       ]
     },
     {
-      "id": "0ec70f23-e1d5-4259-afae-4b1ccbbdaaee",
+      "id": "01f4d1fd-830d-4105-9642-d01020c865fc",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -4049,7 +4313,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4074,7 +4340,7 @@
       ]
     },
     {
-      "id": "f7c97499-9c9c-4ab8-b9d3-8cc96249ca51",
+      "id": "031e8be5-6a8d-4346-895c-89e29887ba85",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -4083,7 +4349,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4108,7 +4376,7 @@
       ]
     },
     {
-      "id": "45265660-b059-449b-824a-e3b087f6d0ec",
+      "id": "84b43cbc-ac19-4070-94e9-7ac097e18c57",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -4117,7 +4385,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4142,10 +4412,12 @@
       ]
     },
     {
-      "id": "17029bf6-cd84-417e-b2ca-d4f60acf0cc6",
+      "id": "8433be7d-77fe-45fe-baaa-090b521860ae",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4170,10 +4442,12 @@
       ]
     },
     {
-      "id": "c7ae48cf-e1e5-4270-a7b2-e9fc4c519d4a",
+      "id": "c44922aa-db61-40c4-9ae8-e89099c2009d",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4198,10 +4472,12 @@
       ]
     },
     {
-      "id": "750ff151-22a5-4f74-81a8-1c25d3ada6cb",
+      "id": "cf8f262c-015e-4267-aeef-2cc52baa3c1d",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4226,10 +4502,12 @@
       ]
     },
     {
-      "id": "1df2e3c0-95ac-425c-9060-cac9a02b7834",
+      "id": "9f9119ba-c63c-4067-bcce-f15c27e8c47d",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4254,10 +4532,12 @@
       ]
     },
     {
-      "id": "3f66b0f0-9f2f-46d5-9b66-be691bf687e1",
+      "id": "9adb94a0-26ab-426b-af88-7cb0e080b3d4",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4282,7 +4562,7 @@
       ]
     },
     {
-      "id": "81f85f5a-421c-4e9b-b3b5-b0db50d74488",
+      "id": "ecdcea95-4d36-4da2-813e-3aae94e4095c",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -4290,7 +4570,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4315,7 +4597,7 @@
       ]
     },
     {
-      "id": "cc6db857-b999-4852-a322-f0cfc0553284",
+      "id": "65f5ce67-d35a-41ea-9614-b7e371c141b8",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -4323,7 +4605,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4348,10 +4632,12 @@
       ]
     },
     {
-      "id": "d74520ef-5407-45ef-adaa-ebf4b3af685c",
+      "id": "180c0a9d-f0bc-4028-a227-dbd3fccdfe73",
       "blockName": "cherry_planks",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4376,10 +4662,12 @@
       ]
     },
     {
-      "id": "d3d9dc1d-7f95-4d48-9a00-264031ef98a9",
+      "id": "445db253-937e-4ae7-8c45-44bc953e5383",
       "blockName": "cherry_planks",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4404,10 +4692,12 @@
       ]
     },
     {
-      "id": "e0c77b96-95a6-4156-9e0e-cc88fe796233",
+      "id": "2246ce0e-980b-4a6b-b6fc-c163d6206503",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4432,10 +4722,12 @@
       ]
     },
     {
-      "id": "e55e2467-272c-4ef2-a1cd-af0833d211fd",
+      "id": "6423252b-d786-4ec9-adcd-61a4460d18ea",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4460,10 +4752,12 @@
       ]
     },
     {
-      "id": "b62f86d3-7881-46fa-80fd-1c6288a701e7",
+      "id": "fdabae62-d8b6-4f8d-93b1-83dae45559fb",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4488,7 +4782,7 @@
       ]
     },
     {
-      "id": "587e20e9-fe2f-4163-be40-7f4ab45dcecc",
+      "id": "8268b611-ce95-4790-9dbe-3df3e45f0664",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -4496,7 +4790,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4521,7 +4817,7 @@
       ]
     },
     {
-      "id": "c9165223-61e3-4091-a85c-c979203e1cab",
+      "id": "e522b86b-5db3-4ecd-b862-cf71c98d94d5",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -4529,7 +4825,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4554,10 +4852,12 @@
       ]
     },
     {
-      "id": "9461f41a-f646-482f-930a-416bd6ccfefd",
+      "id": "83bc7a71-8b1f-469d-8676-19ac84fac656",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4582,10 +4882,12 @@
       ]
     },
     {
-      "id": "ad6195a9-dee2-40a7-8ad1-62a81d9e587f",
+      "id": "cca08c58-a813-4886-802d-5283348ce66f",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4610,10 +4912,12 @@
       ]
     },
     {
-      "id": "3972bbbd-dbfb-4dd4-be8b-e9c7643a1d30",
+      "id": "59f9c41a-0a8b-429b-9d92-34a3fb4ac6d9",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4638,10 +4942,12 @@
       ]
     },
     {
-      "id": "543ffd02-e822-433c-a3e8-5df7329f36c0",
+      "id": "bda30fc5-7bf3-483e-bf2c-4864af658111",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4666,10 +4972,12 @@
       ]
     },
     {
-      "id": "45b1d46f-f981-4050-9578-66d00585177d",
+      "id": "bc62f795-f43a-4829-a209-7614b773d040",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4694,7 +5002,7 @@
       ]
     },
     {
-      "id": "8a815052-7561-47ef-a3aa-7079e2747336",
+      "id": "02a4b63c-7429-4ad8-b543-9822bcc4a7a3",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -4703,7 +5011,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4728,7 +5038,7 @@
       ]
     },
     {
-      "id": "f94eb217-611f-404d-a13d-29359a7a8a8b",
+      "id": "49e07470-a3a7-4e0f-92f7-37ded70eebbc",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -4737,7 +5047,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4762,7 +5074,7 @@
       ]
     },
     {
-      "id": "6cfebceb-c0ba-4d2e-98d9-d5d11772257b",
+      "id": "fe5c7126-0421-4973-b73d-cfb09b9f36dd",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -4771,7 +5083,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4796,7 +5110,7 @@
       ]
     },
     {
-      "id": "382c3af9-2c5a-4bf7-ade4-aae89b761084",
+      "id": "c76943d5-cb5d-4ccd-9c39-1f09ae5584f3",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -4805,7 +5119,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4830,7 +5146,7 @@
       ]
     },
     {
-      "id": "5039a3ca-9359-4dc2-abd1-955e2cd40c1c",
+      "id": "90626461-7727-4163-aa3d-7ab320461640",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -4839,7 +5155,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4864,10 +5182,12 @@
       ]
     },
     {
-      "id": "890630bb-e787-4c69-bf39-41c3f8fab135",
+      "id": "612413b5-bca4-4a1d-8b49-8b0e8ae8cfaf",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4892,10 +5212,12 @@
       ]
     },
     {
-      "id": "ed1dc908-67dc-4fce-bd94-8bf1d652028e",
+      "id": "f31575cf-1bee-4f48-882b-d81e24e8f7ec",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4920,10 +5242,12 @@
       ]
     },
     {
-      "id": "9d412783-0c4b-4723-9050-9abf9a505c3c",
+      "id": "207f5e91-1d4f-4656-8acc-772df37a0f8b",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4948,7 +5272,7 @@
       ]
     },
     {
-      "id": "f52d7267-a860-4a3c-9feb-82650e1070cb",
+      "id": "aa7a8c5a-40e2-465b-bd70-c666e3218338",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -4957,7 +5281,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -4982,7 +5308,7 @@
       ]
     },
     {
-      "id": "c2f34b64-0820-448a-a2fa-b74e7692df4c",
+      "id": "96fa0ed5-1392-45e1-8993-d4059f9a3d7c",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -4991,7 +5317,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5016,10 +5344,12 @@
       ]
     },
     {
-      "id": "083fa00a-481c-4127-b888-76761f90812b",
+      "id": "eeea1964-7608-4316-a18a-6c996fb5bd19",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5044,10 +5374,12 @@
       ]
     },
     {
-      "id": "db3406c4-56d5-4d3d-bebc-974684d19d06",
+      "id": "01e12e84-d27a-4996-9597-bdcab907d85c",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5072,7 +5404,7 @@
       ]
     },
     {
-      "id": "0c1037bf-c1af-45b5-8c25-3a1cb0dbf823",
+      "id": "166ed203-21c8-461e-ae23-176957362f78",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5080,7 +5412,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5105,7 +5439,7 @@
       ]
     },
     {
-      "id": "65f862a9-73af-4a70-846f-4156692fcc18",
+      "id": "41df663a-d358-4a6f-aeb7-db1ffa4e3301",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5113,7 +5447,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5138,7 +5474,7 @@
       ]
     },
     {
-      "id": "c069faca-c3b7-4970-ba94-03661f4823e0",
+      "id": "489f79b7-bb2f-47b0-bb4e-0b50f79f5ea0",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5146,7 +5482,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5171,7 +5509,7 @@
       ]
     },
     {
-      "id": "8b5d42d1-d16b-41da-8484-9ec0ae72d562",
+      "id": "0a8c9807-aa8e-4178-916d-8a0b9d3074db",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5179,7 +5517,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5204,7 +5544,7 @@
       ]
     },
     {
-      "id": "3248a68e-9daa-48b2-92ea-bdf69324a9c7",
+      "id": "b1211268-0204-4bf8-be31-8120361fa820",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5212,7 +5552,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5237,7 +5579,7 @@
       ]
     },
     {
-      "id": "fa4dff8f-7e3e-4b90-9ffb-7f59e4fce073",
+      "id": "56307593-fb0a-458b-bba5-557bbad035e3",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5245,7 +5587,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5270,7 +5614,7 @@
       ]
     },
     {
-      "id": "77bc8918-1991-4a14-a9af-a235dac7c0d6",
+      "id": "918aeded-abb4-4071-ada0-4ecbd1c093ee",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -5279,7 +5623,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5304,7 +5650,7 @@
       ]
     },
     {
-      "id": "e5920827-94b3-4a01-ae06-da40b08173a8",
+      "id": "76d1c27a-120a-4c97-87c2-2e97b45cff32",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -5313,7 +5659,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5338,10 +5686,12 @@
       ]
     },
     {
-      "id": "8f86e2fe-3b8d-41db-bd2e-b32ce8773fc1",
+      "id": "44d9ace3-f98c-43a8-aee6-88026130409a",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5366,10 +5716,12 @@
       ]
     },
     {
-      "id": "54eec7d3-cc59-4e92-9f37-1c097ec43e25",
+      "id": "1ad51495-baf5-4f8f-8206-4dee7d55a4d2",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5394,10 +5746,12 @@
       ]
     },
     {
-      "id": "e99f293c-d488-4ad8-a1c3-024aa1d5a1b3",
+      "id": "e5e99a5c-9df7-4c10-9948-f983920ad03e",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5422,10 +5776,12 @@
       ]
     },
     {
-      "id": "52da6dae-a5d6-4a3f-9739-79d8d2a6e846",
+      "id": "6ff4b5fa-9d05-4676-ab40-3c203e55ceb1",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5450,10 +5806,12 @@
       ]
     },
     {
-      "id": "c51c588f-71c2-40c2-8c79-7b5dc5210c45",
+      "id": "a2d1cc86-e618-4a8d-9e62-0c847956fde4",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5478,10 +5836,12 @@
       ]
     },
     {
-      "id": "0d7271c0-5e51-478d-8934-f84533880923",
+      "id": "cc23d3d2-43f3-408d-9fa5-610c585d3bf9",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5506,10 +5866,12 @@
       ]
     },
     {
-      "id": "7def92b7-0a47-43b7-81f0-30ee15ef5535",
+      "id": "832048ba-2840-4083-9436-6de0b02fce1c",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5534,7 +5896,7 @@
       ]
     },
     {
-      "id": "65f6bf40-4a75-4220-a137-114fb765d81c",
+      "id": "a97f33f5-d992-461b-b8e1-95e079a0ca83",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5542,7 +5904,9 @@
         "shape": "straight",
         "facing": "south"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5567,10 +5931,12 @@
       ]
     },
     {
-      "id": "b3fd1aa0-f834-4b8c-a305-189c9739f33c",
+      "id": "9d0f6177-6bfc-41f5-8409-13e0c2691df7",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5595,10 +5961,12 @@
       ]
     },
     {
-      "id": "654ea937-9abc-4903-97ef-9da993e9cbce",
+      "id": "5de9f3e4-ae32-46e6-a9de-871938639d1e",
       "blockName": "cherry_button",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5623,7 +5991,7 @@
       ]
     },
     {
-      "id": "428ce0ef-6c50-4c5e-84db-509b3c387245",
+      "id": "921d5d70-8b6d-4afe-9db8-5e58ab360439",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -5632,7 +6000,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5657,7 +6027,7 @@
       ]
     },
     {
-      "id": "9bd0d334-1825-4699-9a17-3fe2dd963454",
+      "id": "55084cdc-6564-4323-8902-516a19893818",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -5666,7 +6036,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5691,10 +6063,12 @@
       ]
     },
     {
-      "id": "01431240-4ff6-43b9-96dc-f5079da99a19",
+      "id": "95db45ee-c3d6-4ef3-ae3a-62907e5cc24e",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5719,7 +6093,7 @@
       ]
     },
     {
-      "id": "ad89fc39-849f-4fee-9075-c440b2318070",
+      "id": "714148cf-7dd0-4e7b-8b67-100f715c0758",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5727,7 +6101,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5752,10 +6128,12 @@
       ]
     },
     {
-      "id": "0cf45e5f-7da1-4be6-baf5-67f63cb05845",
+      "id": "85d6fade-4684-4110-bafd-2eacbaf2b192",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5780,10 +6158,12 @@
       ]
     },
     {
-      "id": "32d368b8-8557-4d82-8886-d5ce63778744",
+      "id": "eb21ade6-0e64-4aa3-9d85-5ab818b479fd",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5808,7 +6188,7 @@
       ]
     },
     {
-      "id": "869724a1-5f78-4bf2-ba05-542dc2d82011",
+      "id": "333bb3c5-455b-4216-a7a4-b0184b2f0690",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -5817,7 +6197,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5842,10 +6224,12 @@
       ]
     },
     {
-      "id": "2cc88b6e-75c2-42cd-8e06-7bea0bbc3938",
+      "id": "ddd9a12f-c04a-4167-aec8-a97b955ac732",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5870,7 +6254,7 @@
       ]
     },
     {
-      "id": "fd895acb-fce0-42cd-a5b1-0525c3321b79",
+      "id": "9fdf8586-78e4-4c5b-a103-899780b6d25a",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -5879,7 +6263,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5904,7 +6290,7 @@
       ]
     },
     {
-      "id": "74dde5a5-d481-4b58-8260-78f92819775b",
+      "id": "effa3551-ae3c-409f-8e45-831a94391d2e",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -5912,7 +6298,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5937,7 +6325,7 @@
       ]
     },
     {
-      "id": "002fbfbe-8404-4332-bdb8-b984b71334bf",
+      "id": "ececfd7f-1548-4eb5-a30a-68f9958ff9d2",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -5946,7 +6334,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5971,10 +6361,12 @@
       ]
     },
     {
-      "id": "cd2bc475-05d6-45f7-a9e3-fb1ad02887ff",
+      "id": "964eafc4-7062-4e3c-81e6-e3d9a79e9fd0",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -5999,7 +6391,7 @@
       ]
     },
     {
-      "id": "8e7f3715-a594-4a5d-a75a-b07b12042d2d",
+      "id": "e25ad44f-8489-4a14-b388-0f18e25e90c1",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -6008,7 +6400,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6033,10 +6427,12 @@
       ]
     },
     {
-      "id": "8f602e05-bbdd-4fc9-ab05-9702d91be273",
+      "id": "2cf72e18-3b7d-46fc-b487-e3f2c106c006",
       "blockName": "cherry_planks",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6061,10 +6457,12 @@
       ]
     },
     {
-      "id": "1a688843-4772-4c6b-bb1b-b3ac5dc8282c",
+      "id": "ef757b4e-52fd-4a95-bc98-dae3068cd1d2",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6089,10 +6487,12 @@
       ]
     },
     {
-      "id": "d1fa2a1f-da39-4e18-b017-dddad0d3b6ad",
+      "id": "a418314a-8116-46be-9ba6-908e4cd48493",
       "blockName": "cherry_planks",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6117,10 +6517,12 @@
       ]
     },
     {
-      "id": "ee5b478b-fc7c-4de9-83ea-39ed83da5a40",
+      "id": "d675aa4a-abf8-4b28-b488-4d3d5954ab7b",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6145,7 +6547,7 @@
       ]
     },
     {
-      "id": "8791ba21-ad57-4cf1-94df-7e5c39cff738",
+      "id": "5e8e7dc4-2fc2-4372-ae29-c27bf0aac95b",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -6154,7 +6556,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6179,10 +6583,12 @@
       ]
     },
     {
-      "id": "08eaf7ec-4f0a-4107-8b95-ebd940d97459",
+      "id": "c9072004-8112-411c-8da1-4837f1f2a1ae",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6207,7 +6613,7 @@
       ]
     },
     {
-      "id": "59a9ada3-b029-4b7d-a3d0-2c1a2625ffc6",
+      "id": "4e0ddba7-7fa2-48fb-a601-39bc43ed3640",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6215,7 +6621,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6240,7 +6648,7 @@
       ]
     },
     {
-      "id": "c5565d07-481f-42c1-907a-5300f7a29a2e",
+      "id": "27766b5e-24a3-4c31-97d3-dabd3a43c370",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -6249,7 +6657,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6274,10 +6684,12 @@
       ]
     },
     {
-      "id": "4a51c01b-d396-440e-a901-3e6cb600498c",
+      "id": "344d5411-cdd2-4c6e-89bc-d1e657653605",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6302,7 +6714,7 @@
       ]
     },
     {
-      "id": "ea75dd17-885e-4903-83d7-5af4879eacb0",
+      "id": "d62ed3b3-1c96-4694-a28c-ae42347923f1",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -6311,7 +6723,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6336,7 +6750,7 @@
       ]
     },
     {
-      "id": "9380c581-3142-464e-abf1-4ae854d5fe89",
+      "id": "82c2587b-90b4-40eb-8c5d-ed7bba2f2fa8",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6344,7 +6758,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6369,7 +6785,7 @@
       ]
     },
     {
-      "id": "20451a79-d74f-4816-98ed-a0cdfb78643b",
+      "id": "60b35d4e-89cb-406a-94a7-36917d4c7e57",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6377,7 +6793,9 @@
         "shape": "straight",
         "facing": "south"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6402,10 +6820,12 @@
       ]
     },
     {
-      "id": "993392a3-5ef7-47b1-9ec6-b7d9e3fa21f7",
+      "id": "d5de0c11-fff7-4b76-85f4-c4831d61b5fe",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6430,7 +6850,7 @@
       ]
     },
     {
-      "id": "31907ded-be9c-4c23-9197-91d149a9638e",
+      "id": "a7e5fd8e-4987-495c-b857-0bea555d6ef3",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6438,7 +6858,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6463,7 +6885,7 @@
       ]
     },
     {
-      "id": "bd67a201-b758-42bc-9a7d-92bbcf8005ce",
+      "id": "c5c2783f-0a40-4904-a2b9-9475555fd984",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6471,7 +6893,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6496,7 +6920,7 @@
       ]
     },
     {
-      "id": "55a0d1bf-39e3-4393-8253-6ea29ddd9df8",
+      "id": "80edec13-a413-403c-94ed-b039dc6b9676",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -6505,7 +6929,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6530,7 +6956,7 @@
       ]
     },
     {
-      "id": "8a739ead-af10-4469-a199-ce52f0f0ecd9",
+      "id": "600d6584-8164-4a10-9989-df33f1c6ca46",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6538,7 +6964,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6563,7 +6991,7 @@
       ]
     },
     {
-      "id": "33873d22-62c3-49a1-9089-9f8f59ed8791",
+      "id": "4c57ba29-3b79-4710-ac1a-e1dd87310160",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6571,7 +6999,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6596,10 +7026,12 @@
       ]
     },
     {
-      "id": "7121bf1c-50e5-439b-9a12-51abba6182b0",
+      "id": "daa911ba-5bc7-4ac5-a056-1e277b60b1f2",
       "blockName": "cherry_button",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6624,7 +7056,7 @@
       ]
     },
     {
-      "id": "01cc64eb-1550-4121-ad57-12db08c1a19e",
+      "id": "07d70a7a-25e5-4d45-914b-3cfc39b512e1",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -6633,7 +7065,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6658,10 +7092,12 @@
       ]
     },
     {
-      "id": "c1004b4f-8caa-45c4-ab76-31d4c11b1c64",
+      "id": "3e229e57-8ddb-4a10-b874-4152bddfb6a5",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6686,10 +7122,12 @@
       ]
     },
     {
-      "id": "44d03942-9ff3-4377-8053-f843853299b6",
+      "id": "0cf4d32a-f93c-4223-9490-05fa87bb7e10",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6714,7 +7152,7 @@
       ]
     },
     {
-      "id": "17bed1ac-27cc-4dff-8944-d4cc2232892b",
+      "id": "6f512f64-bba0-4743-b11e-f1d99f445668",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -6723,7 +7161,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6748,7 +7188,7 @@
       ]
     },
     {
-      "id": "54282dc5-07c1-495e-8022-69d817b339ee",
+      "id": "f2c32d18-6986-493d-aed1-00aae2edde69",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -6757,7 +7197,9 @@
         "west": "true",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6782,7 +7224,7 @@
       ]
     },
     {
-      "id": "42f7e6d6-2ece-467b-9b51-ded71c3f37d3",
+      "id": "564eff26-6725-4ad1-b6b5-6d56588484d5",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -6791,7 +7233,9 @@
         "west": "true",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6816,7 +7260,7 @@
       ]
     },
     {
-      "id": "6b35026f-692c-433a-a0e8-4daac2eb4eaa",
+      "id": "b1844dff-b717-4da4-ad74-ff26050a12c2",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -6825,7 +7269,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6850,7 +7296,7 @@
       ]
     },
     {
-      "id": "bd6c114b-be8e-4250-8064-85180b07e8bf",
+      "id": "f4e733b7-aade-4dd7-82d2-9785a25ffa2c",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6858,7 +7304,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6883,7 +7331,7 @@
       ]
     },
     {
-      "id": "efdf1219-66b0-4eda-9bb0-8d3898ca690a",
+      "id": "a272edac-d913-4960-994d-2b6d7a776f56",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -6891,7 +7339,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6916,10 +7366,12 @@
       ]
     },
     {
-      "id": "ad007aaf-7cae-4b50-903d-7f984ef865a2",
+      "id": "5aac4fe7-4ea4-48f5-a061-8cc1a998f9d2",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6944,10 +7396,12 @@
       ]
     },
     {
-      "id": "8483b2e9-85e0-4296-b6af-400dedf05a4e",
+      "id": "65ccc72e-ef97-40f1-b495-f76fa2d3cca8",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -6972,10 +7426,12 @@
       ]
     },
     {
-      "id": "ce752e7d-be79-46ea-a186-2495a41be7f8",
+      "id": "d9468a87-8162-4856-8fc4-320d4a5c160f",
       "blockName": "cherry_button",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7000,10 +7456,12 @@
       ]
     },
     {
-      "id": "cc12e0fa-effd-4b47-96f9-875e68259a18",
+      "id": "06da8ad2-884e-4475-ad9a-62b76e35ba7e",
       "blockName": "cherry_button",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7028,7 +7486,7 @@
       ]
     },
     {
-      "id": "cb1d0129-8cc9-420d-86d2-f9d14c8be3e3",
+      "id": "c4912e82-c1a3-4f42-a48b-e53d89de4068",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -7037,7 +7495,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7062,7 +7522,7 @@
       ]
     },
     {
-      "id": "23bd2548-b9b4-407d-8e95-c7be4cadbafb",
+      "id": "0f741ce9-d8f1-4c67-ad79-e74226dc5f4a",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -7071,7 +7531,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7096,10 +7558,12 @@
       ]
     },
     {
-      "id": "30994773-7f11-4fac-855b-bb9fb9165893",
+      "id": "98aff482-37e3-499a-9ab8-8dfb38fd2d29",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7124,10 +7588,12 @@
       ]
     },
     {
-      "id": "627a9adc-b678-43f8-be5e-cb4be27ded63",
+      "id": "9c4a0000-17fc-43d3-9754-88a8e848a20f",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7152,10 +7618,12 @@
       ]
     },
     {
-      "id": "9299f340-d7c7-4141-8db1-3b74789613db",
+      "id": "279ab613-e16b-4f5a-ab65-c339f464e81a",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7180,10 +7648,12 @@
       ]
     },
     {
-      "id": "113b6d77-8a63-40b8-a95e-8f9d9b55b589",
+      "id": "efec88a9-6ca8-4c70-a27a-f1c5ea8dbe1f",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7208,10 +7678,12 @@
       ]
     },
     {
-      "id": "19d054ae-94f4-4044-91a5-de256b15debf",
+      "id": "dfbe2adb-a14d-4ceb-ab80-6fc7e8a0fd8c",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7236,10 +7708,12 @@
       ]
     },
     {
-      "id": "573d8136-ca95-4c9e-91b6-ed488afafb32",
+      "id": "6dfb2c00-d7b8-4670-b4cd-afd643f0cd20",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7264,10 +7738,12 @@
       ]
     },
     {
-      "id": "e80e5149-2aef-4c57-be9d-4c0f5b2ea383",
+      "id": "96ca720d-7fef-461f-ab4b-d97d8544768e",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7292,10 +7768,12 @@
       ]
     },
     {
-      "id": "79d0d796-67b4-4891-aed7-7d58bf64b72d",
+      "id": "fc1680f6-8e86-4bdb-b6d5-943466ba9836",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7320,10 +7798,12 @@
       ]
     },
     {
-      "id": "1cb50ab7-0fba-4b3c-8073-3a1f94d31883",
+      "id": "e0fc49ef-38b8-4420-a9ca-fcbcee80f0f4",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7348,10 +7828,12 @@
       ]
     },
     {
-      "id": "9a2af53d-c4a5-4df8-bbdf-2827537bfc38",
+      "id": "b2cf9f0d-92ea-4890-adce-f370415a3b3b",
       "blockName": "stripped_cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7376,10 +7858,12 @@
       ]
     },
     {
-      "id": "9c63885d-d81e-4440-a1ec-ff0bf57bc8af",
+      "id": "01e0d904-ef79-498a-8f53-f7b330f00a21",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7404,10 +7888,12 @@
       ]
     },
     {
-      "id": "844082a4-e515-4b85-9178-6ea5c0e277a8",
+      "id": "7b0155c3-d8cb-45f3-a72a-2dce20af0072",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7432,10 +7918,12 @@
       ]
     },
     {
-      "id": "1c4473eb-6b43-4743-bf50-67efb7386824",
+      "id": "79d64f4e-b79e-4cd3-a946-5fd1e3f130fc",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7460,10 +7948,12 @@
       ]
     },
     {
-      "id": "a9700f3d-0671-4db3-abc8-b64bb3fb9376",
+      "id": "fb491ad7-bf21-4a1a-9547-a9aa33993e77",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7488,10 +7978,12 @@
       ]
     },
     {
-      "id": "dd816e7a-c0c7-4e30-985a-606f645d799e",
+      "id": "01a8ea71-4a4f-435b-b6ca-b74433f27756",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7516,10 +8008,12 @@
       ]
     },
     {
-      "id": "78685eb9-a9f8-4df5-b5d5-964ec68e7fbe",
+      "id": "f48226d6-0466-474a-84ae-e1f70c1078a7",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7544,10 +8038,12 @@
       ]
     },
     {
-      "id": "b25a9c13-9044-48ee-886c-0df3b05f3b31",
+      "id": "b0a5419b-0d69-4856-8fee-16cd3c4d2e77",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7572,10 +8068,12 @@
       ]
     },
     {
-      "id": "9c2a8726-e5c6-4f04-9f9d-18c1afc0afef",
+      "id": "585d3496-054f-4501-87cb-08394202b2df",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7600,10 +8098,12 @@
       ]
     },
     {
-      "id": "c2d577b3-232b-4676-96fa-20653b09c435",
+      "id": "7cc88917-feee-4f31-883f-cb7d2a5cdb7e",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7628,10 +8128,12 @@
       ]
     },
     {
-      "id": "4f682e51-b61b-4b78-9452-ee8343b5b340",
+      "id": "ab36e855-5636-40df-b0cf-cd25a7cb4893",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7656,10 +8158,12 @@
       ]
     },
     {
-      "id": "7d315e1f-667e-4523-b14f-b3c4045c59a7",
+      "id": "d807747f-f619-4082-8a1f-acd26269f835",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7684,10 +8188,12 @@
       ]
     },
     {
-      "id": "6c144a51-c5af-43e7-a4d8-64a81ce59cab",
+      "id": "19899e70-a0a0-48f7-b972-131f228b95db",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7712,10 +8218,12 @@
       ]
     },
     {
-      "id": "543a384a-6deb-4493-ab04-c594fb75bbf5",
+      "id": "fc87e226-0efa-4b5b-907a-d947560de96e",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7740,10 +8248,12 @@
       ]
     },
     {
-      "id": "83150278-8000-4837-9e79-fe3b18b6e2a7",
+      "id": "07d7d206-7b27-4160-87b3-b0b7121e033c",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7768,7 +8278,7 @@
       ]
     },
     {
-      "id": "14e62c13-b212-4432-988c-774f626ce48a",
+      "id": "fa759aa5-aa20-48e0-a351-bc6641a77168",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -7776,7 +8286,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7801,7 +8313,7 @@
       ]
     },
     {
-      "id": "c0e37298-af0f-4de5-b4e8-cfb6e94cd0c1",
+      "id": "32b8b714-b8eb-4c7b-a779-3e47bbbb7cf7",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -7809,7 +8321,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7834,7 +8348,7 @@
       ]
     },
     {
-      "id": "adcfd3a0-6b31-4854-9bd2-8e9220a7f784",
+      "id": "dfd5d807-5901-491a-ae18-be116f524d21",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -7842,7 +8356,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7867,7 +8383,7 @@
       ]
     },
     {
-      "id": "4603383a-638a-44a0-bc87-3b8762867867",
+      "id": "3f9c838a-e2d5-437b-bbd8-5fdf861982d7",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -7875,7 +8391,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7900,7 +8418,7 @@
       ]
     },
     {
-      "id": "29287f6a-5a68-4abe-af9e-00e1ec41ac33",
+      "id": "3b9cd984-95f7-43d4-bb99-a4c37d279f76",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -7908,7 +8426,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7933,7 +8453,7 @@
       ]
     },
     {
-      "id": "f7c8c21a-2be1-45bb-ac57-d2b11a381d16",
+      "id": "7b957dca-de2e-4f94-b63b-7c45037b5baf",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -7941,7 +8461,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7966,10 +8488,12 @@
       ]
     },
     {
-      "id": "fb220a9d-f940-4b71-a0c0-af198b214ea0",
+      "id": "2248fa84-ec4e-4f69-a56a-da7d4fb103e7",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -7994,10 +8518,12 @@
       ]
     },
     {
-      "id": "16a35366-699f-4501-961f-07a83fffb1f8",
+      "id": "8c124831-f381-4f9c-8be6-1b4be9f4c590",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8022,10 +8548,12 @@
       ]
     },
     {
-      "id": "5b4a3c0f-3cbe-428e-bd63-430dad96c904",
+      "id": "7a0bfa92-3074-4be0-a571-9a807b0e12d0",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8050,10 +8578,12 @@
       ]
     },
     {
-      "id": "fdb9cddb-c9f3-4a87-953f-e2a831edea87",
+      "id": "11a28704-c66b-4e79-ad07-e8b762cfda8a",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8078,10 +8608,12 @@
       ]
     },
     {
-      "id": "114e651f-fb9f-41e7-9454-7eecf59d0cf3",
+      "id": "40d635f6-ad37-400b-a177-9e87d66157e9",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8106,10 +8638,12 @@
       ]
     },
     {
-      "id": "cee51a2d-6cf5-4df3-b657-aaaee14330a0",
+      "id": "0612a500-db20-48ca-af63-59a0f74c0ccb",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8134,10 +8668,12 @@
       ]
     },
     {
-      "id": "13fb06e7-e106-41a5-8b89-432a24f3236a",
+      "id": "0768a4eb-f83b-4485-a4ea-2802bace7615",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8162,10 +8698,12 @@
       ]
     },
     {
-      "id": "2abfa630-3020-45d9-8745-a9458c33657d",
+      "id": "b9af314a-5cbb-4593-b94f-06a3f76c9746",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8190,7 +8728,7 @@
       ]
     },
     {
-      "id": "1582548e-4e5b-4d6c-896e-c38f2d94f569",
+      "id": "dc8cabaa-a4f0-4a66-8681-aa351aac2117",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -8199,7 +8737,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8224,7 +8764,7 @@
       ]
     },
     {
-      "id": "6a2302e2-ea67-4f0e-b3a3-2e2a03d7b84a",
+      "id": "f5bc4cc6-c761-497d-9a9e-c274c4127b31",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -8233,7 +8773,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8258,7 +8800,7 @@
       ]
     },
     {
-      "id": "80fa6df4-6849-4371-ba21-44a7c5fd699e",
+      "id": "8496c445-fcdf-49c7-9d9f-340fe3c412c9",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -8267,7 +8809,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8292,7 +8836,7 @@
       ]
     },
     {
-      "id": "60a3c9f4-c61a-4f21-8be9-0fc059cb6c5c",
+      "id": "2d810a47-bc31-45d1-879d-199a95c2c1c3",
       "blockName": "cherry_wall_sign",
       "properties": {
         "north": "false",
@@ -8301,7 +8845,9 @@
         "west": "false",
         "up": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8326,7 +8872,7 @@
       ]
     },
     {
-      "id": "0571f115-b9bb-414e-b868-344e259158c1",
+      "id": "e95a1216-c717-47f9-b235-80a44510d69a",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8334,7 +8880,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8359,7 +8907,7 @@
       ]
     },
     {
-      "id": "61f4a5cb-b327-4698-93c9-c3eeaa206890",
+      "id": "4ac2ed92-872f-42a6-8be4-64fda382000c",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8367,7 +8915,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8392,7 +8942,7 @@
       ]
     },
     {
-      "id": "07ef3ceb-4413-4660-b088-c592c970f2fe",
+      "id": "3e346267-2e4b-4b42-89e5-00b2cb507a36",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8400,7 +8950,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8425,7 +8977,7 @@
       ]
     },
     {
-      "id": "22a29370-ac8a-42f1-a356-307d32de7a36",
+      "id": "5cd24b60-c032-49a8-9521-b8a822533421",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8433,7 +8985,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8458,7 +9012,7 @@
       ]
     },
     {
-      "id": "62355fd2-f2e4-4db6-90c7-9219e7b3d08e",
+      "id": "df625298-135a-4176-9ef8-b47b3b551beb",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8466,7 +9020,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8491,7 +9047,7 @@
       ]
     },
     {
-      "id": "185ef8cd-48ad-4d26-a172-2b0f9ff92e56",
+      "id": "c6f3002d-d5e5-432d-abd8-930df55c546f",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8499,7 +9055,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8524,10 +9082,12 @@
       ]
     },
     {
-      "id": "40b58bb0-0358-4b09-9ebc-31b8caf8894d",
+      "id": "7d54e683-b609-41fb-883e-157968a9347d",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8552,10 +9112,12 @@
       ]
     },
     {
-      "id": "d8d250ac-f173-4ee8-9a85-16605f79adf3",
+      "id": "7713db91-e1bb-4009-87b0-a39bf80c7d31",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8580,10 +9142,12 @@
       ]
     },
     {
-      "id": "44910c9d-336a-4fef-9cb9-2635d8551377",
+      "id": "7c9d339b-e08f-41c8-a83d-0cd472d03d7a",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8608,10 +9172,12 @@
       ]
     },
     {
-      "id": "a5e69a53-d0d5-4cf6-a626-4d6e145a999e",
+      "id": "a49e9dc1-e938-4487-bd9e-0c218b558503",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8636,14 +9202,16 @@
       ]
     },
     {
-      "id": "9c28c430-1cf4-4e00-9682-6ee10630d5fe",
+      "id": "cb411370-b2ed-491e-b987-2e73c001f9a6",
       "blockName": "pink_candle",
       "properties": {
         "waterlogged": "false",
         "lit": "false",
         "candles": "4"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8668,14 +9236,16 @@
       ]
     },
     {
-      "id": "347ae1ab-af41-497f-b74a-fae83ad6cac7",
+      "id": "3bb275dd-98de-496a-ac0a-77deffefe33f",
       "blockName": "pink_candle",
       "properties": {
         "waterlogged": "false",
         "lit": "false",
         "candles": "4"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8700,7 +9270,7 @@
       ]
     },
     {
-      "id": "00df3bfb-a6fa-45c7-b882-b0d36f78f82a",
+      "id": "d22d143f-5a29-41bf-bc03-4f58ca6e7ae6",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8708,7 +9278,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8733,7 +9305,7 @@
       ]
     },
     {
-      "id": "f29eefb2-e26f-4e21-9c50-2ce2fd737dcb",
+      "id": "2837f00f-c9ee-4eaf-a847-b2e00d5a6218",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8741,7 +9313,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8766,7 +9340,7 @@
       ]
     },
     {
-      "id": "c73350ec-e8ed-404e-bb6b-bf868f978e7e",
+      "id": "1237ca5d-d303-450a-91e6-75bdcbb8414f",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8774,7 +9348,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8799,7 +9375,7 @@
       ]
     },
     {
-      "id": "89aa7246-2ca6-4ba4-84d4-7c81919f1ebf",
+      "id": "ab03f003-1ba6-4da0-af4b-8944b3a133d9",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8807,7 +9383,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8832,7 +9410,7 @@
       ]
     },
     {
-      "id": "20e487f7-71e3-4dd1-b3ae-94b2d5f4ae28",
+      "id": "608f9eda-18cd-41e6-9440-9685c885c143",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8840,7 +9418,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8865,7 +9445,7 @@
       ]
     },
     {
-      "id": "9d67379e-f262-45a4-b5fd-42ef2d2fd220",
+      "id": "1937e135-1473-429f-9c8a-570f1e3b8e39",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8873,7 +9453,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8898,7 +9480,7 @@
       ]
     },
     {
-      "id": "584db40d-a633-496f-9df4-a69c7a486d7d",
+      "id": "4d7d3904-79c5-45c9-8676-ef6a06681262",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8906,7 +9488,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8931,7 +9515,7 @@
       ]
     },
     {
-      "id": "1bac6abe-5023-4275-a4b2-ec5e28c4b418",
+      "id": "5f399a6f-0186-427c-add0-b2fecdc79171",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8939,7 +9523,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8964,7 +9550,7 @@
       ]
     },
     {
-      "id": "a95ca7c7-8506-4bdb-a6c3-40e184576da5",
+      "id": "7a58fdb0-47c5-48bb-bbd6-019d809909c9",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -8972,7 +9558,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -8997,7 +9585,7 @@
       ]
     },
     {
-      "id": "eb1eb785-fee1-4044-9c7b-df2355b816d2",
+      "id": "9acec046-2c32-4d8d-ad86-88943d5d30ae",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9005,7 +9593,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9030,7 +9620,7 @@
       ]
     },
     {
-      "id": "5ca1d10f-d42a-4ecf-82ed-76251a477455",
+      "id": "297de7f3-2734-46ca-a0d8-04d9ba71f4d3",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9038,7 +9628,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9063,7 +9655,7 @@
       ]
     },
     {
-      "id": "1bd50412-548c-457f-96d4-2ab04c5d2e54",
+      "id": "7440b8ab-79ef-413c-ab5d-9a8121226db7",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9071,7 +9663,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9096,7 +9690,7 @@
       ]
     },
     {
-      "id": "ae4da308-869d-4d3c-b8af-be5f348e75af",
+      "id": "d5a47afb-43e0-4a7f-91fb-05c9d5927b5e",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9104,7 +9698,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9129,7 +9725,7 @@
       ]
     },
     {
-      "id": "c3e3a458-10d2-4469-88fa-43c64bd1fa33",
+      "id": "b507bc13-687c-4338-b835-1160ca119367",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9137,7 +9733,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9162,7 +9760,7 @@
       ]
     },
     {
-      "id": "52d70248-01c8-4429-aabb-dee0f6673da1",
+      "id": "b55c9c67-9a9b-44e9-9d4e-3dd21e110f6d",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9170,7 +9768,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9195,7 +9795,7 @@
       ]
     },
     {
-      "id": "eac2d6d3-19d3-4d22-a2fe-1075ff5f923c",
+      "id": "797a9539-f6c6-41e4-8cc9-304c214a067a",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9203,7 +9803,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9228,7 +9830,7 @@
       ]
     },
     {
-      "id": "31f7bdcc-761f-448e-bddf-65a53971dddd",
+      "id": "25041968-3fb5-44d4-8739-dbc19932991f",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9236,7 +9838,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9261,7 +9865,7 @@
       ]
     },
     {
-      "id": "1cfbfa11-0b27-434b-88d7-45b3337a46b3",
+      "id": "65a62660-3ac0-4791-a535-fafb4910b851",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9269,7 +9873,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9294,7 +9900,7 @@
       ]
     },
     {
-      "id": "bda6a7c2-6f04-400e-bb8b-79a7fdca10eb",
+      "id": "581f1416-1acc-4c91-b203-203910f653b3",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9302,7 +9908,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9327,7 +9935,7 @@
       ]
     },
     {
-      "id": "33a61559-0f76-4fbb-8bd1-b1557c420c98",
+      "id": "391fd600-4712-4880-946f-37a78089dbf4",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9335,7 +9943,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9360,7 +9970,7 @@
       ]
     },
     {
-      "id": "b8b6ab82-6e25-4f4a-a927-a0e3c62c2d56",
+      "id": "7c49fa39-cb9b-4322-885e-ac24e43b1c31",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9368,7 +9978,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9393,7 +10005,7 @@
       ]
     },
     {
-      "id": "a4e0eb5a-e169-4b8b-9176-fbf24079b3de",
+      "id": "dc2f8dc8-04c8-4c9a-a444-6db6a7e60898",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9401,7 +10013,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9426,10 +10040,12 @@
       ]
     },
     {
-      "id": "a58e05a6-c365-48ac-8bc8-b4a7a258104a",
+      "id": "0462073d-0265-4433-b40c-bf4fc2b97529",
       "blockName": "cherry_log",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9454,7 +10070,7 @@
       ]
     },
     {
-      "id": "8e26bf96-0ffd-449b-a35c-9dc4399dab67",
+      "id": "79166c97-e0c3-459a-9d73-573366940782",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9462,7 +10078,9 @@
         "shape": "straight",
         "facing": "north"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9487,7 +10105,7 @@
       ]
     },
     {
-      "id": "3c72cae8-edbe-44be-9ef5-d2327854caeb",
+      "id": "2e92ab93-b257-4344-93b9-6044a92526b6",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9495,7 +10113,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9520,7 +10140,7 @@
       ]
     },
     {
-      "id": "c9275628-9bf9-41d8-911d-f1bafcefd57f",
+      "id": "47542401-345b-4005-ab61-7f06afbbcd5f",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9528,7 +10148,9 @@
         "shape": "straight",
         "facing": "south"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9553,7 +10175,7 @@
       ]
     },
     {
-      "id": "7512ec10-6fc2-4426-8df6-c881786bbecc",
+      "id": "4b5c9d1b-e81c-4e58-937c-1c7b0f19e926",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9561,7 +10183,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9586,7 +10210,7 @@
       ]
     },
     {
-      "id": "4ac55aeb-09b8-4ad4-b4a3-73d2391c2552",
+      "id": "494c37a0-064c-4e2e-aeee-51c3fd0ffad4",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9594,7 +10218,9 @@
         "shape": "straight",
         "facing": "south"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9619,7 +10245,7 @@
       ]
     },
     {
-      "id": "10cfadc9-00ef-435a-9889-a46f86ade6b9",
+      "id": "605c26d4-ed6a-4f63-8b31-66c0d10566ea",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9627,7 +10253,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9652,7 +10280,7 @@
       ]
     },
     {
-      "id": "187cd101-a7d9-4e3a-a0e4-fdb41843de5c",
+      "id": "b9baacdb-1db7-415b-a760-e31a84c01897",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9660,7 +10288,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9685,7 +10315,7 @@
       ]
     },
     {
-      "id": "6b723c94-c6e6-4c8e-bfc2-37bfe8ba4fb6",
+      "id": "b0604b6c-f399-4ee2-993e-82e75db16668",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9693,7 +10323,9 @@
         "shape": "straight",
         "facing": "north"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9718,10 +10350,12 @@
       ]
     },
     {
-      "id": "0db7d793-1309-40bd-97a4-4935fc5fe3e0",
+      "id": "2f9c0441-5dfc-472d-af27-7534452a32c2",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9746,7 +10380,7 @@
       ]
     },
     {
-      "id": "048a13a2-0bc3-47bf-b5e6-b19ff7f43e52",
+      "id": "c2204474-967d-430d-8019-ca1aac3fcdfe",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9754,7 +10388,9 @@
         "shape": "straight",
         "facing": "north"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9779,7 +10415,7 @@
       ]
     },
     {
-      "id": "fa9bb69e-08f9-437d-9e74-5c90d3f3e31e",
+      "id": "4d5b58cc-7ec2-4a69-8d93-757b29ea5cdb",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9787,7 +10423,9 @@
         "shape": "straight",
         "facing": "west"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9812,7 +10450,7 @@
       ]
     },
     {
-      "id": "7ce5a3ff-d3c8-49b2-964a-73d8cdf0a9b9",
+      "id": "07b24371-a37e-461b-8370-3e770d2d33d0",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9820,7 +10458,9 @@
         "shape": "straight",
         "facing": "east"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9845,7 +10485,7 @@
       ]
     },
     {
-      "id": "828659e3-71b6-47ed-b943-ac77ad4ccb02",
+      "id": "3004e7fe-15c6-4ff2-8438-1f4eec7bbf15",
       "blockName": "cherry_stairs",
       "properties": {
         "waterlogged": "false",
@@ -9853,7 +10493,9 @@
         "shape": "straight",
         "facing": "south"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9878,10 +10520,12 @@
       ]
     },
     {
-      "id": "2efa02fd-7934-47a5-a070-32066a414708",
+      "id": "412202b6-24b1-4d5b-9318-e8030ce68677",
       "blockName": "ochre_froglight",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9906,10 +10550,12 @@
       ]
     },
     {
-      "id": "22890053-9ecf-460c-9775-57aca1e59b2a",
+      "id": "080d1e9d-d27d-40f2-bb68-c77398d6fcb6",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9934,10 +10580,12 @@
       ]
     },
     {
-      "id": "3499fca8-1252-445d-a1eb-4b3ace79ab99",
+      "id": "5e4814a5-248d-4618-ae7b-8d4ca9469fb0",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9962,10 +10610,12 @@
       ]
     },
     {
-      "id": "74ba0700-f878-41d3-8b39-a0ce3a72f627",
+      "id": "53d00deb-e2cf-4608-8b81-d9d16a30e23f",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -9990,10 +10640,12 @@
       ]
     },
     {
-      "id": "b58c4caf-5724-4e76-851d-1bbb7dd88cf5",
+      "id": "ee8514ab-b270-45de-9549-4ae250ca4828",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10018,10 +10670,12 @@
       ]
     },
     {
-      "id": "63e53a51-f1c1-4e15-9bec-df0f7eba012f",
+      "id": "c400c56a-0dde-4802-8f00-909eb3130dd4",
       "blockName": "cherry_trapdoor",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10046,10 +10700,12 @@
       ]
     },
     {
-      "id": "1db20499-82d0-4674-a3ea-e4563a0bc2c3",
+      "id": "8914915d-a2e9-4ef9-98a6-023544b933b9",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10074,10 +10730,12 @@
       ]
     },
     {
-      "id": "497ed5cb-3016-4c76-86e8-da7ae7b984a5",
+      "id": "b42bae2d-b06d-40f7-b857-6f1fceeb025a",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10102,10 +10760,12 @@
       ]
     },
     {
-      "id": "377fee1f-132c-4ad1-8abc-2e7225b69805",
+      "id": "708262d3-67a9-4dd6-90ea-40b6b769bf1b",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10130,10 +10790,12 @@
       ]
     },
     {
-      "id": "67f4ffd9-db76-4474-bb30-95f7fb561869",
+      "id": "1fa9ab1f-0ab2-4d06-b43f-7a8bd8f8ec3f",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10158,10 +10820,12 @@
       ]
     },
     {
-      "id": "c4606684-62b2-4d33-b99a-4500f57dc1f6",
+      "id": "3629a3a7-0717-4119-bc5c-1a26c8d9c80d",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10186,10 +10850,12 @@
       ]
     },
     {
-      "id": "6b35552b-c0a8-47c3-a3a3-12d43d530f7f",
+      "id": "dc241ba1-8d18-4707-8e74-6fb3411cd450",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10214,10 +10880,12 @@
       ]
     },
     {
-      "id": "3383e304-7e03-4e2c-bc86-7b073beda852",
+      "id": "6d420b07-45ce-49ff-8936-01bcdd777f0e",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10242,10 +10910,12 @@
       ]
     },
     {
-      "id": "abc98cc9-3d8b-4bd7-b24c-4750dd2b117d",
+      "id": "f77bef87-86bf-443b-9857-0371039c7aa4",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10270,10 +10940,12 @@
       ]
     },
     {
-      "id": "702f93f9-feed-4589-a8fe-603aadb8dda1",
+      "id": "c223cb6d-d16c-47d9-aaca-00df0527cf44",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10298,10 +10970,12 @@
       ]
     },
     {
-      "id": "b2af2005-7db3-4a4b-a367-79505f8ea0d3",
+      "id": "3ff90e2a-28ae-44e6-8e38-8db35164ead2",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10326,10 +11000,12 @@
       ]
     },
     {
-      "id": "472d8dca-98ab-4237-84a4-ddd295e70f8d",
+      "id": "f8ec72b4-73a6-4439-8eaa-5a5eb08f989a",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10354,10 +11030,12 @@
       ]
     },
     {
-      "id": "2a909d2e-7e57-4ebb-8ffd-bcf647e4c054",
+      "id": "640c4eb5-7876-417d-87fe-94ee0ffd0d11",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10382,10 +11060,12 @@
       ]
     },
     {
-      "id": "a7a96c97-c25c-460a-9539-afa22cdf4235",
+      "id": "84c219d3-1da4-471d-a0e0-a29eab47d937",
       "blockName": "obsidian",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10410,10 +11090,12 @@
       ]
     },
     {
-      "id": "00792f93-3ed5-44a3-9882-7eccecaa1fea",
+      "id": "c8cd98a7-6fda-4e30-82c6-ffe5acbf2fba",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10438,10 +11120,12 @@
       ]
     },
     {
-      "id": "d721b131-1fc0-4c74-8e67-859e273165f3",
+      "id": "5c2b8c4b-47d0-45d4-abe3-834eb21f8a55",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10466,10 +11150,12 @@
       ]
     },
     {
-      "id": "c39fdc19-3580-4b4f-8a52-8dcad3dc21f6",
+      "id": "757d72b7-5ff9-41e6-93cd-6fc297b191fc",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10494,10 +11180,12 @@
       ]
     },
     {
-      "id": "db12f0f7-0e88-4695-948e-6d30aefcf9d2",
+      "id": "c17c3135-6b59-4016-b2ef-dba93204f2be",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10522,10 +11210,12 @@
       ]
     },
     {
-      "id": "5765e6a6-20c2-4158-81a5-9f90b3e898ef",
+      "id": "127a37fa-772e-4ace-bd2b-d59f2fc1d6eb",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10550,10 +11240,12 @@
       ]
     },
     {
-      "id": "71b36c5c-8eb0-42db-8241-2a88086b69c7",
+      "id": "f928aff6-1377-4a65-987d-7827da108f99",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10578,10 +11270,12 @@
       ]
     },
     {
-      "id": "76fd2c99-6a5b-4989-8f25-e9d7c92193b2",
+      "id": "1bfc65ea-df5c-43c0-b419-21ab707ea7d8",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10606,10 +11300,12 @@
       ]
     },
     {
-      "id": "19196cb7-8cb9-4e23-8862-1e00fb940e19",
+      "id": "d22facba-21b8-4662-91b7-64dcd3f9ab97",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10634,10 +11330,12 @@
       ]
     },
     {
-      "id": "657cb8a0-665d-4a7c-8cae-96641f9a35b8",
+      "id": "6df40986-4696-419b-b0be-2f298230a19b",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10662,10 +11360,12 @@
       ]
     },
     {
-      "id": "3a9cf909-fa31-4f4d-aacf-85d49aa92f24",
+      "id": "87c49a43-0962-4f29-a606-7574382d41dc",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10690,10 +11390,12 @@
       ]
     },
     {
-      "id": "ea072775-ea7e-4483-aef6-6dba5d05a6d7",
+      "id": "bafca6c2-3ed5-442d-a038-4a0171f9c097",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10718,10 +11420,12 @@
       ]
     },
     {
-      "id": "bf41b2da-8fc2-4c34-bc52-1c9ab18657ad",
+      "id": "4a729572-baa0-46a8-bad9-087c7d35ae09",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10746,10 +11450,12 @@
       ]
     },
     {
-      "id": "dd942f48-624e-4790-b655-0c87e0770da1",
+      "id": "5e3858dc-d1db-4ed2-b1b5-71d8cf379627",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10774,10 +11480,12 @@
       ]
     },
     {
-      "id": "a28503fd-6c89-4287-af13-7f0af4e087b0",
+      "id": "d0ea2768-445f-45e7-a1e4-9b9c831d58ef",
       "blockName": "nether_portal",
       "properties": null,
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10802,7 +11510,7 @@
       ]
     },
     {
-      "id": "52893de7-df77-456e-8845-936857fa885c",
+      "id": "1723dacb-7c13-42b8-bce0-7cb3734cade0",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -10811,7 +11519,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10836,7 +11546,7 @@
       ]
     },
     {
-      "id": "0433ca6e-bb2c-4c88-9908-5a5c541f1aa6",
+      "id": "0c84446a-1781-4392-901d-c5e12eeb74f8",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -10845,7 +11555,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10870,7 +11582,7 @@
       ]
     },
     {
-      "id": "cd60928b-2db4-43ca-b19d-109d2f941f7d",
+      "id": "b9e75462-741c-43c7-84bb-523150bf44ce",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -10879,7 +11591,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10904,7 +11618,7 @@
       ]
     },
     {
-      "id": "8b12acc6-a11c-48b2-adba-d86b53dc6715",
+      "id": "b57a3267-3d1d-49d3-a037-a3b850b086f1",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -10913,7 +11627,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10938,7 +11654,7 @@
       ]
     },
     {
-      "id": "ece424eb-76f7-4a64-8c32-92c6eb31d691",
+      "id": "f72b5fc7-ccac-4e4b-ae94-616ca3adfcb4",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -10947,7 +11663,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -10972,7 +11690,7 @@
       ]
     },
     {
-      "id": "0a1276a9-0f1f-438e-ae5e-24410de4630b",
+      "id": "0bb41631-2f35-47d6-a6f7-b7fce97a6d70",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -10981,7 +11699,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11006,7 +11726,7 @@
       ]
     },
     {
-      "id": "2ac62e86-bed4-4b91-97d8-d5dd832ce9d0",
+      "id": "e9b54ff8-c03c-4d82-a6ab-9c6a40f433ea",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -11015,7 +11735,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11040,7 +11762,7 @@
       ]
     },
     {
-      "id": "ffaba9db-0996-4f94-a767-4607aead3b77",
+      "id": "cc8d5626-32c1-49dc-8d29-dd249492bf2a",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -11049,7 +11771,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11074,7 +11798,7 @@
       ]
     },
     {
-      "id": "c38de9f1-47a1-446d-bdbf-619ac96e0bfc",
+      "id": "dc7cd070-ecee-4f3c-bd4d-3bd8ae8f9a23",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -11083,7 +11807,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11108,7 +11834,7 @@
       ]
     },
     {
-      "id": "c113a0a3-d5dc-49a8-a900-e0a7429371b4",
+      "id": "1ea110cb-087e-4ad9-bf91-f820d696a069",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -11117,7 +11843,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11142,7 +11870,7 @@
       ]
     },
     {
-      "id": "1b6fce85-b620-415c-b87b-db5796582606",
+      "id": "f99be084-fd23-4dca-88cb-08059738f3b1",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "false",
@@ -11151,7 +11879,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11176,7 +11906,7 @@
       ]
     },
     {
-      "id": "b5810c93-bd0e-442f-8592-6e5cf732ab40",
+      "id": "6d1b5607-bf9d-4d61-81c8-14cc91b1c43f",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -11185,7 +11915,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11210,7 +11942,7 @@
       ]
     },
     {
-      "id": "28d10930-eb15-44f4-9ba7-cc0083400f2f",
+      "id": "e933b882-2921-4272-9ff0-6d850f2fafdf",
       "blockName": "cherry_fence",
       "properties": {
         "north": "false",
@@ -11219,7 +11951,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11244,7 +11978,7 @@
       ]
     },
     {
-      "id": "52b6b760-4d2e-425e-aaee-1ad03dcdcd01",
+      "id": "b84a3f2d-a8f7-45a7-bc0f-740b6d370fc6",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11253,7 +11987,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11278,7 +12014,7 @@
       ]
     },
     {
-      "id": "de0c9e06-a620-4416-9af4-de6afd2816ea",
+      "id": "41934187-9db6-45c5-86eb-136f7ee1d395",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -11287,7 +12023,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11312,7 +12050,7 @@
       ]
     },
     {
-      "id": "8ed0e050-d211-4e19-ab18-7d5da18edf6d",
+      "id": "aa837725-fe59-436c-977c-80674bf5f569",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11321,7 +12059,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11346,7 +12086,7 @@
       ]
     },
     {
-      "id": "b4aee05a-6a93-465f-8d03-b9ba444fae44",
+      "id": "a596c0ce-0793-44d1-bab8-58f17e6e34ec",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -11355,7 +12095,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11380,7 +12122,7 @@
       ]
     },
     {
-      "id": "2a0509a5-057c-4f85-b04b-5191a9192a73",
+      "id": "cfb3c281-4ef6-43ca-9081-8fb084fae333",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11389,7 +12131,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11414,7 +12158,7 @@
       ]
     },
     {
-      "id": "2856b897-88f0-47cf-a9c4-ff0ec6fb0e4e",
+      "id": "6d71a532-9fe3-4d16-8ee2-a784e184f1c4",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -11423,7 +12167,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11448,7 +12194,7 @@
       ]
     },
     {
-      "id": "b5a5e9c4-69a7-47a0-ad09-811f2882a662",
+      "id": "5cf43074-6807-4ba0-99ed-d5e40322e6d5",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11457,7 +12203,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11482,7 +12230,7 @@
       ]
     },
     {
-      "id": "53b78c7e-78c2-45b9-a83e-a755a0cf4708",
+      "id": "0271e93d-936a-40c3-814b-226675ee503f",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -11491,7 +12239,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11516,7 +12266,7 @@
       ]
     },
     {
-      "id": "985cdcb1-a64e-410e-8deb-ea43f71117ee",
+      "id": "21e821db-8cc1-477f-9ff0-019cf35a0c35",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11525,7 +12275,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11550,7 +12302,7 @@
       ]
     },
     {
-      "id": "747fe49a-cd78-437f-88f3-543f4ef24087",
+      "id": "83861b18-e461-4863-943c-ec72eb868f1c",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -11559,7 +12311,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11584,7 +12338,7 @@
       ]
     },
     {
-      "id": "75e563c9-0adf-4b56-8d25-b7d673fd3770",
+      "id": "5d820500-8ab8-4b94-9eba-860cd9784dce",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11593,7 +12347,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11618,7 +12374,7 @@
       ]
     },
     {
-      "id": "1f53aec1-b253-43ae-bff5-bf60741c9d15",
+      "id": "347cc97b-35ce-4f15-abf4-0310db0c5e82",
       "blockName": "pink_stained_glass_pane",
       "properties": {
         "north": "true",
@@ -11627,7 +12383,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11652,7 +12410,7 @@
       ]
     },
     {
-      "id": "f297c170-1e1a-4bb9-8757-e3bff0c50a48",
+      "id": "0cdfb5c0-0075-4379-bc3a-cd04021f1be7",
       "blockName": "cherry_fence",
       "properties": {
         "north": "true",
@@ -11661,7 +12419,9 @@
         "west": "false",
         "waterlogged": "false"
       },
-      "tags": [],
+      "tags": [
+        "PortalSword"
+      ],
       "viewRange": null,
       "brightness": null,
       "shadowRadius": null,
@@ -11686,7 +12446,393 @@
       ]
     }
   ],
-  "groups": [],
+  "groups": [
+    {
+      "id": "886dce6a-54ef-4c15-adc1-4927837f1714",
+      "members": [
+        "001c941d-db46-4613-9da5-bb6be0f8aa6b",
+        "0039588a-e7cd-4cd0-bea6-494fd9913ce9",
+        "01a8ea71-4a4f-435b-b6ca-b74433f27756",
+        "01e0d904-ef79-498a-8f53-f7b330f00a21",
+        "01e12e84-d27a-4996-9597-bdcab907d85c",
+        "01f4d1fd-830d-4105-9642-d01020c865fc",
+        "02574208-8f68-4a51-a5ef-8bd186e16979",
+        "0271e93d-936a-40c3-814b-226675ee503f",
+        "028becc3-ff6e-4d17-b99e-964b086d6125",
+        "02a4b63c-7429-4ad8-b543-9822bcc4a7a3",
+        "031e8be5-6a8d-4346-895c-89e29887ba85",
+        "0462073d-0265-4433-b40c-bf4fc2b97529",
+        "0612a500-db20-48ca-af63-59a0f74c0ccb",
+        "06da8ad2-884e-4475-ad9a-62b76e35ba7e",
+        "0768a4eb-f83b-4485-a4ea-2802bace7615",
+        "07b24371-a37e-461b-8370-3e770d2d33d0",
+        "07d70a7a-25e5-4d45-914b-3cfc39b512e1",
+        "07d7d206-7b27-4160-87b3-b0b7121e033c",
+        "080d1e9d-d27d-40f2-bb68-c77398d6fcb6",
+        "0a8c9807-aa8e-4178-916d-8a0b9d3074db",
+        "0b34d6ab-9f3c-4156-adcc-c7e173d9cc91",
+        "0b7bf68e-bff2-439e-a0d7-0dd68dd44a29",
+        "0bb41631-2f35-47d6-a6f7-b7fce97a6d70",
+        "0bd87920-d7f6-464b-a5c7-5941511531af",
+        "0c84446a-1781-4392-901d-c5e12eeb74f8",
+        "0cdfb5c0-0075-4379-bc3a-cd04021f1be7",
+        "0cf4d32a-f93c-4223-9490-05fa87bb7e10",
+        "0d33101d-690e-4d08-a799-f3c1c03692fe",
+        "0f579f27-bfe6-4d8b-a6c6-a61d3ea14fae",
+        "0f741ce9-d8f1-4c67-ad79-e74226dc5f4a",
+        "11a28704-c66b-4e79-ad07-e8b762cfda8a",
+        "1237ca5d-d303-450a-91e6-75bdcbb8414f",
+        "127a37fa-772e-4ace-bd2b-d59f2fc1d6eb",
+        "13485769-7d38-407c-8fc9-616a86508db6",
+        "153035a9-66b7-43d2-a483-0d4b2d19fed6",
+        "15d66912-c296-4553-9117-5b27e21f6c7a",
+        "166ed203-21c8-461e-ae23-176957362f78",
+        "16a0feac-f0bc-4adf-99f2-bc4ee58989ee",
+        "1723dacb-7c13-42b8-bce0-7cb3734cade0",
+        "180c0a9d-f0bc-4028-a227-dbd3fccdfe73",
+        "1937e135-1473-429f-9c8a-570f1e3b8e39",
+        "19899e70-a0a0-48f7-b972-131f228b95db",
+        "1ad51495-baf5-4f8f-8206-4dee7d55a4d2",
+        "1bbf38af-d71c-4745-a228-fa7d6d4ecac5",
+        "1bfc65ea-df5c-43c0-b419-21ab707ea7d8",
+        "1d24f52e-ddc4-4155-afc1-9c9358f108bf",
+        "1ea110cb-087e-4ad9-bf91-f820d696a069",
+        "1fa9ab1f-0ab2-4d06-b43f-7a8bd8f8ec3f",
+        "207f5e91-1d4f-4656-8acc-772df37a0f8b",
+        "215e9572-b8cf-4b5e-b04d-3bc7cb60b818",
+        "21e821db-8cc1-477f-9ff0-019cf35a0c35",
+        "2246ce0e-980b-4a6b-b6fc-c163d6206503",
+        "2248fa84-ec4e-4f69-a56a-da7d4fb103e7",
+        "22a71476-f6e6-4fdc-8742-e45833a2773f",
+        "235c54de-9f52-4f48-b08c-f9c866ee32a3",
+        "25041968-3fb5-44d4-8739-dbc19932991f",
+        "257fb3c6-b80e-4c8a-868b-19b723842cfc",
+        "2737312f-1afd-4246-a326-c4b5255ecb16",
+        "27766b5e-24a3-4c31-97d3-dabd3a43c370",
+        "279ab613-e16b-4f5a-ab65-c339f464e81a",
+        "2837f00f-c9ee-4eaf-a847-b2e00d5a6218",
+        "297de7f3-2734-46ca-a0d8-04d9ba71f4d3",
+        "2cf72e18-3b7d-46fc-b487-e3f2c106c006",
+        "2d810a47-bc31-45d1-879d-199a95c2c1c3",
+        "2e92ab93-b257-4344-93b9-6044a92526b6",
+        "2ec3903d-74e9-41ca-8a16-aeb9965941b9",
+        "2f9c0441-5dfc-472d-af27-7534452a32c2",
+        "2ffeb969-f195-4db3-9525-2dc0c74f59bf",
+        "3004e7fe-15c6-4ff2-8438-1f4eec7bbf15",
+        "31e1e67a-cb38-4379-8715-752dd505b537",
+        "32b8b714-b8eb-4c7b-a779-3e47bbbb7cf7",
+        "333bb3c5-455b-4216-a7a4-b0184b2f0690",
+        "344d5411-cdd2-4c6e-89bc-d1e657653605",
+        "347cc97b-35ce-4f15-abf4-0310db0c5e82",
+        "3629a3a7-0717-4119-bc5c-1a26c8d9c80d",
+        "379b48de-cd58-453c-b9de-3cc772ab9e03",
+        "379fd218-f912-480d-aa61-6a10dc14c5d7",
+        "383f4f1d-f461-4226-8e66-6ed7ecaf7166",
+        "391fd600-4712-4880-946f-37a78089dbf4",
+        "39a9ea18-9965-4cd5-9ba0-535b97d66d11",
+        "3a94cdbd-111a-4aaf-a177-8059e5ee26f0",
+        "3b9cd984-95f7-43d4-bb99-a4c37d279f76",
+        "3bb275dd-98de-496a-ac0a-77deffefe33f",
+        "3ce05df5-f204-4a79-854a-95e5a05a67cd",
+        "3ce4c073-06df-4cf2-bca6-19d49a7ce1a7",
+        "3ce78a66-1989-46a5-ab3b-4c54c029fa98",
+        "3e229e57-8ddb-4a10-b874-4152bddfb6a5",
+        "3e346267-2e4b-4b42-89e5-00b2cb507a36",
+        "3f9c838a-e2d5-437b-bbd8-5fdf861982d7",
+        "3ff90e2a-28ae-44e6-8e38-8db35164ead2",
+        "40d635f6-ad37-400b-a177-9e87d66157e9",
+        "412202b6-24b1-4d5b-9318-e8030ce68677",
+        "41934187-9db6-45c5-86eb-136f7ee1d395",
+        "41c28e2d-c59d-4ddb-b468-cad4dc0c596a",
+        "41df663a-d358-4a6f-aeb7-db1ffa4e3301",
+        "4448f54f-d6ab-420a-98f8-1ef6aa326d46",
+        "445db253-937e-4ae7-8c45-44bc953e5383",
+        "44d9ace3-f98c-43a8-aee6-88026130409a",
+        "46c8bbc7-8b35-4471-8b74-874c133d7516",
+        "47542401-345b-4005-ab61-7f06afbbcd5f",
+        "47ed69a1-ca7a-4151-97fa-58acaefe0d9a",
+        "489f79b7-bb2f-47b0-bb4e-0b50f79f5ea0",
+        "494c37a0-064c-4e2e-aeee-51c3fd0ffad4",
+        "49e07470-a3a7-4e0f-92f7-37ded70eebbc",
+        "4a729572-baa0-46a8-bad9-087c7d35ae09",
+        "4ac2ed92-872f-42a6-8be4-64fda382000c",
+        "4b094e36-4301-4d62-901c-b0534b097edb",
+        "4b5c9d1b-e81c-4e58-937c-1c7b0f19e926",
+        "4b60024e-c753-4321-b257-56df6bcf0274",
+        "4c57ba29-3b79-4710-ac1a-e1dd87310160",
+        "4c7aae43-4d0f-4253-ad45-96da0fa066a3",
+        "4cff621f-4aad-40bf-b65b-d5a82f0a85d2",
+        "4d5b58cc-7ec2-4a69-8d93-757b29ea5cdb",
+        "4d7d3904-79c5-45c9-8676-ef6a06681262",
+        "4e0ddba7-7fa2-48fb-a601-39bc43ed3640",
+        "4f3628b8-f0b2-4a2d-9823-ee0253e2e0c8",
+        "50a122dd-6632-4361-8b5c-183a85cf3b7e",
+        "538d91a9-171a-4bb9-99d6-8d4cad93e6f0",
+        "53d00deb-e2cf-4608-8b81-d9d16a30e23f",
+        "53f277fc-d225-4add-a323-8bfa87046c68",
+        "540a5758-9fec-4984-94d4-e8b293a98929",
+        "545ea32f-4ee2-45a3-956f-36c642c61b7e",
+        "55043b2c-5806-44fe-80df-95c589c1a8d2",
+        "55084cdc-6564-4323-8902-516a19893818",
+        "56307593-fb0a-458b-bba5-557bbad035e3",
+        "564eff26-6725-4ad1-b6b5-6d56588484d5",
+        "568f4dc3-c361-42ca-b05f-f04cc6ed2186",
+        "56ea0904-9f21-4bed-97e9-ae5760385101",
+        "57c6d271-7203-4ad3-aa83-9d6d4f1564a7",
+        "581f1416-1acc-4c91-b203-203910f653b3",
+        "585d3496-054f-4501-87cb-08394202b2df",
+        "59f9c41a-0a8b-429b-9d92-34a3fb4ac6d9",
+        "5aac4fe7-4ea4-48f5-a061-8cc1a998f9d2",
+        "5b4416bc-a089-4e83-bbba-74e722da9a66",
+        "5b571e75-a6b7-499f-b5e7-c404dee87d1b",
+        "5c2b8c4b-47d0-45d4-abe3-834eb21f8a55",
+        "5cd24b60-c032-49a8-9521-b8a822533421",
+        "5cf43074-6807-4ba0-99ed-d5e40322e6d5",
+        "5d820500-8ab8-4b94-9eba-860cd9784dce",
+        "5de9f3e4-ae32-46e6-a9de-871938639d1e",
+        "5e3858dc-d1db-4ed2-b1b5-71d8cf379627",
+        "5e4814a5-248d-4618-ae7b-8d4ca9469fb0",
+        "5e8e7dc4-2fc2-4372-ae29-c27bf0aac95b",
+        "5f399a6f-0186-427c-add0-b2fecdc79171",
+        "600d6584-8164-4a10-9989-df33f1c6ca46",
+        "605c26d4-ed6a-4f63-8b31-66c0d10566ea",
+        "608f9eda-18cd-41e6-9440-9685c885c143",
+        "60b35d4e-89cb-406a-94a7-36917d4c7e57",
+        "612413b5-bca4-4a1d-8b49-8b0e8ae8cfaf",
+        "615c2eee-d59a-4223-b694-f50a68c96549",
+        "61668555-c6e3-473d-a271-e78475e99a04",
+        "634000e1-647e-4674-8e98-cbd2356b7814",
+        "63b6ca10-01e5-4fb8-ae5d-5c92f7191b44",
+        "640c4eb5-7876-417d-87fe-94ee0ffd0d11",
+        "6423252b-d786-4ec9-adcd-61a4460d18ea",
+        "65a62660-3ac0-4791-a535-fafb4910b851",
+        "65ccc72e-ef97-40f1-b495-f76fa2d3cca8",
+        "65f5ce67-d35a-41ea-9614-b7e371c141b8",
+        "667279fb-5c26-4359-a1ab-7edcb0b14be1",
+        "677b81ca-b647-487f-aee8-053ec3e2bd96",
+        "678e8bc4-0384-4978-bd64-47c737fefdcf",
+        "69768bb2-4c7d-427b-bf86-8a8d59b2df74",
+        "6a77a1e9-bc04-436f-9032-7c1d40acceee",
+        "6b813261-80c6-436a-aeaf-e1ffb652317a",
+        "6bd14c8a-e262-4ef9-bb1d-700588ec3cd3",
+        "6c4e9ba3-ea91-463d-84bb-23e5e77acf94",
+        "6c658f25-06e1-47a2-894d-0cfdefb668af",
+        "6d1b5607-bf9d-4d61-81c8-14cc91b1c43f",
+        "6d420b07-45ce-49ff-8936-01bcdd777f0e",
+        "6d55ce42-ebee-4bff-8aab-626128c7b81c",
+        "6d71a532-9fe3-4d16-8ee2-a784e184f1c4",
+        "6df40986-4696-419b-b0be-2f298230a19b",
+        "6dfb2c00-d7b8-4670-b4cd-afd643f0cd20",
+        "6f512f64-bba0-4743-b11e-f1d99f445668",
+        "6ff4b5fa-9d05-4676-ab40-3c203e55ceb1",
+        "7064e901-409e-4445-9ab4-2a2abac9e137",
+        "708262d3-67a9-4dd6-90ea-40b6b769bf1b",
+        "71107d3a-2e14-4023-bb3f-1fd642ca6776",
+        "714148cf-7dd0-4e7b-8b67-100f715c0758",
+        "7414525b-ea95-46c9-8c82-5105314f4509",
+        "7440b8ab-79ef-413c-ab5d-9a8121226db7",
+        "751bbbb0-b9a3-4c50-a0b5-6d3be76ebc11",
+        "757d72b7-5ff9-41e6-93cd-6fc297b191fc",
+        "76d1c27a-120a-4c97-87c2-2e97b45cff32",
+        "7713db91-e1bb-4009-87b0-a39bf80c7d31",
+        "79166c97-e0c3-459a-9d73-573366940782",
+        "797a9539-f6c6-41e4-8cc9-304c214a067a",
+        "79d64f4e-b79e-4cd3-a946-5fd1e3f130fc",
+        "7a0bfa92-3074-4be0-a571-9a807b0e12d0",
+        "7a58fdb0-47c5-48bb-bbd6-019d809909c9",
+        "7b0155c3-d8cb-45f3-a72a-2dce20af0072",
+        "7b957dca-de2e-4f94-b63b-7c45037b5baf",
+        "7c1d14d7-bac4-431b-901e-479ad54e0b83",
+        "7c1d9367-2ce1-4321-8e81-e8d93dad823b",
+        "7c49fa39-cb9b-4322-885e-ac24e43b1c31",
+        "7c9d339b-e08f-41c8-a83d-0cd472d03d7a",
+        "7cc88917-feee-4f31-883f-cb7d2a5cdb7e",
+        "7d44a6b6-043e-4e75-904d-5b363378ee46",
+        "7d54e683-b609-41fb-883e-157968a9347d",
+        "7e177912-bef4-4cf8-8bd3-3a931dd3c0dc",
+        "7fc219a3-973d-4b3f-8f1e-9a4d6fee014e",
+        "80032a6b-a241-4192-99a6-0dbf07e880cf",
+        "80edec13-a413-403c-94ed-b039dc6b9676",
+        "8268b611-ce95-4790-9dbe-3df3e45f0664",
+        "82c2587b-90b4-40eb-8c5d-ed7bba2f2fa8",
+        "832048ba-2840-4083-9436-6de0b02fce1c",
+        "8354088d-fb3b-4fc0-8d9a-5d02dfa5d8cf",
+        "837c1a8b-9646-42b4-8690-6d4387a3b462",
+        "83861b18-e461-4863-943c-ec72eb868f1c",
+        "83bc7a71-8b1f-469d-8676-19ac84fac656",
+        "84030dd5-3812-403f-af90-8bd72a00c8cc",
+        "8433be7d-77fe-45fe-baaa-090b521860ae",
+        "84679613-7698-4632-a58b-47e7a4bca937",
+        "846f774a-b806-44f5-bcc1-747447681aaf",
+        "8496c445-fcdf-49c7-9d9f-340fe3c412c9",
+        "84b43cbc-ac19-4070-94e9-7ac097e18c57",
+        "84c219d3-1da4-471d-a0e0-a29eab47d937",
+        "85d6fade-4684-4110-bafd-2eacbaf2b192",
+        "8681f64c-c870-42e7-b1e3-283f952eab67",
+        "86b480ae-890c-4607-b2be-89934767855b",
+        "873f24a0-3ac1-403a-906b-3a92eb2f4f5b",
+        "87c49a43-0962-4f29-a606-7574382d41dc",
+        "8806c4c4-b0a3-432a-8b48-98c33e47370f",
+        "8879fd6d-3cef-4f39-8b52-5c5312040398",
+        "8914915d-a2e9-4ef9-98a6-023544b933b9",
+        "89820b79-1da7-4560-bc5d-9c0b1a23a0ea",
+        "89c01d43-0d85-448c-b882-eb90e69e7318",
+        "8c124831-f381-4f9c-8be6-1b4be9f4c590",
+        "8c7d8c08-e106-44e8-a69d-e06542d45b74",
+        "90626461-7727-4163-aa3d-7ab320461640",
+        "918aeded-abb4-4071-ada0-4ecbd1c093ee",
+        "921d5d70-8b6d-4afe-9db8-5e58ab360439",
+        "92eef7cf-7af0-4a25-ba69-3e3b3d2938f5",
+        "941c007a-0667-44c2-b1db-a0009338b390",
+        "95db45ee-c3d6-4ef3-ae3a-62907e5cc24e",
+        "964eafc4-7062-4e3c-81e6-e3d9a79e9fd0",
+        "96ca720d-7fef-461f-ab4b-d97d8544768e",
+        "96fa0ed5-1392-45e1-8993-d4059f9a3d7c",
+        "97ec05ed-908a-4fa6-9590-fe2d70dd121d",
+        "98aff482-37e3-499a-9ab8-8dfb38fd2d29",
+        "9acec046-2c32-4d8d-ad86-88943d5d30ae",
+        "9adb94a0-26ab-426b-af88-7cb0e080b3d4",
+        "9c4a0000-17fc-43d3-9754-88a8e848a20f",
+        "9d0f6177-6bfc-41f5-8409-13e0c2691df7",
+        "9f9119ba-c63c-4067-bcce-f15c27e8c47d",
+        "9fdf8586-78e4-4c5b-a103-899780b6d25a",
+        "a272edac-d913-4960-994d-2b6d7a776f56",
+        "a2d1cc86-e618-4a8d-9e62-0c847956fde4",
+        "a418314a-8116-46be-9ba6-908e4cd48493",
+        "a4297ca8-173f-4e1a-9148-9c4f15a612cb",
+        "a49e9dc1-e938-4487-bd9e-0c218b558503",
+        "a596c0ce-0793-44d1-bab8-58f17e6e34ec",
+        "a6157433-4325-479d-a32c-3417ab53769c",
+        "a7e5fd8e-4987-495c-b857-0bea555d6ef3",
+        "a96279fb-7ad7-4926-9faa-9515920c9451",
+        "a97f33f5-d992-461b-b8e1-95e079a0ca83",
+        "aa7a8c5a-40e2-465b-bd70-c666e3218338",
+        "aa837725-fe59-436c-977c-80674bf5f569",
+        "ab03f003-1ba6-4da0-af4b-8944b3a133d9",
+        "ab36e855-5636-40df-b0cf-cd25a7cb4893",
+        "ac279b94-3575-4a00-ae72-c36f20c34e94",
+        "ae439b7a-4aae-40b1-aeca-139286c22957",
+        "b00d9a73-dc57-4dce-bbcf-d8fe77fd639d",
+        "b00e2939-6075-40a2-a5d3-597b3c7545e8",
+        "b0604b6c-f399-4ee2-993e-82e75db16668",
+        "b0a5419b-0d69-4856-8fee-16cd3c4d2e77",
+        "b1211268-0204-4bf8-be31-8120361fa820",
+        "b1844dff-b717-4da4-ad74-ff26050a12c2",
+        "b2cf9f0d-92ea-4890-adce-f370415a3b3b",
+        "b30deeea-ad63-40c4-a3f6-e18744db361a",
+        "b42bae2d-b06d-40f7-b857-6f1fceeb025a",
+        "b507bc13-687c-4338-b835-1160ca119367",
+        "b55c9c67-9a9b-44e9-9d4e-3dd21e110f6d",
+        "b57a3267-3d1d-49d3-a037-a3b850b086f1",
+        "b84a3f2d-a8f7-45a7-bc0f-740b6d370fc6",
+        "b9af314a-5cbb-4593-b94f-06a3f76c9746",
+        "b9baacdb-1db7-415b-a760-e31a84c01897",
+        "b9e75462-741c-43c7-84bb-523150bf44ce",
+        "bafca6c2-3ed5-442d-a038-4a0171f9c097",
+        "bc62f795-f43a-4829-a209-7614b773d040",
+        "bda30fc5-7bf3-483e-bf2c-4864af658111",
+        "bdfaf2c2-e4d2-4d63-a769-0dd225de8ab0",
+        "c169b3d4-6b29-47b7-a56a-f349b1efd9cd",
+        "c17c3135-6b59-4016-b2ef-dba93204f2be",
+        "c212604a-b625-48a7-9742-a87fda91c9d5",
+        "c2204474-967d-430d-8019-ca1aac3fcdfe",
+        "c223cb6d-d16c-47d9-aaca-00df0527cf44",
+        "c344bfb9-7ebe-46bc-a65d-f3d6d3528d8a",
+        "c400c56a-0dde-4802-8f00-909eb3130dd4",
+        "c40f5c63-af1e-4f35-9b85-8f4e7334eaa5",
+        "c44922aa-db61-40c4-9ae8-e89099c2009d",
+        "c4912e82-c1a3-4f42-a48b-e53d89de4068",
+        "c5c2783f-0a40-4904-a2b9-9475555fd984",
+        "c6f3002d-d5e5-432d-abd8-930df55c546f",
+        "c76943d5-cb5d-4ccd-9c39-1f09ae5584f3",
+        "c8cd98a7-6fda-4e30-82c6-ffe5acbf2fba",
+        "c9072004-8112-411c-8da1-4837f1f2a1ae",
+        "c97ef4a3-cc31-45e3-8910-d2adc8b8e242",
+        "cb411370-b2ed-491e-b987-2e73c001f9a6",
+        "cc23d3d2-43f3-408d-9fa5-610c585d3bf9",
+        "cc8d5626-32c1-49dc-8d29-dd249492bf2a",
+        "cca08c58-a813-4886-802d-5283348ce66f",
+        "cd706c0f-0449-45b6-88c9-3b3e67f436f5",
+        "cf8f262c-015e-4267-aeef-2cc52baa3c1d",
+        "cfb3c281-4ef6-43ca-9081-8fb084fae333",
+        "cfc8c8db-69d9-4e55-baf1-9f2fee43ae58",
+        "d06f1596-8319-4f77-8c4c-973e17e2ebef",
+        "d0ea2768-445f-45e7-a1e4-9b9c831d58ef",
+        "d1c12c2d-8eef-4d6b-bfad-ff8a9f93c6a4",
+        "d22b1dea-f2bd-4739-b4dc-d1251c75f77e",
+        "d22d143f-5a29-41bf-bc03-4f58ca6e7ae6",
+        "d22facba-21b8-4662-91b7-64dcd3f9ab97",
+        "d2cd7cd3-779d-4f5d-9b80-eaad7129af00",
+        "d413e85e-4902-498c-ba1b-2bdd0652d368",
+        "d5042102-3504-48b1-a852-dd93e0ea3772",
+        "d5a47afb-43e0-4a7f-91fb-05c9d5927b5e",
+        "d5de0c11-fff7-4b76-85f4-c4831d61b5fe",
+        "d62ed3b3-1c96-4694-a28c-ae42347923f1",
+        "d675aa4a-abf8-4b28-b488-4d3d5954ab7b",
+        "d76ebf2c-0e79-4b97-a3c0-9ea13200ee66",
+        "d807747f-f619-4082-8a1f-acd26269f835",
+        "d862e8e6-1b4a-4ae7-9a5c-863e48fedd81",
+        "d9468a87-8162-4856-8fc4-320d4a5c160f",
+        "daa911ba-5bc7-4ac5-a056-1e277b60b1f2",
+        "dbed976e-1b30-4d30-8478-6957a5d018d3",
+        "dc241ba1-8d18-4707-8e74-6fb3411cd450",
+        "dc2f8dc8-04c8-4c9a-a444-6db6a7e60898",
+        "dc7cd070-ecee-4f3c-bd4d-3bd8ae8f9a23",
+        "dc8cabaa-a4f0-4a66-8681-aa351aac2117",
+        "ddd9a12f-c04a-4167-aec8-a97b955ac732",
+        "df625298-135a-4176-9ef8-b47b3b551beb",
+        "dfbe2adb-a14d-4ceb-ab80-6fc7e8a0fd8c",
+        "dfd5d807-5901-491a-ae18-be116f524d21",
+        "e0fc49ef-38b8-4420-a9ca-fcbcee80f0f4",
+        "e107d819-ec2e-4f68-90ab-39ac4accc6b1",
+        "e25ad44f-8489-4a14-b388-0f18e25e90c1",
+        "e522b86b-5db3-4ecd-b862-cf71c98d94d5",
+        "e5e99a5c-9df7-4c10-9948-f983920ad03e",
+        "e65174b1-8d48-428f-b0f8-79e355e37eaf",
+        "e6791b1b-cca8-4942-b43c-542983cacf30",
+        "e68dec86-f7c9-4808-9d9d-b552d502beaf",
+        "e7d3aad0-fdd7-497d-b3d9-cdb8f897c9fb",
+        "e933b882-2921-4272-9ff0-6d850f2fafdf",
+        "e95a1216-c717-47f9-b235-80a44510d69a",
+        "e9b54ff8-c03c-4d82-a6ab-9c6a40f433ea",
+        "eb21ade6-0e64-4aa3-9d85-5ab818b479fd",
+        "ec55822a-51b7-41f8-987a-48a730719cf2",
+        "ecdcea95-4d36-4da2-813e-3aae94e4095c",
+        "ececfd7f-1548-4eb5-a30a-68f9958ff9d2",
+        "edb73683-5844-42a5-bde7-4776baba9187",
+        "ee8514ab-b270-45de-9549-4ae250ca4828",
+        "eeea1964-7608-4316-a18a-6c996fb5bd19",
+        "ef757b4e-52fd-4a95-bc98-dae3068cd1d2",
+        "efec88a9-6ca8-4c70-a27a-f1c5ea8dbe1f",
+        "effa3551-ae3c-409f-8e45-831a94391d2e",
+        "f0ff2ad1-c947-4dbb-9daa-5aae31582195",
+        "f1b828f1-dd27-4a70-9019-c848170c629f",
+        "f25047a2-59a7-4733-aaab-eead810b60dd",
+        "f2c32d18-6986-493d-aed1-00aae2edde69",
+        "f31575cf-1bee-4f48-882b-d81e24e8f7ec",
+        "f3d8800e-43d3-4393-9bc9-7d1c50d00b80",
+        "f3f80b24-6b1e-4e00-aaba-cbed2b07bb25",
+        "f48226d6-0466-474a-84ae-e1f70c1078a7",
+        "f492987f-43c5-42e1-9f2a-b39c4182f9f6",
+        "f4e733b7-aade-4dd7-82d2-9785a25ffa2c",
+        "f5bc4cc6-c761-497d-9a9e-c274c4127b31",
+        "f72b5fc7-ccac-4e4b-ae94-616ca3adfcb4",
+        "f77bef87-86bf-443b-9857-0371039c7aa4",
+        "f7de9233-f175-4e89-8104-419645cc8e8d",
+        "f8ec72b4-73a6-4439-8eaa-5a5eb08f989a",
+        "f928aff6-1377-4a65-987d-7827da108f99",
+        "f99be084-fd23-4dca-88cb-08059738f3b1",
+        "fa759aa5-aa20-48e0-a351-bc6641a77168",
+        "fb491ad7-bf21-4a1a-9547-a9aa33993e77",
+        "fc1680f6-8e86-4bdb-b6d5-943466ba9836",
+        "fc3ada39-6935-4a4e-952a-fcf39b60b9bd",
+        "fc87e226-0efa-4b5b-907a-d947560de96e",
+        "fd99eb9a-251f-4179-a0f0-31d6ec5f6db9",
+        "fdabae62-d8b6-4f8d-93b1-83dae45559fb",
+        "fe5c7126-0421-4973-b73d-cfb09b9f36dd"
+      ]
+    }
+  ],
   "refAssets": [],
   "refs": []
 }
