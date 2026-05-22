@@ -12,3 +12,7 @@ Data/atlas/blocks_atlas.png
 Data/atlas/icons_atlas.json
 
 Debug/*
+
+updateTracking/work
+updateTracking/work/
+updateTracking/work/*

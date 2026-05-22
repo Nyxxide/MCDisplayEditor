@@ -1,5 +1,4 @@
 // TODO: Add selection to change dropdown/search between Blocks/Items/Atlases
-// TODO: Maybe make audio a bit louder or something. kinda quiet.
 
 /* TODO Texture Stuff:
 *   - Add Props to blocks as I find em.
