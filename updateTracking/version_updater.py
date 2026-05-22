@@ -256,14 +256,14 @@ def cleanup_work_dir(work_dir: Path) -> None:
 
 
 def rebuild_docker(editor_root: Path) -> None:
-    rebuild_script = editor_root.parent / "rebuild_docker.sh"
+    rebuild_script = editor_root.parent / "rebuild-docker.sh"
 
     if not rebuild_script.exists():
         print(f"[warn] Docker rebuild script does not exist: {rebuild_script}")
         return
 
     print("[apply] Rebuilding Docker container")
-    run_command(["./rebuild_docker.sh"], cwd=editor_root.parent)
+    run_command(["./rebuild-docker.sh"], cwd=editor_root.parent)
 
 
 def main() -> int:
