@@ -349,7 +349,7 @@ def main() -> int:
 
     rebuild_script = editor_root.parent / "rebuild_docker.sh"
     print("[apply] Rebuilding Docker container")
-    run_command(["./rebuild_docker.sh"], cwd=editor_root.parent)
+    run_command(["./rebuild-docker.sh"], cwd=editor_root.parent)
 
     write_state(state_path, version_id)
 
