@@ -34,6 +34,5 @@ jobs:
             cd serverScripts
             node genBlockList.mjs
             node buildBlockAtlas.mjs
-            node generateIconsAtlas.mjs
             cd ../..
             ./rebuild-docker.sh
