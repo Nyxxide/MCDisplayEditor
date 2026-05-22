@@ -18,6 +18,7 @@ MANIFEST_URLS = [
 
 RENDERCHEST_EXE = Path("/home/taghost/MCDisplayEditorDocker/renderchest/renderchest")
 
+
 ASSET_DIRS_TO_COPY = {
     "blockstates": "assets/minecraft/blockstates",
     "models/block": "assets/minecraft/models/block",
