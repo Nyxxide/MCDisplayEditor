@@ -7,12 +7,14 @@ node_modules/
 node_modules/*
 
 Data/json/*
-Data/atlas/blocks_atlas.json
-Data/atlas/blocks_atlas.png
-Data/atlas/icons_atlas.json
+Data/atlas/*
+
+Resources/iconGenData/icons
 
 Debug/*
 
 updateTracking/work
 updateTracking/work/
 updateTracking/work/*
+
+serverScripts/genIconlessSprites.mjs

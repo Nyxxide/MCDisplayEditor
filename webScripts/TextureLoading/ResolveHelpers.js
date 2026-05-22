@@ -6,23 +6,30 @@ import {stripMcPrefix, loadBlockstate, loadModel} from "./StaticHelpers.js";
 function resolveTextureRef(textures, ref) {
     if (!ref) return null;
 
+    // NEW: Mojang can now use texture descriptor objects
+    if (typeof ref === "object") {
+        if (ref.sprite) {
+            return resolveTextureRef(textures, ref.sprite);
+        }
+
+        return null;
+    }
+
+    if (typeof ref !== "string") return null;
+
     // follow indirections like "#side"
     if (ref.startsWith("#")) {
         const key = ref.slice(1);
         return resolveTextureRef(textures, textures?.[key]);
     }
 
-    // normalize to no-namespace path like "block/acacia_log"
-    let p = ref.startsWith("minecraft:") ? ref.slice("minecraft:".length) : ref;
+    let p = ref.startsWith("minecraft:")
+        ? ref.slice("minecraft:".length)
+        : ref;
 
-    // common forms:
-    // "block/acacia_log"  -> ok
-    // "acacia_log"        -> assume block/
     if (!p.includes("/")) p = `block/${p}`;
 
-    // final atlas key MUST match atlas JSON
     return `minecraft:${p}`;
-
 }
 
 async function resolveModelIdForBlock(blockId, props = null) {

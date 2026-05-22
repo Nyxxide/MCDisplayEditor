@@ -428,12 +428,20 @@ function buildMeshFromModel(atlas, model, blockId, props, opts = {}) {
             bid.includes("melon_stem") || bid.includes("pumpkin_stem") ||
             bid.includes("attached_melon_stem") || bid.includes("attached_pumpkin_stem");
 
+        const isTripwire = bid.includes("tripwire");
+
         mat = new THREE.MeshBasicMaterial({
             map: atlasTex,
-            transparent: false,
-            alphaTest: 0.5,
-            side: isStemLike ? THREE.DoubleSide : THREE.FrontSide,
-            depthWrite: true,
+
+            // Tripwire needs real alpha blending or a much lower alpha cutoff.
+            transparent: isTripwire,
+            opacity: 1,
+
+            alphaTest: isTripwire ? 0.01 : 0.5,
+
+            side: isTripwire || isStemLike ? THREE.DoubleSide : THREE.FrontSide,
+
+            depthWrite: !isTripwire,
             depthTest: true,
         });
     } else {

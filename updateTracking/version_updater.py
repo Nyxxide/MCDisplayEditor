@@ -16,35 +16,18 @@ MANIFEST_URLS = [
     "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json",
 ]
 
-ASSET_DIRS_TO_COMPARE = {
+# RENDERCHEST_EXE = Path("/home/taghost/MCDisplayEditorDocker/renderchest/renderchest")
+RENDERCHEST_EXE = Path("/home/nyx/Desktop/iconpull/renderchest/renderchest")
+
+ASSET_DIRS_TO_COPY = {
     "blockstates": "assets/minecraft/blockstates",
     "models/block": "assets/minecraft/models/block",
     "models/item": "assets/minecraft/models/item",
     "textures/block": "assets/minecraft/textures/block",
 }
 
-IGNORED_FILE_PARTS = [
-    "waxed",
-    "wall_head",
-    "wall_skull",
-    "void",
-    "item_frame",
-]
-
-IGNORED_EXACT_FILES = {
-    "water.json",
-    "lava.json",
-    "air.json",
-    "barrier.json",
-    "light.json",
-    "bubble_column.json",
-    "cave_air.json",
-    "moving_piston.json",
+SKIP_EXACT_FILES = {
     "beacon.json",
-    "conduit.png",
-    "tripwire.png.mcmeta",
-    "cactus_side.png.mcmeta",
-    "cactus_top.png.mcmeta"
 }
 
 
@@ -103,121 +86,156 @@ def read_state(state_path: Path) -> dict:
     return json.loads(state_path.read_text(encoding="utf-8"))
 
 
-def should_ignore(rel_path: Path) -> bool:
-    name = rel_path.name
-
-    if name in IGNORED_EXACT_FILES:
-        return True
-
-    as_string = str(rel_path).replace("\\", "/")
-
-    for part in IGNORED_FILE_PARTS:
-        if part in as_string:
-            return True
-
-    return False
+def run_command(command: list[str], cwd: Path) -> None:
+    print(f"[run] {' '.join(command)}")
+    subprocess.run(command, cwd=cwd, check=True)
 
 
-def jar_extract_selected(jar_path: Path, extract_root: Path) -> None:
-    if extract_root.exists():
-        shutil.rmtree(extract_root)
+def extract_full_assets(jar_path: Path, extracted_dir: Path) -> Path:
+    if extracted_dir.exists():
+        shutil.rmtree(extracted_dir)
 
-    extract_root.mkdir(parents=True, exist_ok=True)
-
-    wanted_prefixes = tuple(v + "/" for v in ASSET_DIRS_TO_COMPARE.values())
+    extracted_dir.mkdir(parents=True, exist_ok=True)
 
     with zipfile.ZipFile(jar_path, "r") as jar:
         for member in jar.infolist():
             if member.is_dir():
                 continue
 
-            if not member.filename.startswith(wanted_prefixes):
+            if not member.filename.startswith("assets/"):
                 continue
 
-            target = extract_root / member.filename
+            target = extracted_dir / member.filename
             target.parent.mkdir(parents=True, exist_ok=True)
 
             with jar.open(member, "r") as src, target.open("wb") as dst:
                 shutil.copyfileobj(src, dst)
 
+    assets_dir = extracted_dir / "assets"
 
-def list_files(root: Path) -> set[Path]:
-    if not root.exists():
-        return set()
+    if not assets_dir.exists():
+        raise RuntimeError(f"Extracted assets folder was not found: {assets_dir}")
 
-    return {
-        p.relative_to(root)
-        for p in root.rglob("*")
-        if p.is_file()
-    }
+    return assets_dir
 
 
-def compare_dirs(local_root: Path, extracted_root: Path) -> dict[str, list[Path]]:
-    results = {}
+def should_skip_resource_file(rel: Path) -> bool:
+    if rel.name in SKIP_EXACT_FILES:
+        return True
 
-    for label, jar_subpath in ASSET_DIRS_TO_COMPARE.items():
-        local_dir = local_root / label
-        extracted_dir = extracted_root / jar_subpath
+    return False
 
-        local_files = list_files(local_dir)
-        extracted_files = list_files(extracted_dir)
 
-        new_files = sorted(
-            f for f in extracted_files - local_files
-            if not should_ignore(f)
+def copy_asset_dirs_to_resources(resources_root: Path, extracted_dir: Path) -> None:
+    """
+    Copies only NEW files from the downloaded jar into Resources.
+
+    Important:
+    - Existing files are never overwritten.
+    - beacon.json is skipped so your local bcn workaround stays intact.
+    """
+
+    for resource_subdir, jar_subdir in ASSET_DIRS_TO_COPY.items():
+        src = extracted_dir / jar_subdir
+        dst = resources_root / resource_subdir
+
+        if not src.exists():
+            print(f"[warn] Missing extracted asset folder: {src}")
+            continue
+
+        dst.mkdir(parents=True, exist_ok=True)
+
+        added = 0
+        skipped_existing = 0
+        skipped_special = 0
+
+        for file in src.rglob("*"):
+            if not file.is_file():
+                continue
+
+            rel = file.relative_to(src)
+
+            if should_skip_resource_file(rel):
+                skipped_special += 1
+                print(f"[skip-special] Resources/{resource_subdir}/{rel}")
+                continue
+
+            out = dst / rel
+
+            if out.exists():
+                skipped_existing += 1
+                continue
+
+            out.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(file, out)
+            added += 1
+
+            print(f"[copy-new] Resources/{resource_subdir}/{rel}")
+
+        print(
+            f"[copy] Resources/{resource_subdir}: "
+            f"added={added}, existing={skipped_existing}, special_skips={skipped_special}"
         )
 
-        results[label] = new_files
 
-    return results
+def clear_dir(path: Path) -> None:
+    if path.exists():
+        shutil.rmtree(path)
 
-
-def print_results(version_id: str, local_version: str | None, results: dict[str, list[Path]]) -> None:
-    print()
-    print("=" * 80)
-    print(f"Minecraft version checked: {version_id}")
-    print(f"Local recorded version:   {local_version or '(none)'}")
-    print("=" * 80)
-
-    total = 0
-
-    for label, files in results.items():
-        print()
-        print(f"[{label}] new files: {len(files)}")
-
-        for f in files:
-            print(f"  + {f}")
-
-        total += len(files)
-
-    print()
-    print("=" * 80)
-    print(f"Total new files detected: {total}")
-    print("Dry run only. No files were copied. No Docker rebuild was performed.")
-    print("=" * 80)
-
-def copy_new_files(resources_root: Path, extracted_root: Path, results: dict[str, list[Path]]) -> None:
-    for label, files in results.items():
-        jar_subpath = ASSET_DIRS_TO_COMPARE[label]
-
-        for rel_file in files:
-            src = extracted_root / jar_subpath / rel_file
-            dst = resources_root / label / rel_file
-
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, dst)
-
-            print(f"[copy] {src} -> {dst}")
+    path.mkdir(parents=True, exist_ok=True)
 
 
-def run_command(command: list[str], cwd: Path) -> None:
-    print(f"[run] {' '.join(command)}")
-    subprocess.run(command, cwd=cwd, check=True)
+def run_renderchest(assets_dir: Path, renderchest_output_dir: Path) -> Path:
+    clear_dir(renderchest_output_dir)
+
+    run_command(
+        [
+            str(RENDERCHEST_EXE),
+            "--assets", str(assets_dir),
+            "--output", str(renderchest_output_dir),
+            "--namespace", "minecraft",
+            "--size", "32",
+            "--quality", "4",
+            "--format", "png",
+            "--item-list",
+        ],
+        cwd=RENDERCHEST_EXE.parent
+    )
+
+    minecraft_icons_dir = renderchest_output_dir / "items/minecraft"
+
+    if not minecraft_icons_dir.exists():
+        raise RuntimeError(
+            f"Renderchest completed, but expected output folder was not found: {minecraft_icons_dir}"
+        )
+
+    return minecraft_icons_dir
+
+
+def populate_icon_folder(editor_root: Path, minecraft_icons_dir: Path) -> None:
+    icons_dir = editor_root / "Resources" / "iconGenData" / "icons"
+
+    clear_dir(icons_dir)
+
+    count = 0
+
+    for file in minecraft_icons_dir.rglob("*.png"):
+        rel = file.relative_to(minecraft_icons_dir)
+        dst = icons_dir / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(file, dst)
+        count += 1
+
+    print(f"[icons] Rebuilt icon source folder: {icons_dir}")
+    print(f"[icons] Copied {count} PNGs")
 
 
 def run_post_update_scripts(editor_root: Path) -> None:
-    run_command(["node", "genBlockList.mjs"], cwd=editor_root / "serverScripts")
-    run_command(["node", "buildBlockAtlas.mjs"], cwd=editor_root / "serverScripts")
+    scripts_dir = editor_root / "serverScripts"
+
+    run_command(["node", "genBlockList.mjs"], cwd=scripts_dir)
+    run_command(["node", "buildBlockAtlas.mjs"], cwd=scripts_dir)
+    run_command(["node", "genIconAtlas.mjs"], cwd=scripts_dir)
 
 
 def write_state(state_path: Path, version_id: str) -> None:
@@ -230,9 +248,28 @@ def write_state(state_path: Path, version_id: str) -> None:
 
     print(f"[state] Updated local Minecraft version to {version_id}")
 
+
+def cleanup_work_dir(work_dir: Path) -> None:
+    if work_dir.exists():
+        shutil.rmtree(work_dir)
+
+    print(f"[cleanup] Removed work directory: {work_dir}")
+
+
+def rebuild_docker(editor_root: Path) -> None:
+    rebuild_script = editor_root.parent / "rebuild_docker.sh"
+
+    if not rebuild_script.exists():
+        print(f"[warn] Docker rebuild script does not exist: {rebuild_script}")
+        return
+
+    print("[apply] Rebuilding Docker container")
+    run_command(["./rebuild_docker.sh"], cwd=editor_root.parent)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Dry-run Minecraft client jar resource diff for MCDisplayEditor."
+        description="Minecraft version updater for MCDisplayEditor."
     )
 
     parser.add_argument(
@@ -268,7 +305,7 @@ def main() -> int:
     parser.add_argument(
         "--apply",
         action="store_true",
-        help="Actually copy missing files, run generator scripts, and update state."
+        help="Actually update resources/icons, run scripts, update state, and rebuild Docker."
     )
 
     args = parser.parse_args()
@@ -276,11 +313,21 @@ def main() -> int:
     editor_root = Path(args.editor_root).resolve()
     resources_root = editor_root / "Resources"
 
-    state_path = Path(args.state_file).resolve() if args.state_file else editor_root / "updateTracking" / "state.json"
-    work_dir = Path(args.work_dir).resolve() if args.work_dir else editor_root / "updateTracking" / "work"
+    state_path = (
+        Path(args.state_file).resolve()
+        if args.state_file
+        else editor_root / "updateTracking" / "state.json"
+    )
+
+    work_dir = (
+        Path(args.work_dir).resolve()
+        if args.work_dir
+        else editor_root / "updateTracking" / "work"
+    )
 
     downloads_dir = work_dir / "downloads"
     extracted_dir = work_dir / "extracted"
+    renderchest_output_dir = work_dir / "renderchest_output"
 
     state = read_state(state_path)
     local_version = state.get("minecraft_version")
@@ -290,12 +337,21 @@ def main() -> int:
     version_id = version_entry["id"]
 
     if local_version == version_id and not args.force_positive:
-        print(f"[ok] Local state already matches latest checked version: {version_id}")
-        print("[ok] Use --force-positive to run the dry diff anyway.")
+        print(f"[ok] Local state already matches checked version: {version_id}")
         return 0
 
     if local_version == version_id and args.force_positive:
-        print(f"[force] Local version matches {version_id}, but forcing positive dry-run.")
+        print(f"[force] Local version matches {version_id}, but forcing update run.")
+
+    print("=" * 80)
+    print(f"Local recorded version: {local_version or '(none)'}")
+    print(f"Minecraft version found: {version_id}")
+    print("=" * 80)
+
+    if not args.apply:
+        print("[dry-run] Version difference detected.")
+        print("[dry-run] Use --apply to update resources/icons and rebuild Docker.")
+        return 0
 
     version_meta = fetch_json(version_entry["url"])
 
@@ -324,34 +380,26 @@ def main() -> int:
             )
         print("[verify] SHA1 OK")
 
-    print("[extract] Extracting selected Minecraft asset folders")
-    jar_extract_selected(jar_path, extracted_dir)
+    print("[extract] Extracting full assets folder")
+    assets_dir = extract_full_assets(jar_path, extracted_dir)
 
-    print("[diff] Comparing extracted assets against local Resources")
-    results = compare_dirs(resources_root, extracted_dir)
+    print("[resources] Adding only missing resource files")
+    copy_asset_dirs_to_resources(resources_root, extracted_dir)
 
-    print_results(version_id, local_version, results)
+    print("[renderchest] Generating item icons")
+    minecraft_icons_dir = run_renderchest(assets_dir, renderchest_output_dir)
 
-    total_new_files = sum(len(files) for files in results.values())
+    print("[icons] Moving renderchest minecraft PNGs into Resources/iconGenData/icons")
+    populate_icon_folder(editor_root, minecraft_icons_dir)
 
-    if not args.apply:
-        print("[dry-run] Use --apply to copy files, run scripts, and update state.")
-        return 0
-
-    if total_new_files == 0:
-        print("[apply] No new files detected. Nothing to copy.")
-    else:
-        print("[apply] Copying new files into Resources")
-        copy_new_files(resources_root, extracted_dir, results)
-
-    print("[apply] Running post-update scripts")
+    print("[scripts] Running block/icon atlas scripts")
     run_post_update_scripts(editor_root)
 
-    rebuild_script = editor_root.parent / "rebuild_docker.sh"
-    print("[apply] Rebuilding Docker container")
-    run_command(["./rebuild-docker.sh"], cwd=editor_root.parent)
-
     write_state(state_path, version_id)
+
+    cleanup_work_dir(work_dir)
+
+    rebuild_docker(editor_root)
 
     print("[done] Update applied successfully.")
     return 0

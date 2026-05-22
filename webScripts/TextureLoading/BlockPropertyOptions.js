@@ -95,7 +95,7 @@ export const BLOCK_PROPERTY_OPTIONS = [
     },
 
     {
-        match: (id) => id.includes("glow_lichen"),
+        match: (id) => id.includes("glow_lichen") || id.includes("sculk_vein"),
         properties: {
             north: { label: "North", values: ["false", "true"], default: "false" },
             south: { label: "South", values: ["false", "true"], default: "false" },
@@ -811,7 +811,60 @@ export const BLOCK_PROPERTY_OPTIONS = [
             snowy: {
                 label: "Snowy",
                 values: ["true", "false"],
-                default: "false" },
+                default: "false"
+            },
+        },
+    },
+
+    {
+        match: (id) => id.includes("tripwire"),
+        properties: {
+            disarmed: {
+                label: "Disarmed",
+                values: ["true", "false"],
+                default: "false"
+            },
+            powered: {
+                label: "Powered",
+                values: ["true", "false"],
+                default: "false"
+            },
+            north: {
+                label: "North",
+                values: ["true", "false"],
+                default: "false"
+            },
+            east: {
+                label: "East",
+                values: ["true", "false"],
+                default: "false"
+            },
+            west: {
+                label: "West",
+                values: ["true", "false"],
+                default: "false"
+            },
+            south: {
+                label: "South",
+                values: ["true", "false"],
+                default: "false"
+            },
+            attached: {
+                label: "Attached",
+                values: ["true", "false"],
+                default: "false"
+            },
+        },
+    },
+
+    {
+        match: (id) => (id.includes("snow") && !(id.includes("powder") || id.includes("block"))),
+        properties: {
+            layers: {
+                label: "layers",
+                values: ["1", "2", "3", "4", "5", "6", "7", "8"],
+                default: "1"
+            },
         },
     },
 
