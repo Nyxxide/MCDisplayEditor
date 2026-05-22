@@ -16,8 +16,7 @@ MANIFEST_URLS = [
     "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json",
 ]
 
-# RENDERCHEST_EXE = Path("/home/taghost/MCDisplayEditorDocker/renderchest/renderchest")
-RENDERCHEST_EXE = Path("/home/nyx/Desktop/iconpull/renderchest/renderchest")
+RENDERCHEST_EXE = Path("/home/taghost/MCDisplayEditorDocker/renderchest/renderchest")
 
 ASSET_DIRS_TO_COPY = {
     "blockstates": "assets/minecraft/blockstates",
